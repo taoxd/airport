@@ -21,38 +21,22 @@ import java.io.FileWriter;
  * @CreateDate: 2019/6/25 14:56
  * @Version: 1.0
  */
-public class JFrameRun extends JFrame {
+public class ConstantBroad {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * Launch the application.
-     */
-    public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    JFrameRun frame = new JFrameRun();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+    public ConstantBroad() {
     }
 
-    /**
-     * Create the frame.
-     */
-    public JFrameRun() {
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 657, 331);
+    public JPanel init(){
+      // setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //        //setBounds(100, 100, 657, 331);
         JPanel contentPane = new JPanel();
         contentPane.setForeground(Color.BLACK);
         contentPane.setBackground(Color.WHITE);
-        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+        //contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         contentPane.setLayout(null);
-        setContentPane(contentPane);
+        //setContentPane(contentPane);
 
         JLabel languageLabel = new JLabel("语种:");
         languageLabel.setFont(new Font("宋体", Font.PLAIN, 16));
@@ -99,6 +83,8 @@ public class JFrameRun extends JFrame {
             }
         });
 
+
+
         audioButton.setFont(new Font("宋体", Font.PLAIN, 12));
         audioButton.setBackground(new Color(30, 144, 255));
         audioButton.setForeground(new Color(240, 248, 255));
@@ -120,6 +106,8 @@ public class JFrameRun extends JFrame {
                 writeXML();
             }
         });
+
+        return contentPane;
     }
 
     public void writeXML() {

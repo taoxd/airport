@@ -1,27 +1,17 @@
 package view;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import java.awt.Font;
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JTextField;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.Color;
-import javax.swing.JTextArea;
-import java.awt.SystemColor;
-import javax.swing.SwingConstants;
-import javax.swing.JSlider;
-import javax.swing.JInternalFrame;
-
-public class Index extends JFrame {
+import java.awt.event.ActionListener;
+/**
+* @Description:    首页
+* @Author:         taoxudong
+* @CreateDate:     2019/6/26 13:55
+* @Version:        1.0
+*/
+public class Index   {
 
 	private JPanel contentPane;
 	private JTextField textField;
@@ -36,26 +26,26 @@ public class Index extends JFrame {
 			public void run() {
 				try {
 					Index frame = new Index();
-					frame.setVisible(true);
+					//frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
 	}
-
+	public Index(){};
 	/**
 	 * Create the frame.
 	 */
-	public Index() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 977, 778);
+	public JPanel init() {
+		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//setBounds(100, 100, 977, 778);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(255, 255, 255));
 		contentPane.setForeground(new Color(255, 255, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(null);
-		setContentPane(contentPane);
+		//setContentPane(contentPane);
 		
 		JLabel lblXml = new JLabel("XML命名:");
 		lblXml.setFont(new Font("宋体", Font.PLAIN, 16));
@@ -84,6 +74,8 @@ public class Index extends JFrame {
 		btnNewButton.setBackground(new Color(30, 144, 255));
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				BulletBox frame = new BulletBox();
+				frame.setVisible(true);
 			}
 		});
 		btnNewButton.setBounds(564, 37, 104, 31);
@@ -168,5 +160,7 @@ public class Index extends JFrame {
 		btnNewButton_2.setFont(new Font("宋体", Font.PLAIN, 16));
 		btnNewButton_2.setBounds(564, 651, 93, 31);
 		contentPane.add(btnNewButton_2);
+
+		return contentPane;
 	}
 }
