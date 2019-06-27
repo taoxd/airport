@@ -8,17 +8,15 @@ package config;
  */
 public class Constant {
 
-
+    //导入音频默认打开文件目录
     public static final String IMPORT_VOICE_OPEN_URL = "F:\\";
-
-    //菜单固定选项
-    public static final String DONG_HANG_KE_CANG = "东航客舱";
-    public static final String HOME_PAGE = "首页";
-    public static final String TEMPLATE_LIST = "模版列表";
-    public static final String RESOURCE_ADD = "资源添加";
-    public static final String CONSTANT_BROAD = "常量广播词";
-    public static final String VARIABLE_BROAD = "变量广播词";
-    public static final String PREVIEW_RESOURCE_XML = "资源XML预览";
-    public static final String EXPORT = "导出";
+    //音频上传路径
+    public static final String UPLOAD_VOICE_PATH = "G:\\DHKC\\voice";
+    //资源文件路径
+    public static final String UPLOAD_RESOURCE_PATH = "G:\\DHKC\\resource";
+    //资源文件名
+    public static final String RESOURCE_NAME = "\\resource.xml";
+    //广播模版路径
+    public static final String UPLOAD_BROADCAST_PATH = "G:\\DHKC\\broadcast";
 
 }

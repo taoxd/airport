@@ -1,6 +1,8 @@
 package util;
 
 
+import config.Constant;
+import config.Menu;
 import org.dom4j.*;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
@@ -131,7 +133,6 @@ public class DOMUtils {
      * @方法功能描述：TODO
      * @方法名:getChildList
      * @返回类型：List<Element>
-     * @时间：2011-4-14下午12:21:52
      */
     public static List<Element> getChildList(Element node) {
         if (node == null)
@@ -156,7 +157,6 @@ public class DOMUtils {
      * @方法功能描述 : 查询没有子节点的节点，使用xpath方式
      * @方法名:getSingleNode
      * @返回类型：Node
-     * @时间：2011-4-14下午12:38:25
      */
     public static Node getSingleNode(Element parent, String nodeNodeName) {
         nodeNodeName = nodeNodeName.trim();
@@ -174,30 +174,30 @@ public class DOMUtils {
      * @param parent
      * @param childName
      * @return @参数描述 :
-     * @方法功能描述：得到子节点，不使用xpath
+     * @方法功能描述：根据属性名，属性值，得到子节点，不使用xpath
      * @方法名:getChild
      * @返回类型：Element
-     * @时间：2011-4-14下午12:53:22
      */
     @SuppressWarnings("rawtypes")
-    public static Element getChild(Element parent, String childName) {
+    public static Element getChild(Element parent, String childName, String attribute, String value) {
         childName = childName.trim();
         if (parent == null)
             return null;
         if (childName == null || childName.equals(""))
             return null;
         Element e = null;
-        Iterator it = getIterator(parent);
+        Iterator<Element> it = getIterator(parent);
         while (it != null && it.hasNext()) {
-            Element k = (Element) it.next();
+            Element k = it.next();
             if (k == null) continue;
-            if (k.getName().equalsIgnoreCase(childName)) {
+            if (k.getName().equalsIgnoreCase(childName) && value.equalsIgnoreCase(k.attributeValue(attribute))) {
                 e = k;
                 break;
             }
         }
         return e;
     }
+
     /**
      * @param xmlFilePath
      * @return @参数描述 :
@@ -254,7 +254,6 @@ public class DOMUtils {
      * @方法功能描述:遍历指定的节点下所有的节点
      * @方法名:ransack
      * @返回类型：void
-     * @时间：2011-4-18下午05:25:41
      */
     public static List<Element> ransack(Element element, List<Element> allkidsList) {
         if (element == null)
@@ -491,10 +490,10 @@ public class DOMUtils {
      * 得到指定节点下所有子节点的属性集合
      * @方法名:getNameNodeAllAttributeMap
      * @返回类型：Map<Integer,Object>
-     * @时间：2011-4-18下午04:40:14
      */
-    public static Map<Integer, Object> getNameNodeAllKidsAttributeMap(Element parent) {
-        Map<Integer, Object> allAttrMap = new HashMap<Integer, Object>();
+    public static List<Map<String, String>> getNameNodeAllKidsAttributeMap(Element parent) {
+        List<Map<String, String>> list = new ArrayList<>();
+
         if (parent == null)
             return null;
         List<Element> childlElements = getChildList(parent);
@@ -503,9 +502,9 @@ public class DOMUtils {
         for (int i = 0; i < childlElements.size(); i++) {
             Element childElement = childlElements.get(i);
             Map<String, String> attrMap = getNodeAttrMap(childElement);
-            allAttrMap.put(i, attrMap);
+            list.add(attrMap);
         }
-        return allAttrMap;
+        return list;
     }
 
     /**
@@ -545,7 +544,7 @@ public class DOMUtils {
     }
 
     /**
-     * 去掉声明头的(即<?xml...?>去掉)
+     * 去掉声明头的(即<?xml...?>去掉)XML报文串
      *
      * @param document
      * @param charset
@@ -602,7 +601,9 @@ public class DOMUtils {
         if (document == null || path == null) {
             return;
         }
-        XMLWriter writer = new XMLWriter(new FileWriter(path));
+        //OutputFormat format=OutputFormat.createCompactFormat();  //紧凑格式:去除空格换行
+        OutputFormat format = OutputFormat.createPrettyPrint();   //漂亮格式：有空格换行
+        XMLWriter writer = new XMLWriter(new FileWriter(path), format);
         writer.write(document);
         writer.close();
     }
@@ -618,6 +619,7 @@ public class DOMUtils {
 
         XMLWriter output;
         Document document = DocumentHelper.createDocument();
+        document.addElement("resources");
 
         OutputFormat format = OutputFormat.createPrettyPrint();
         try {
@@ -674,7 +676,6 @@ public class DOMUtils {
     }
 
 
-
     /**
      * @param element
      * @方法功能描述:验证节点是否唯一
@@ -693,4 +694,5 @@ public class DOMUtils {
         }
         return j;
     }
+
 }

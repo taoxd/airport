@@ -1,6 +1,10 @@
 package view;
 
 import config.Constant;
+import config.Menu;
+import org.dom4j.Document;
+import org.dom4j.Element;
+import org.dom4j.Node;
 import util.DOMUtils;
 
 import javax.swing.*;
@@ -8,6 +12,8 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Description: 主菜单
@@ -23,21 +29,29 @@ public class MainFrame extends JFrame {
         init();
     }
 
-    public void init() {
+    public JTree loadTree() {
+        Document document = DOMUtils.getDocument(Constant.UPLOAD_RESOURCE_PATH + Constant.RESOURCE_NAME);
+        Node node = document.selectSingleNode("//resourceType[@typeId='" + Menu.VARIABLE_BROAD.getCode() + "']/hashValue");
 
-        Container container = this.getContentPane();
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode(Menu.DONG_HANG_KE_CANG.getName());//东航客舱
+        DefaultMutableTreeNode child1 = new DefaultMutableTreeNode(Menu.HOME_PAGE.getName());//主页
 
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode(Constant.DONG_HANG_KE_CANG);//东航客舱
-        DefaultMutableTreeNode child1 = new DefaultMutableTreeNode(Constant.HOME_PAGE);//主页
+        DefaultMutableTreeNode child2 = new DefaultMutableTreeNode(Menu.TEMPLATE_LIST.getName());//模版列表
 
-        DefaultMutableTreeNode child2 = new DefaultMutableTreeNode(Constant.TEMPLATE_LIST);//模版列表
+        DefaultMutableTreeNode child3 = new DefaultMutableTreeNode(Menu.RESOURCE_ADD.getName());//资源添加
+        DefaultMutableTreeNode child31 = new DefaultMutableTreeNode(Menu.CONSTANT_BROAD.getName());//常量广播词
+        DefaultMutableTreeNode child32 = new DefaultMutableTreeNode(Menu.VARIABLE_BROAD.getName());//变量广播词
+        if (null != node) {
+            Element resourceTypeElement = node.getParent();
+            List<Map<String, String>> mapList = DOMUtils.getNameNodeAllKidsAttributeMap(resourceTypeElement);
+            for (Map<String, String> map : mapList) {
+                String type = map.get("type");
+                child32.add(new DefaultMutableTreeNode(type));
+            }
+        }
 
-        DefaultMutableTreeNode child3 = new DefaultMutableTreeNode(Constant.RESOURCE_ADD);//资源添加
-        DefaultMutableTreeNode child31 = new DefaultMutableTreeNode(Constant.CONSTANT_BROAD);//常量广播词
-        DefaultMutableTreeNode child32 = new DefaultMutableTreeNode(Constant.VARIABLE_BROAD);//变量广播词
-
-        DefaultMutableTreeNode child4 = new DefaultMutableTreeNode(Constant.PREVIEW_RESOURCE_XML);//资源XML预览
-        DefaultMutableTreeNode child5 = new DefaultMutableTreeNode(Constant.EXPORT);//导出
+        DefaultMutableTreeNode child4 = new DefaultMutableTreeNode(Menu.PREVIEW_RESOURCE_XML.getName());//资源XML预览
+        DefaultMutableTreeNode child5 = new DefaultMutableTreeNode(Menu.EXPORT.getName());//导出
         root.add(child1);
         root.add(child2);
         root.add(child3);
@@ -46,6 +60,18 @@ public class MainFrame extends JFrame {
         child3.add(child31);
         child3.add(child32);
         JTree tree = new JTree(root);
+
+        return tree;
+    }
+
+
+    public void init() {
+
+        Container container = this.getContentPane();
+
+
+        JTree tree = loadTree();
+
         // 设置树显示根节点句柄
         tree.setShowsRootHandles(true);
 
@@ -76,33 +102,34 @@ public class MainFrame extends JFrame {
 
     private void treeSelect(TreeSelectionEvent e) {
         rightPanel.removeAll();
+        //选中菜单名
         String selectLastPathName = e.getPath().getLastPathComponent().toString();
-        if (Constant.CONSTANT_BROAD.equals(selectLastPathName)) {
+        if (Menu.CONSTANT_BROAD.getName().equals(selectLastPathName)) {//常量广播词
             JPanel panel = new ConstantBroad().init();
             panel.setBackground(Color.GREEN);
             panel.setBounds(5, 5, 800, 800);
             rightPanel.add(panel);
-        } else if (Constant.VARIABLE_BROAD.equals(selectLastPathName)) {
+        } else if (Menu.VARIABLE_BROAD.getName().equals(selectLastPathName)) {//变量广播词
             JPanel panel = new VariableBroad().init();
             panel.setBackground(Color.GREEN);
             panel.setBounds(5, 5, 800, 800);
             rightPanel.add(panel);
-        } else if (Constant.HOME_PAGE.equals(selectLastPathName)) {
+        } else if (Menu.HOME_PAGE.getName().equals(selectLastPathName)) {
             JPanel panel = new Index().init();
             panel.setBackground(Color.GREEN);
             panel.setBounds(5, 5, 800, 800);
             rightPanel.add(panel);
 
-        } else if (Constant.PREVIEW_RESOURCE_XML.equals(selectLastPathName)) {
+        } else if (Menu.PREVIEW_RESOURCE_XML.getName().equals(selectLastPathName)) {
 
-            String document = DOMUtils.documentToString(DOMUtils.getDocument(Constant.IMPORT_VOICE_OPEN_URL + "resource.xml"), "utf8");
+            String document = DOMUtils.documentToString(DOMUtils.getDocument(Constant.UPLOAD_RESOURCE_PATH + Constant.RESOURCE_NAME), "utf8");
             JTextArea jTextArea = new JTextArea(document);
             jTextArea.setEditable(false);
             jTextArea.setBackground(Color.GREEN);
             jTextArea.setBounds(5, 5, 800, 800);
             rightPanel.add(jTextArea);
         } else {
-            JLabel l = new JLabel(e.getPath().getLastPathComponent().toString());
+            JLabel l = new JLabel(e.getPath().toString());
             l.setBounds(5, 190, 250, 20);
             rightPanel.add(l);
 

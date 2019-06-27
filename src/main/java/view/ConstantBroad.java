@@ -1,19 +1,21 @@
 package view;
 
 import config.Constant;
+import config.Menu;
 import org.dom4j.Document;
-import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
-import org.dom4j.io.OutputFormat;
-import org.dom4j.io.XMLWriter;
+import org.dom4j.Node;
+import util.DOMUtils;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Description: 添加常量广播词
@@ -25,11 +27,15 @@ public class ConstantBroad {
 
     private static final long serialVersionUID = 1L;
 
+    private JComboBox languageComboBox;
+    private JTextField resourceTextField;
+    private JLabel audioName;
+
     public ConstantBroad() {
     }
 
-    public JPanel init(){
-      // setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    public JPanel init() {
+        // setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //        //setBounds(100, 100, 657, 331);
         JPanel contentPane = new JPanel();
         contentPane.setForeground(Color.BLACK);
@@ -44,7 +50,7 @@ public class ConstantBroad {
         contentPane.add(languageLabel);
 
         //语种下拉框
-        JComboBox<String> languageComboBox = new JComboBox<String>();
+        languageComboBox = new JComboBox();
         languageComboBox.setModel(new DefaultComboBoxModel(new String[]{"Chn"}));
         languageComboBox.setFont(new Font("宋体", Font.PLAIN, 24));
         languageComboBox.setToolTipText("1");
@@ -58,13 +64,13 @@ public class ConstantBroad {
         contentPane.add(resourceLabel);
 
         //资源名称
-        JTextField resourceTextField = new JTextField();
+        resourceTextField = new JTextField();
         resourceTextField.setBounds(89, 101, 385, 36);
         contentPane.add(resourceTextField);
         resourceTextField.setColumns(10);
 
         //导入音频显示文件名
-        JLabel audioName = new JLabel();
+        audioName = new JLabel();
         audioName.setBounds(89, 149, 299, 15);
         contentPane.add(audioName);
 
@@ -83,8 +89,6 @@ public class ConstantBroad {
             }
         });
 
-
-
         audioButton.setFont(new Font("宋体", Font.PLAIN, 12));
         audioButton.setBackground(new Color(30, 144, 255));
         audioButton.setForeground(new Color(240, 248, 255));
@@ -100,51 +104,91 @@ public class ConstantBroad {
 
         submitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.out.println(languageComboBox.getSelectedIndex() + "," + languageComboBox.getSelectedItem());
-                System.out.println(resourceTextField.getText());
-                System.out.println(audioName.getText());
-                writeXML();
+                writeToXML();
             }
         });
 
         return contentPane;
     }
 
-    public void writeXML() {
-        Document document = DocumentHelper.createDocument();
-        Element rootElement = document.addElement("resources");
-        Element actionElement1 = rootElement.addElement("resourceType");
-        actionElement1.addAttribute("typeId", "100");
-        Element forwardElement1 = actionElement1.addElement("hashValue");
-        forwardElement1.addAttribute("id", "111");
-        Element forwardElement2 = actionElement1.addElement("resource");
-        forwardElement2.addAttribute("language", "chn");
-        forwardElement2.addAttribute("value", "fail.jsp");
-        forwardElement2.addAttribute("url", "fail.jsp");
-        forwardElement2.addAttribute("hashId", "11111");
-        try {
-            /**
-             *  指定文本的写出的格式：
-             *      紧凑格式 ：项目上线时候使用
-             *      漂亮格式：开发调试的时候使用
-             */
-            //OutputFormat format=OutputFormat.createCompactFormat();  //紧凑格式:去除空格换行
-            OutputFormat format = OutputFormat.createPrettyPrint();   //漂亮格式：有空格换行
-            /**
-             * 指定生成的xml文档的编码影响了：
-             *         1.xml文档保存时的编码
-             *         2.xml文档声明的encoding编码（Xml解析时的编码）
-             * 结论：使用该方法生成Xml文档可以避免中文乱码问题
-             */
-            format.setEncoding("UTF-8");
-            /** 将document中的内容写入文件中 */
-            XMLWriter writer = new XMLWriter(new FileWriter(new File(
-                    "f://resource.xml")), format);
-            writer.write(document);
-            writer.close();
-            /** 执行成功,需返回1 */
-        } catch (Exception ex) {
-            ex.printStackTrace();
+    //xml处理
+    public void writeToXML() {
+        File file1 = new File(Constant.UPLOAD_RESOURCE_PATH);
+        //文件夹不存在，则新建新建
+        if (!file1.exists()) {
+            file1.mkdirs();
         }
+
+        Document document = DOMUtils.getDocument(Constant.UPLOAD_RESOURCE_PATH + Constant.RESOURCE_NAME);
+        Node node = document.selectSingleNode("//resourceType[@typeId='" + Menu.CONSTANT_BROAD.getCode() + "']/hashValue");
+        //新增
+        if (null == node) {
+            addXML(document, getNewId(true));
+        } else {//修改
+            updateXML(document, getNewId(false));
+        }
+    }
+
+
+    public void updateXML(Document document, Map<String, String> map) {
+
+        Node node = document.selectSingleNode("//resourceType[@typeId='" + Menu.CONSTANT_BROAD.getCode() + "']/hashValue/resource");
+        Element hashValueElement = node.getParent();
+        Element resource = hashValueElement.addElement("resource");
+        resource.addAttribute("language", languageComboBox.getSelectedItem().toString());
+        resource.addAttribute("value", resourceTextField.getText());
+        resource.addAttribute("url", audioName.getText());
+        resource.addAttribute("hashId", map.get("hashId"));
+
+        try {
+            DOMUtils.writeXMLToFile(document, Constant.UPLOAD_RESOURCE_PATH + Constant.RESOURCE_NAME);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addXML(Document document, Map<String, String> map) {
+        Element rootElement = document.getRootElement();
+
+        Element resourceTypeElement = rootElement.addElement("resourceType");
+        resourceTypeElement.addAttribute("typeId", Menu.CONSTANT_BROAD.getCode());
+
+        Element hashValueElement = resourceTypeElement.addElement("hashValue");
+        hashValueElement.addAttribute("id", map.get("id"));
+
+        Element resourceElement = hashValueElement.addElement("resource");
+        resourceElement.addAttribute("language", languageComboBox.getSelectedItem().toString());
+        resourceElement.addAttribute("value", resourceTextField.getText());
+        resourceElement.addAttribute("url", audioName.getText());
+        resourceElement.addAttribute("hashId", map.get("hashId"));
+        try {
+            DOMUtils.writeXMLToFile(document, Constant.UPLOAD_RESOURCE_PATH + Constant.RESOURCE_NAME);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Map<String, String> getNewId(boolean isAdd) {
+        Map<String, String> map = new HashMap<>();
+        String typeId = Menu.CONSTANT_BROAD.getCode();
+        map.put("typeId", typeId);
+        if (isAdd) {
+            String id = typeId + 1;
+            map.put("id", id);
+            String hashId = id + 1;
+            map.put("hashId", hashId);
+        } else {
+            Document document = DOMUtils.getDocument(Constant.UPLOAD_RESOURCE_PATH + Constant.RESOURCE_NAME);
+            Element hashValueElement = document.selectSingleNode("//resourceType[@typeId='" + Menu.CONSTANT_BROAD.getCode() + "']/hashValue/resource[last()]").getParent();
+            String id = hashValueElement.attributeValue("id");
+            List<Element> resourceElements = hashValueElement.elements();
+            String hashId = resourceElements.get(resourceElements.size() - 1).attributeValue("hashId");
+
+            String newHashId = id + String.valueOf(Integer.valueOf(hashId.replace(id, "")) + 1);
+            map.put("id", id);
+            map.put("hashId", newHashId);
+        }
+
+        return map;
     }
 }
