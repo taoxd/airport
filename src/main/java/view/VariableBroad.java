@@ -21,7 +21,7 @@ import java.util.Map;
  *
  * @author ZYY
  */
-public class VariableBroad {
+public class VariableBroad extends JPanel{
 
     private static final long serialVersionUID = 1L;
     private JTextField variableTypeField;
@@ -34,48 +34,50 @@ public class VariableBroad {
     public JPanel init() {
         //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //setBounds(100, 100, 549, 376);
-        JPanel contentPane = new JPanel();
-        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-        contentPane.setLayout(null);
+        //JPanel contentPane = new JPanel();
+        this.setBorder(new EmptyBorder(5, 5, 5, 5));
+        this.setLayout(null);
         //setContentPane(contentPane);
 
         JLabel label = new JLabel("新增变量类别:");
         label.setFont(new Font("宋体", Font.PLAIN, 16));
         label.setBounds(47, 72, 111, 43);
-        contentPane.add(label);
+        this.add(label);
 
         //变量类别输入框
         variableTypeField = new JTextField();
         variableTypeField.setBounds(159, 72, 206, 43);
-        contentPane.add(variableTypeField);
+        this.add(variableTypeField);
         variableTypeField.setColumns(10);
 
         JLabel showTypeLabel = new JLabel("展示类型:");
         showTypeLabel.setFont(new Font("宋体", Font.PLAIN, 16));
         showTypeLabel.setBounds(79, 136, 79, 43);
-        contentPane.add(showTypeLabel);
+        this.add(showTypeLabel);
 
         comboBox = new JComboBox();
         comboBox.setBackground(new Color(255, 255, 255));
         comboBox.setFont(new Font("宋体", Font.PLAIN, 16));
         comboBox.setModel(new DefaultComboBoxModel(new String[]{Constant.SELECTION, Constant.EDITBOX}));
         comboBox.setBounds(159, 141, 206, 38);
-        contentPane.add(comboBox);
+        this.add(comboBox);
 
         JButton submitButton = new JButton("提交");
         submitButton.setBackground(new Color(30, 144, 255));
         submitButton.setForeground(new Color(255, 255, 255));
         submitButton.setFont(new Font("宋体", Font.PLAIN, 16));
         submitButton.setBounds(202, 246, 99, 36);
-        contentPane.add(submitButton);
+        this.add(submitButton);
 
         //提交按钮
         submitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 writeToXML();
+
+
             }
         });
-        return contentPane;
+        return this;
     }
 
     //xml处理
@@ -103,6 +105,18 @@ public class VariableBroad {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        JFrame jf=(JFrame)(getRootPane().getParent());
+        Container contentPane1 = jf.getContentPane();
+        Component[] components = contentPane1.getComponents();
+        for (int i=0;i<components.length;i++){
+            String name = components[i].getName();
+            if ("leftPanel".equals(name)){
+                ((JPanel)components[i]).removeAll();
+                ((JPanel)components[i]).add(new JScrollPane(new MainFrame().loadTree()));
+                ((JPanel)components[i]).repaint();;
+            }
+        }
+
     }
 
 

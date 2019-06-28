@@ -18,6 +18,16 @@ public class Main {
         if (!file.exists()){
             file.mkdirs();
         }
+        //模版文件夹
+        File file1 = new File(Constant.UPLOAD_BROADCAST_PATH);
+        if (!file1.exists()){
+            file1.mkdirs();
+        }
+        //声音文件夹
+        File file2 = new File(Constant.UPLOAD_VOICE_PATH);
+        if (!file2.exists()){
+            file2.mkdirs();
+        }
         new MainFrame().init();
     }
 }

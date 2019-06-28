@@ -22,10 +22,14 @@ import java.util.List;
  * @Version: 1.0
  */
 public class MainFrame extends JFrame {
+    private JPanel leftPanel;
     private JPanel rightPanel;
+    private JTree tree;
 
     public MainFrame() {
         super("东航客舱");
+        //获取最新的树
+        loadTree();
     }
 
     public JTree loadTree() {
@@ -61,11 +65,15 @@ public class MainFrame extends JFrame {
         root.add(child5);
         child3.add(child31);
         child3.add(child32);
-        JTree tree = new JTree(root);
-
+        tree = new JTree(root);
         return tree;
     }
 
+    /**
+     * 获取最新变量广播词
+     * @param document
+     * @return
+     */
     public List<DefaultMutableTreeNode> variableTree(Document document) {
         List<DefaultMutableTreeNode> list = new ArrayList<>();
 
@@ -103,15 +111,14 @@ public class MainFrame extends JFrame {
         return list;
     }
 
-
+    /**
+     * 初始化容器
+     */
     public void init() {
         Container container = this.getContentPane();
-
-        JTree tree = loadTree();
-
+        container.setLayout(new BorderLayout());
         // 设置树显示根节点句柄
         tree.setShowsRootHandles(true);
-
         tree.setPreferredSize(new Dimension(200, 0));
         tree.addTreeSelectionListener(new TreeSelectionListener() {
             @Override
@@ -119,12 +126,19 @@ public class MainFrame extends JFrame {
                 treeSelect(e);
             }
         });
-
         // 创建滚动面板，包裹树（因为树节点展开后可能需要很大的空间来显示，所以需要用一个滚动面板来包裹）
         JScrollPane scrollPane = new JScrollPane(tree);
-        container.add(scrollPane, BorderLayout.WEST);
+
+        leftPanel = new JPanel();
+        leftPanel.setName("leftPanel");
+        leftPanel.setBackground(Color.RED);
+        leftPanel.setLayout(new BorderLayout());
+        leftPanel.setBounds(5, 5, 800, 0);
+        leftPanel.add(scrollPane);
+        container.add(leftPanel, BorderLayout.WEST);
 
         rightPanel = new JPanel();
+        rightPanel.setName("rightPanel");
         rightPanel.setLayout(null);
         rightPanel.setBackground(Color.pink);
         //p.setPreferredSize(new Dimension(180, 400));
@@ -137,14 +151,19 @@ public class MainFrame extends JFrame {
 
     private void treeSelect(TreeSelectionEvent e) {
         rightPanel.removeAll();
+        //路径个数
+        int pathCount = e.getPath().getPathCount();
         //选中菜单名
         String selectLastPathName = e.getPath().getLastPathComponent().toString();
+        System.out.println("路径个数: " + e.getPath());
+        System.out.println("路径: " + pathCount);
+        System.out.println("选择: " + e.getPath().getPathComponent(pathCount - 1));
         if (Menu.CONSTANT_BROAD.getName().equals(selectLastPathName)) {//常量广播词
             JPanel panel = new ConstantBroad().init();
             panel.setBackground(Color.GREEN);
             panel.setBounds(5, 5, 800, 800);
             rightPanel.add(panel);
-        } else if (Menu.VARIABLE_BROAD.getName().equals(selectLastPathName)) {//变量广播词
+        } else if (Menu.VARIABLE_BROAD.getName().equals(selectLastPathName)) {//点击变量广播词
             JPanel panel = new VariableBroad().init();
             panel.setBackground(Color.GREEN);
             panel.setBounds(5, 5, 800, 800);
@@ -163,13 +182,13 @@ public class MainFrame extends JFrame {
             jTextArea.setBackground(Color.GREEN);
             jTextArea.setBounds(5, 5, 800, 800);
             rightPanel.add(jTextArea);
-        } else if (Menu.VARIABLE_BROAD.getName().equals(e.getPath().getParentPath().getLastPathComponent().toString())) {//比如点击了城市
+        } else if (pathCount == 4 && Menu.VARIABLE_BROAD.getName().equals(e.getPath().getPathComponent(2).toString())) {//比如点击了城市
             JPanel panel = new VariableTypeBroad(selectLastPathName).init();
             panel.setBackground(Color.GREEN);
             panel.setBounds(5, 5, 800, 800);
             rightPanel.add(panel);
 
-        } else if (Menu.VARIABLE_BROAD.getName().equals(e.getPath().getParentPath().getParentPath().getLastPathComponent().toString())) {//比如点击了中国
+        } else if (pathCount == 5 && Menu.VARIABLE_BROAD.getName().equals(e.getPath().getPathComponent(2).toString())) {//比如点击了中国
             String category = e.getPath().getParentPath().getLastPathComponent().toString();
             String variableBroadName = e.getPath().getLastPathComponent().toString();
             JPanel panel = new VariableThird(category, variableBroadName).init();
