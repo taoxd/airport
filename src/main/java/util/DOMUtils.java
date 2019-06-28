@@ -609,7 +609,7 @@ public class DOMUtils {
     }
 
     /**
-     * @param xmlPath 生成空的xml文件头
+     * @param xmlPath 生成空的xml文件头，resources根节点
      * @方法名:createEmptyXmlFile
      * @返回类型：Document
      */
@@ -619,8 +619,11 @@ public class DOMUtils {
 
         XMLWriter output;
         Document document = DocumentHelper.createDocument();
-        document.addElement("resources");
-
+        Element rootElement = document.addElement("resources");
+        Element element = rootElement.addElement("resourceType");
+        element.addAttribute("typeId",Menu.CONSTANT_BROAD.getCode());
+        element.addAttribute("flag",Constant.CONST);
+        element.addAttribute("show",Constant.CONST);
         OutputFormat format = OutputFormat.createPrettyPrint();
         try {
             output = new XMLWriter(new FileWriter(xmlPath), format);

@@ -1,7 +1,6 @@
 package view;
 
 import config.Constant;
-import config.Menu;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.Node;
@@ -16,20 +15,24 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @Description: 添加常量广播词
+ * @Description: 变量广播词类型点击，比如城市
  * @Author: taoxudong
  * @CreateDate: 2019/6/25 14:56
  * @Version: 1.0
  */
-public class ConstantBroad {
+public class VariableTypeBroad {
 
     private static final long serialVersionUID = 1L;
 
     private JComboBox languageComboBox;
     private JTextField resourceTextField;
     private JLabel audioName;
+    private String selectName;
 
-    public ConstantBroad() {
+
+    public VariableTypeBroad(String selectName) {
+        //获取点击的变量广播词类型名称
+        this.selectName = selectName;
     }
 
     public JPanel init() {
@@ -112,24 +115,20 @@ public class ConstantBroad {
     //xml处理
     public void writeToXML() {
         Document document = DOMUtils.getDocument(Constant.UPLOAD_RESOURCE_PATH + Constant.RESOURCE_NAME);
-        Node node = document.selectSingleNode("//resourceType[@typeId='" + Menu.CONSTANT_BROAD.getCode() + "']/hashValue/resource[@value='" + resourceTextField.getText() + "']");
-        //新增
-        if (null == node) {
-            addXML(document, getNewId());
-        }
+        //Node lastHashValueNode = document.selectSingleNode("//resourceType[@type='" + selectName + "']/hashValue[last()]");
+        updateXML(document,getNewId());
     }
 
-    public void addXML(Document document, Map<String, String> map) {
-        Element resourceTypeElement = (Element)document.selectSingleNode("//resourceType[@typeId='" + Menu.CONSTANT_BROAD.getCode() + "']");
 
+    public void updateXML(Document document, Map<String, String> map) {
+        Element resourceTypeElement = (Element) document.selectSingleNode("//resourceType[@type='" + selectName + "']");
         Element hashValueElement = resourceTypeElement.addElement("hashValue");
-        hashValueElement.addAttribute("id", map.get("id"));
-
-        Element resourceElement = hashValueElement.addElement("resource");
-        resourceElement.addAttribute("language", languageComboBox.getSelectedItem().toString());
-        resourceElement.addAttribute("value", resourceTextField.getText());
-        resourceElement.addAttribute("url", audioName.getText());
-        resourceElement.addAttribute("hashId", map.get("hashId"));
+        hashValueElement.addAttribute("id",map.get("id"));
+        Element resource = hashValueElement.addElement("resource");
+        resource.addAttribute("language", languageComboBox.getSelectedItem().toString());
+        resource.addAttribute("value", resourceTextField.getText());
+        resource.addAttribute("url", audioName.getText());
+        resource.addAttribute("hashId", map.get("hashId"));
         try {
             DOMUtils.writeXMLToFile(document, Constant.UPLOAD_RESOURCE_PATH + Constant.RESOURCE_NAME);
         } catch (IOException e) {
@@ -139,15 +138,16 @@ public class ConstantBroad {
 
     private Map<String, String> getNewId() {
         Map<String, String> map = new HashMap<>();
-        String typeId = Menu.CONSTANT_BROAD.getCode();
-        String id;
         Document document = DOMUtils.getDocument(Constant.UPLOAD_RESOURCE_PATH + Constant.RESOURCE_NAME);
-        Node lastHashValueNode = document.selectSingleNode("//resourceType[@typeId='" + Menu.CONSTANT_BROAD.getCode() + "']/hashValue[last()]");
-        if (lastHashValueNode == null) {
+        Element ele = (Element) document.selectSingleNode("//resourceType[@type='" + selectName + "']");
+        String typeId = ele.attributeValue("typeId");
+        String id;
+        Node node = document.selectSingleNode("//resourceType[@type='" + selectName + "']/hashValue[last()]");
+        if (node == null) {
             id = typeId + 1;
         } else {
-            String lastId = ((Element) lastHashValueNode).attributeValue("id");
-            id = typeId + (Integer.valueOf(lastId.replace(typeId, "")) + 1);
+            String lastId = ((Element) node).attributeValue("id");
+            id = typeId + String.valueOf(Integer.valueOf(lastId.replace(typeId, "")) + 1);
         }
         map.put("id", id);
         map.put("hashId", id + 1);

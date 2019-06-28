@@ -12,14 +12,12 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
- * 变量广播词
+ * 变量广播词(新增类别)
  *
  * @author ZYY
  */
@@ -60,7 +58,7 @@ public class VariableBroad {
         comboBox = new JComboBox();
         comboBox.setBackground(new Color(255, 255, 255));
         comboBox.setFont(new Font("宋体", Font.PLAIN, 16));
-        comboBox.setModel(new DefaultComboBoxModel(new String[]{"下拉框", "输入框"}));
+        comboBox.setModel(new DefaultComboBoxModel(new String[]{Constant.SELECTION, Constant.EDITBOX}));
         comboBox.setBounds(159, 141, 206, 38);
         contentPane.add(comboBox);
 
@@ -82,48 +80,24 @@ public class VariableBroad {
 
     //xml处理
     public void writeToXML() {
-        File file1 = new File(Constant.UPLOAD_RESOURCE_PATH);
-        //文件夹不存在，则新建新建
-        if (!file1.exists()) {
-            file1.mkdirs();
-        }
-
         Document document = DOMUtils.getDocument(Constant.UPLOAD_RESOURCE_PATH + Constant.RESOURCE_NAME);
-        Node node = document.selectSingleNode("//resourceType[@typeId='" + Menu.VARIABLE_BROAD.getCode() + "']/hashValue");
-        //新增
-        if (null == node) {
-            addXML(document, getNewId(true));
-        } else {//修改
-            updateXML(document, getNewId(false));
+        Node lastNode = document.selectSingleNode("//resourceType[@flag='" + Constant.VARIABLE + "'][last()]");
+        //避免添加相同类型
+        Node checkNode = document.selectSingleNode("//resourceType[@type='" + variableTypeField.getText() + "']");
+        if (checkNode == null) {
+            editXML(document, lastNode);
         }
     }
 
-    public void updateXML(Document document, Map<String, String> map) {
+    private void editXML(Document document, Node lastNode) {
+        Map<String, String> newId = getNewId(lastNode);
 
-        Node node = document.selectSingleNode("//resourceType[@typeId='" + Menu.VARIABLE_BROAD.getCode() + "']/hashValue");
-        Element resourceTypeElement = node.getParent();
-        Element hashValueElement = resourceTypeElement.addElement("hashValue");
-        hashValueElement.addAttribute("id", map.get("id"));
-        hashValueElement.addAttribute("type", variableTypeField.getText());
-        hashValueElement.addAttribute("show", comboBox.getSelectedItem().toString());
-
-        try {
-            DOMUtils.writeXMLToFile(document, Constant.UPLOAD_RESOURCE_PATH + Constant.RESOURCE_NAME);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void addXML(Document document, Map<String, String> map) {
         Element rootElement = document.getRootElement();
-
-        Element resourceTypeElement = rootElement.addElement("resourceType");
-        resourceTypeElement.addAttribute("typeId", Menu.VARIABLE_BROAD.getCode());
-
-        Element hashValueElement = resourceTypeElement.addElement("hashValue");
-        hashValueElement.addAttribute("id", map.get("id"));
-        hashValueElement.addAttribute("type", variableTypeField.getText());
-        hashValueElement.addAttribute("show", comboBox.getSelectedItem().toString());
+        Element element = rootElement.addElement("resourceType");
+        element.addAttribute("typeId", newId.get("typeId"));
+        element.addAttribute("type", variableTypeField.getText());
+        element.addAttribute("flag", Constant.VARIABLE);
+        element.addAttribute("show", getcomboBoxVal(comboBox.getSelectedItem().toString()));
         try {
             DOMUtils.writeXMLToFile(document, Constant.UPLOAD_RESOURCE_PATH + Constant.RESOURCE_NAME);
         } catch (IOException e) {
@@ -131,23 +105,30 @@ public class VariableBroad {
         }
     }
 
-    private Map<String, String> getNewId(boolean isAdd) {
-        Map<String, String> map = new HashMap<>();
-        String typeId = Menu.VARIABLE_BROAD.getCode();
-        map.put("typeId", typeId);
-        if (isAdd) {
-            String id = typeId + 1;
-            map.put("id", id);
-        } else {
-            Document document = DOMUtils.getDocument(Constant.UPLOAD_RESOURCE_PATH + Constant.RESOURCE_NAME);
-            Element resourceTypeElement = document.selectSingleNode("//resourceType[@typeId='" + Menu.VARIABLE_BROAD.getCode() + "']/hashValue").getParent();
-            List<Element> hashValueElements = resourceTypeElement.elements();
-            String id = hashValueElements.get(hashValueElements.size() - 1).attributeValue("id");
-            String newId = typeId + (Integer.valueOf(id.replace(Menu.VARIABLE_BROAD.getCode(), "")) + 1);
-            map.put("id", newId);
-        }
 
+    private Map<String, String> getNewId(Node node) {
+        Map<String, String> map = new HashMap<>();
+        String typeId;
+        if (node == null) {
+            typeId = Menu.VARIABLE_BROAD.getCode();
+        } else {
+            String lastTypeId = ((Element) node).attributeValue("typeId");
+            typeId = String.valueOf(Integer.valueOf(lastTypeId) + 1);
+        }
+        map.put("typeId", typeId);
         return map;
+    }
+
+
+    private String getcomboBoxVal(String name) {
+        switch (name) {
+            case Constant.SELECTION:
+                return Constant.SELECTION_VALUE;
+            case Constant.EDITBOX:
+                return Constant.EDITBOX_VALUE;
+        }
+        return null;
+
     }
 
 }

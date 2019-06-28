@@ -1,6 +1,10 @@
 package run;
 
+import config.Constant;
 import view.MainFrame;
+
+import java.io.File;
+
 /**
 * @Description:    启动入口
 * @Author:         taoxudong
@@ -9,6 +13,11 @@ import view.MainFrame;
 */
 public class Main {
     public static void main(String[] args) {
-        new MainFrame("东航客舱");
+        //启动时创建resource文件
+        File file = new File(Constant.UPLOAD_RESOURCE_PATH);
+        if (!file.exists()){
+            file.mkdirs();
+        }
+        new MainFrame().init();
     }
 }

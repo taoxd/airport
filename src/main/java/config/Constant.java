@@ -19,4 +19,20 @@ public class Constant {
     //广播模版路径
     public static final String UPLOAD_BROADCAST_PATH = "G:\\DHKC\\broadcast";
 
+    //常量标识
+    public static final String CONST = "const";
+    //变量标识
+    public static final String VARIABLE = "variable";
+
+
+    public static final String SELECTION = "下拉框";
+    public static final String SELECTION_VALUE = "selection";
+
+    public static final String EDITBOX = "输入框";
+    public static final String EDITBOX_VALUE = "editBox";
+
+    public static final String CONST_VALUE = "const";
+
+
+
 }
