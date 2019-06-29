@@ -20,7 +20,7 @@ import java.util.Map;
  *
  * @author ZYY
  */
-public class VariableThird {
+public class VariableBroadNotChn {
 
     private static final long serialVersionUID = 1L;
     private String category;
@@ -30,7 +30,7 @@ public class VariableThird {
     private JTextField textField;
 
 
-    public VariableThird(String category, String variableBroadName) {
+    public VariableBroadNotChn(String category, String variableBroadName) {
         this.category = category;
         this.variableBroadName = variableBroadName;
     }

@@ -22,7 +22,6 @@ import java.util.List;
  * @Version: 1.0
  */
 public class MainFrame extends JFrame {
-    private JPanel leftPanel;
     private JPanel rightPanel;
     private JTree tree;
 
@@ -43,16 +42,14 @@ public class MainFrame extends JFrame {
         DefaultMutableTreeNode child3 = new DefaultMutableTreeNode(Menu.RESOURCE_ADD.getName());//资源添加
 
         DefaultMutableTreeNode child31 = new DefaultMutableTreeNode(Menu.CONSTANT_BROAD.getName());//常量广播词
-        List<Element> resourceList = document.selectNodes("//resourceType[@typeId='" + Menu.CONSTANT_BROAD.getCode() + "']/hashValue/resource[@language='Chn']");
-        if (CollectionUtils.isNotEmpty(resourceList)) {
-            for (Element ele : resourceList) {
-                child31.add(new DefaultMutableTreeNode(ele.attributeValue("value")));
-            }
+        List<DefaultMutableTreeNode> constTreeNodes = constTree(document);
+        for (DefaultMutableTreeNode node : constTreeNodes) {
+            child31.add(node);
         }
 
         DefaultMutableTreeNode child32 = new DefaultMutableTreeNode(Menu.VARIABLE_BROAD.getName());//变量广播词
-        List<DefaultMutableTreeNode> treeNodes = variableTree(document);
-        for (DefaultMutableTreeNode node : treeNodes) {
+        List<DefaultMutableTreeNode> variableTreeNodes = variableTree(document);
+        for (DefaultMutableTreeNode node : variableTreeNodes) {
             child32.add(node);
         }
 
@@ -66,11 +63,57 @@ public class MainFrame extends JFrame {
         child3.add(child31);
         child3.add(child32);
         tree = new JTree(root);
+        tree.setBackground(Color.blue);
+        tree.setName("menuTree");
+        // 设置树显示根节点句柄
+        tree.setShowsRootHandles(true);
+        tree.setPreferredSize(new Dimension(200, 0));
+        tree.addTreeSelectionListener(new TreeSelectionListener() {
+            @Override
+            public void valueChanged(TreeSelectionEvent e) {
+                treeSelect(e);
+            }
+        });
         return tree;
     }
 
     /**
+     * 获取最新的常量广播词
+     * @param document
+     * @return
+     */
+    public List<DefaultMutableTreeNode> constTree(Document document){
+        List<DefaultMutableTreeNode> list = new ArrayList<>();
+
+        //固定常量中文
+        List<Element> resourceList = document.selectNodes("//resourceType[@flag='" + Constant.CONST + "']/hashValue/resource[@language='Chn']");
+        DefaultMutableTreeNode chnTreeNode;
+
+        for (Element resourceType : resourceList) {
+            //比如你好
+            String value = resourceType.attributeValue("value");
+
+            chnTreeNode = new DefaultMutableTreeNode(value);
+
+            //1001
+            String hashValueId = resourceType.getParent().attributeValue("id");
+
+            List<Element> languageNotChnList = document.selectNodes("//hashValue[@id='" + hashValueId + "']/resource[@language!='Chn']");
+            if (CollectionUtils.isNotEmpty(languageNotChnList)) {
+                for (Element languageNotChn : languageNotChnList) {
+                    chnTreeNode.add(new DefaultMutableTreeNode(languageNotChn.attributeValue("value")));
+                }
+            }
+
+            list.add(chnTreeNode);
+        }
+        return list;
+
+    }
+
+    /**
      * 获取最新变量广播词
+     *
      * @param document
      * @return
      */
@@ -117,25 +160,11 @@ public class MainFrame extends JFrame {
     public void init() {
         Container container = this.getContentPane();
         container.setLayout(new BorderLayout());
-        // 设置树显示根节点句柄
-        tree.setShowsRootHandles(true);
-        tree.setPreferredSize(new Dimension(200, 0));
-        tree.addTreeSelectionListener(new TreeSelectionListener() {
-            @Override
-            public void valueChanged(TreeSelectionEvent e) {
-                treeSelect(e);
-            }
-        });
         // 创建滚动面板，包裹树（因为树节点展开后可能需要很大的空间来显示，所以需要用一个滚动面板来包裹）
         JScrollPane scrollPane = new JScrollPane(tree);
-
-        leftPanel = new JPanel();
-        leftPanel.setName("leftPanel");
-        leftPanel.setBackground(Color.RED);
-        leftPanel.setLayout(new BorderLayout());
-        leftPanel.setBounds(5, 5, 800, 0);
-        leftPanel.add(scrollPane);
-        container.add(leftPanel, BorderLayout.WEST);
+        scrollPane.setName("treeScrollPane");
+        scrollPane.getViewport().add(tree, null);
+        container.add(scrollPane, BorderLayout.WEST);
 
         rightPanel = new JPanel();
         rightPanel.setName("rightPanel");
@@ -158,13 +187,13 @@ public class MainFrame extends JFrame {
         System.out.println("路径个数: " + e.getPath());
         System.out.println("路径: " + pathCount);
         System.out.println("选择: " + e.getPath().getPathComponent(pathCount - 1));
-        if (Menu.CONSTANT_BROAD.getName().equals(selectLastPathName)) {//常量广播词
-            JPanel panel = new ConstantBroad().init();
+        if (Menu.CONSTANT_BROAD.getName().equals(selectLastPathName)) {//常量广播词ConstBroadAdd
+            JPanel panel = new ConstBroadAdd(e.getPath()).init();
             panel.setBackground(Color.GREEN);
             panel.setBounds(5, 5, 800, 800);
             rightPanel.add(panel);
-        } else if (Menu.VARIABLE_BROAD.getName().equals(selectLastPathName)) {//点击变量广播词
-            JPanel panel = new VariableBroad().init();
+        } else if (Menu.VARIABLE_BROAD.getName().equals(selectLastPathName)) {//点击变量广播词VariableBroadAdd
+            JPanel panel = new VariableBroadAdd(e.getPath()).init();
             panel.setBackground(Color.GREEN);
             panel.setBounds(5, 5, 800, 800);
             rightPanel.add(panel);
@@ -182,21 +211,32 @@ public class MainFrame extends JFrame {
             jTextArea.setBackground(Color.GREEN);
             jTextArea.setBounds(5, 5, 800, 800);
             rightPanel.add(jTextArea);
-        } else if (pathCount == 4 && Menu.VARIABLE_BROAD.getName().equals(e.getPath().getPathComponent(2).toString())) {//比如点击了城市
-            JPanel panel = new VariableTypeBroad(selectLastPathName).init();
+        } else if (pathCount == 4 && Menu.VARIABLE_BROAD.getName().equals(e.getPath().getPathComponent(2).toString())) {//变量中文VariableBroadChn
+            JPanel panel = new VariableBroadChn(e.getPath()).init();
             panel.setBackground(Color.GREEN);
             panel.setBounds(5, 5, 800, 800);
             rightPanel.add(panel);
-
-        } else if (pathCount == 5 && Menu.VARIABLE_BROAD.getName().equals(e.getPath().getPathComponent(2).toString())) {//比如点击了中国
+        } else if (pathCount == 4 && Menu.CONSTANT_BROAD.getName().equals(e.getPath().getPathComponent(2).toString())) {//常量中文ConstBroadChn
+            JPanel panel = new ConstBroadChn(e.getPath()).init();
+            panel.setBackground(Color.GREEN);
+            panel.setBounds(5, 5, 800, 800);
+            rightPanel.add(panel);
+        } else if (pathCount == 5 && Menu.VARIABLE_BROAD.getName().equals(e.getPath().getPathComponent(2).toString())) {//变量非中文VariableBroadNotChn
             String category = e.getPath().getParentPath().getLastPathComponent().toString();
             String variableBroadName = e.getPath().getLastPathComponent().toString();
-            JPanel panel = new VariableThird(category, variableBroadName).init();
+            JPanel panel = new VariableBroadNotChn(category, variableBroadName).init();
             panel.setBackground(Color.GREEN);
             panel.setBounds(5, 5, 800, 800);
             rightPanel.add(panel);
 
-        } else {
+        }else if (pathCount == 5 && Menu.CONSTANT_BROAD.getName().equals(e.getPath().getPathComponent(2).toString())){//常量非中文ConstBroadNotChn
+            JPanel panel = new ConstBroadNotChn(e.getPath()).init();
+            panel.setBackground(Color.GREEN);
+            panel.setBounds(5, 5, 800, 800);
+            rightPanel.add(panel);
+        }
+
+        else {
             JLabel l = new JLabel(e.getPath().toString());
             l.setBounds(5, 190, 250, 20);
             rightPanel.add(l);

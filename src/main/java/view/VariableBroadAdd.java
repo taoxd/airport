@@ -6,9 +6,11 @@ import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.Node;
 import util.DOMUtils;
+import util.SwingUtils;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,14 +23,15 @@ import java.util.Map;
  *
  * @author ZYY
  */
-public class VariableBroad extends JPanel{
+public class VariableBroadAdd extends JPanel {
 
     private static final long serialVersionUID = 1L;
     private JTextField variableTypeField;
     private JComboBox comboBox;
+    private TreePath treePath;
 
-    public VariableBroad() {
-
+    public VariableBroadAdd(TreePath treePath) {
+        this.treePath = treePath;
     }
 
     public JPanel init() {
@@ -72,9 +75,12 @@ public class VariableBroad extends JPanel{
         //提交按钮
         submitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                writeToXML();
-
-
+                //变量类型不能为空
+                if (variableTypeField.getText() != null && !"".equals(variableTypeField.getText())) {
+                    writeToXML();
+                }
+                //提交完清空变量类型
+                variableTypeField.setText("");
             }
         });
         return this;
@@ -101,21 +107,15 @@ public class VariableBroad extends JPanel{
         element.addAttribute("flag", Constant.VARIABLE);
         element.addAttribute("show", getcomboBoxVal(comboBox.getSelectedItem().toString()));
         try {
+            //写XML
             DOMUtils.writeXMLToFile(document, Constant.UPLOAD_RESOURCE_PATH + Constant.RESOURCE_NAME);
+            //动态添加节点
+            JFrame jf = (JFrame) (getRootPane().getParent());
+            SwingUtils.addNode(jf, variableTypeField.getText(), treePath);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        JFrame jf=(JFrame)(getRootPane().getParent());
-        Container contentPane1 = jf.getContentPane();
-        Component[] components = contentPane1.getComponents();
-        for (int i=0;i<components.length;i++){
-            String name = components[i].getName();
-            if ("leftPanel".equals(name)){
-                ((JPanel)components[i]).removeAll();
-                ((JPanel)components[i]).add(new JScrollPane(new MainFrame().loadTree()));
-                ((JPanel)components[i]).repaint();;
-            }
-        }
+
 
     }
 
