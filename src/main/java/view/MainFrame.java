@@ -211,8 +211,8 @@ public class MainFrame extends JFrame {
             jTextArea.setBackground(Color.GREEN);
             jTextArea.setBounds(5, 5, 800, 800);
             rightPanel.add(jTextArea);
-        } else if (pathCount == 4 && Menu.VARIABLE_BROAD.getName().equals(e.getPath().getPathComponent(2).toString())) {//变量中文VariableBroadChn
-            JPanel panel = new VariableBroadChn(e.getPath()).init();
+        } else if (pathCount == 4 && Menu.VARIABLE_BROAD.getName().equals(e.getPath().getPathComponent(2).toString())) {//变量中文大类VariableBroadType
+            JPanel panel = new VariableBroadType(e.getPath()).init();
             panel.setBackground(Color.GREEN);
             panel.setBounds(5, 5, 800, 800);
             rightPanel.add(panel);

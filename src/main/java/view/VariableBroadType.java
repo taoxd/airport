@@ -23,7 +23,7 @@ import java.util.Map;
  * @CreateDate: 2019/6/25 14:56
  * @Version: 1.0
  */
-public class VariableBroadChn extends JPanel{
+public class VariableBroadType extends JPanel {
 
     private static final long serialVersionUID = 1L;
 
@@ -35,10 +35,10 @@ public class VariableBroadChn extends JPanel{
     private TreePath treePath;
 
 
-    public VariableBroadChn(TreePath treePath) {
-        this.treePath=treePath;
+    public VariableBroadType(TreePath treePath) {
+        this.treePath = treePath;
         document = DOMUtils.getDocument(Constant.UPLOAD_RESOURCE_PATH + Constant.RESOURCE_NAME);
-        element = (Element) document.selectSingleNode("//resource[@value='" + treePath.getLastPathComponent().toString() + "']");
+        element = (Element) document.selectSingleNode("//resourceType[@type='" + treePath.getLastPathComponent().toString() + "']");
     }
 
     public JPanel init() {
@@ -138,7 +138,7 @@ public class VariableBroadChn extends JPanel{
                 String resourceName = resourceTextField.getText();
                 String audioNameText = audioName.getText();
                 //资源名称和音频不能为空
-                if (resourceName != null && !"".equals(resourceName) && audioNameText != null && !"".equals(audioNameText)){
+                if (resourceName != null && !"".equals(resourceName) && audioNameText != null && !"".equals(audioNameText)) {
                     writeToXML();
                 }
                 //提交完之后，清空
@@ -154,18 +154,18 @@ public class VariableBroadChn extends JPanel{
     public void writeToXML() {
         Document document = DOMUtils.getDocument(Constant.UPLOAD_RESOURCE_PATH + Constant.RESOURCE_NAME);
         //Node lastHashValueNode = document.selectSingleNode("//resourceType[@type='" + selectName + "']/hashValue[last()]");
-        updateXML(document,getNewId());
+        updateXML(document, getNewId());
     }
 
 
     public void updateXML(Document document, Map<String, String> map) {
         Element resourceTypeElement = (Element) document.selectSingleNode("//resourceType[@type='" + treePath.getLastPathComponent().toString() + "']");
         Element hashValueElement = resourceTypeElement.addElement("hashValue");
-        hashValueElement.addAttribute("id",map.get("id"));
+        hashValueElement.addAttribute("id", map.get("id"));
         Element resource = hashValueElement.addElement("resource");
         resource.addAttribute("language", languageComboBox.getSelectedItem().toString());
         resource.addAttribute("value", resourceTextField.getText());
-        resource.addAttribute("url", audioName.getText());
+        resource.addAttribute("url", new File(audioName.getText()).getName());
         resource.addAttribute("hashId", map.get("hashId"));
         try {
             //长传音频文件(放在第一位置，如果文件不存在，直接报错)
