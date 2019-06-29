@@ -79,10 +79,11 @@ public class MainFrame extends JFrame {
 
     /**
      * 获取最新的常量广播词
+     *
      * @param document
      * @return
      */
-    public List<DefaultMutableTreeNode> constTree(Document document){
+    public List<DefaultMutableTreeNode> constTree(Document document) {
         List<DefaultMutableTreeNode> list = new ArrayList<>();
 
         //固定常量中文
@@ -221,22 +222,23 @@ public class MainFrame extends JFrame {
             panel.setBackground(Color.GREEN);
             panel.setBounds(5, 5, 800, 800);
             rightPanel.add(panel);
-        } else if (pathCount == 5 && Menu.VARIABLE_BROAD.getName().equals(e.getPath().getPathComponent(2).toString())) {//变量非中文VariableBroadNotChn
-            String category = e.getPath().getParentPath().getLastPathComponent().toString();
-            String variableBroadName = e.getPath().getLastPathComponent().toString();
-            JPanel panel = new VariableBroadNotChn(category, variableBroadName).init();
+        } else if (pathCount == 5 && Menu.VARIABLE_BROAD.getName().equals(e.getPath().getPathComponent(2).toString())) {//变量中文VariableBroadChn
+            JPanel panel = new VariableBroadChn(e.getPath()).init();
             panel.setBackground(Color.GREEN);
             panel.setBounds(5, 5, 800, 800);
             rightPanel.add(panel);
 
-        }else if (pathCount == 5 && Menu.CONSTANT_BROAD.getName().equals(e.getPath().getPathComponent(2).toString())){//常量非中文ConstBroadNotChn
+        } else if (pathCount == 5 && Menu.CONSTANT_BROAD.getName().equals(e.getPath().getPathComponent(2).toString())) {//常量非中文ConstBroadNotChn
             JPanel panel = new ConstBroadNotChn(e.getPath()).init();
             panel.setBackground(Color.GREEN);
             panel.setBounds(5, 5, 800, 800);
             rightPanel.add(panel);
-        }
-
-        else {
+        } else if (pathCount == 6 && Menu.VARIABLE_BROAD.getName().equals(e.getPath().getPathComponent(2).toString())) {//变量非中文VariableBroadNotChn
+            JPanel panel = new VariableBroadNotChn(e.getPath()).init();
+            panel.setBackground(Color.GREEN);
+            panel.setBounds(5, 5, 800, 800);
+            rightPanel.add(panel);
+        } else {
             JLabel l = new JLabel(e.getPath().toString());
             l.setBounds(5, 190, 250, 20);
             rightPanel.add(l);
