@@ -5,6 +5,7 @@ import config.Menu;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.Node;
+import org.springframework.util.StringUtils;
 import util.DOMUtils;
 import util.SwingUtils;
 
@@ -32,9 +33,20 @@ public class ConstBroadAdd extends JPanel {
     private JTextField resourceTextField;
     private JLabel audioName;
     private TreePath treePath;
+    private Document document;
 
     public ConstBroadAdd(TreePath treePath) {
         this.treePath = treePath;
+        document = DOMUtils.getDocument(Constant.UPLOAD_RESOURCE_PATH + Constant.RESOURCE_NAME);
+        Node node = document.selectSingleNode("//resourceType[@flag='" + Constant.CONST + "']");
+        if (node == null) {
+            Element rootElement = document.getRootElement();
+            Element element = rootElement.addElement("resourceType");
+            element.addAttribute("typeId", Menu.CONSTANT_BROAD.getCode());
+            element.addAttribute("flag", Constant.CONST);
+            element.addAttribute("show", Constant.CONST);
+        }
+
     }
 
     public JPanel init() {
@@ -119,13 +131,13 @@ public class ConstBroadAdd extends JPanel {
         String audioNameText = audioName.getText();
 
         //资源名称和音频不能为空
-        if (resourceName != null && !"".equals(resourceName) && audioNameText != null && !"".equals(audioNameText)) {
-            Document document = DOMUtils.getDocument(Constant.UPLOAD_RESOURCE_PATH + Constant.RESOURCE_NAME);
-            //避免添加重复值
+        if (!StringUtils.isEmpty(resourceName) && !StringUtils.isEmpty(audioNameText)) {
+
+            //避免添加重复值,根据常量类型查看
             Node node = document.selectSingleNode("//resourceType[@typeId='" + Menu.CONSTANT_BROAD.getCode() + "']/hashValue/resource[@value='" + resourceName + "']");
             //新增
             if (null == node) {
-                addXML(document, getNewId());
+                addXML(getNewId());
             }
         }
         //提交完之后，清空
@@ -133,7 +145,7 @@ public class ConstBroadAdd extends JPanel {
         audioName.setText("");
     }
 
-    public void addXML(Document document, Map<String, String> map) {
+    public void addXML(Map<String, String> map) {
         Element resourceTypeElement = (Element) document.selectSingleNode("//resourceType[@typeId='" + Menu.CONSTANT_BROAD.getCode() + "']");
 
         Element hashValueElement = resourceTypeElement.addElement("hashValue");

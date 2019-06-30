@@ -49,6 +49,30 @@ public class DOMUtils {
     }
 
     /**
+     * 初始化没有跟节点
+     * @param xmlPath
+     * @return
+     */
+    public static Document getDocumentTemplate(String xmlPath) {
+        if (xmlPath == null || xmlPath.equals(""))
+            return null;
+
+        File file = new File(xmlPath);
+        if (!file.exists()) {
+            return createTemplateEmptyXmlFile(xmlPath);
+        }
+
+        SAXReader reader = new SAXReader();
+        Document document = null;
+        try {
+            document = reader.read(xmlPath);
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        }
+        return document;
+    }
+
+    /**
      * 通过xml字符获取document文档
      *
      * @param xmlstr 要序列化的xml字符
@@ -619,11 +643,24 @@ public class DOMUtils {
 
         XMLWriter output;
         Document document = DocumentHelper.createDocument();
-        Element rootElement = document.addElement("resources");
-        Element element = rootElement.addElement("resourceType");
-        element.addAttribute("typeId",Menu.CONSTANT_BROAD.getCode());
-        element.addAttribute("flag",Constant.CONST);
-        element.addAttribute("show",Constant.CONST);
+        document.addElement("resources");
+        OutputFormat format = OutputFormat.createPrettyPrint();
+        try {
+            output = new XMLWriter(new FileWriter(xmlPath), format);
+            output.write(document);
+            output.close();
+        } catch (IOException e) {
+            return null;
+        }
+        return document;
+    }
+
+    public static Document createTemplateEmptyXmlFile(String xmlPath) {
+        if (xmlPath == null || xmlPath.equals(""))
+            return null;
+
+        XMLWriter output;
+        Document document = DocumentHelper.createDocument();
         OutputFormat format = OutputFormat.createPrettyPrint();
         try {
             output = new XMLWriter(new FileWriter(xmlPath), format);

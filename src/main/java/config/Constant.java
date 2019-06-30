@@ -13,9 +13,9 @@ public class Constant {
     //音频上传路径
     public static final String UPLOAD_VOICE_PATH = "C:\\DHKC\\voice";
     //资源文件路径
-    public static final String UPLOAD_RESOURCE_PATH = "C:\\DHKC\\resource";
+    public static final String UPLOAD_RESOURCE_PATH = "C:\\DHKC\\resourceXML";
     //广播模版路径
-    public static final String UPLOAD_BROADCAST_PATH = "C:\\DHKC\\broadcast";
+    public static final String UPLOAD_BROADCAST_PATH = "C:\\DHKC\\templateXML";
     //资源文件名
     public static final String RESOURCE_NAME = "\\resource.xml";
 
@@ -32,7 +32,10 @@ public class Constant {
     public static final String EDITBOX = "输入框";
     public static final String EDITBOX_VALUE = "editBox";
 
-    public static final String CONST_VALUE = "const";
+    //新增类别的文件路径   xml命名  中英文
+    public static final String TEMP_PATH = "C:\\DHKC\\temp";
+    //新增类别的文件名
+    public static final String TEMP_FILE = "\\temp.xml";
 
 
 }

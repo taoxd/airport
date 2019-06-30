@@ -1,83 +1,112 @@
 package view;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
+import config.Constant;
+import org.dom4j.Document;
+import org.dom4j.Element;
+import org.dom4j.Node;
+import org.springframework.util.StringUtils;
+import util.DOMUtils;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import java.awt.Font;
-import javax.swing.JComboBox;
-import javax.swing.JTextField;
-import javax.swing.JButton;
-import java.awt.Color;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+
 /**
  * 弹窗
- * @author ZYY
  *
+ * @author ZYY
  */
-public class BulletBox extends JFrame {
+public class BulletBox extends JDialog {
 
-	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
+    private static final long serialVersionUID = 1L;
+    private JPanel rightPanel;
+    private JTextField chnField;
+    private JTextField engField;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					BulletBox frame = new BulletBox();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+    /**
+     * Create the frame.
+     */
+    public BulletBox(JPanel rightPanel) {
+        this.rightPanel = rightPanel;
 
-	/**
-	 * Create the frame.
-	 */
-	public BulletBox() {
-		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		setBounds(100, 100, 549, 376);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(null);
-		setContentPane(contentPane);
-		
-		JLabel label = new JLabel("中文:");
-		label.setFont(new Font("宋体", Font.PLAIN, 16));
-		label.setBounds(108, 72, 50, 43);
-		contentPane.add(label);
-		
-		textField = new JTextField();
-		textField.setBounds(159, 72, 206, 43);
-		contentPane.add(textField);
-		textField.setColumns(10);
-		
-		JLabel lblNewLabel = new JLabel("英文:");
-		lblNewLabel.setFont(new Font("宋体", Font.PLAIN, 16));
-		lblNewLabel.setBounds(108, 136, 50, 43);
-		contentPane.add(lblNewLabel);
-		
-		textField_1 = new JTextField();
-		textField_1.setBounds(159, 138, 206, 43);
-		contentPane.add(textField_1);
-		textField_1.setColumns(10);
-		
-		JButton button = new JButton("提交");
-		button.setBackground(new Color(30, 144, 255));
-		button.setForeground(new Color(255, 255, 255));
-		button.setFont(new Font("宋体", Font.PLAIN, 16));
-		button.setBounds(202, 246, 99, 36);
-		contentPane.add(button);
-		
-		
-	}
+    }
+
+    public JDialog init() {
+        setName("JDialog");
+
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setBounds(100, 100, 549, 376);
+        //contentPane = new JPanel();
+        //this.setBorder(new EmptyBorder(5, 5, 5, 5));
+        this.setLayout(null);
+        //setContentPane(contentPane);
+
+        JLabel label = new JLabel("中文:");
+        label.setFont(new Font("宋体", Font.PLAIN, 16));
+        label.setBounds(108, 72, 50, 43);
+        this.add(label);
+
+        chnField = new JTextField();
+        chnField.setBounds(159, 72, 206, 43);
+        this.add(chnField);
+        chnField.setColumns(10);
+
+        JLabel lblNewLabel = new JLabel("英文:");
+        lblNewLabel.setFont(new Font("宋体", Font.PLAIN, 16));
+        lblNewLabel.setBounds(108, 136, 50, 43);
+        this.add(lblNewLabel);
+
+        engField = new JTextField();
+        engField.setBounds(159, 138, 206, 43);
+        this.add(engField);
+        engField.setColumns(10);
+
+        JButton submitButton = new JButton("提交");
+        submitButton.setBackground(new Color(30, 144, 255));
+        submitButton.setForeground(new Color(255, 255, 255));
+        submitButton.setFont(new Font("宋体", Font.PLAIN, 16));
+        submitButton.setBounds(202, 246, 99, 36);
+        this.add(submitButton);
+
+        submitButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Document tempDocument = DOMUtils.getDocument(Constant.TEMP_PATH + Constant.TEMP_FILE);
+                String chnText = chnField.getText();
+                String engText = engField.getText();
+                if (!StringUtils.isEmpty(chnText) && !StringUtils.isEmpty(engText)) {
+                    Node resourceNode = tempDocument.selectSingleNode("//resource[@chnXML='" + chnText + "' or @engXML='" + engText + "']");
+                    if (resourceNode == null) {
+                        Element rootElement = tempDocument.getRootElement();
+                        Element resource = rootElement.addElement("resource");
+                        resource.addAttribute("chnXML", chnText);
+                        resource.addAttribute("engXML", engText);
+                        try {
+                            //写xml文件
+                            DOMUtils.writeXMLToFile(tempDocument, Constant.TEMP_PATH + Constant.TEMP_FILE);
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+                }
+
+                //重新加载首页，以获得最新数据
+                loadNewData();
+                //关闭弹框
+                dispose();
+            }
+        });
+        return this;
+    }
+
+    //加载首页
+    public void loadNewData() {
+        rightPanel.removeAll();
+        JPanel panel = new Index().init();
+        panel.setBackground(Color.GREEN);
+        panel.setBounds(5, 5, 800, 800);
+        rightPanel.add(panel);
+        rightPanel.repaint();
+    }
 }

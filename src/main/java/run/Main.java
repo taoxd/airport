@@ -28,6 +28,12 @@ public class Main {
         if (!file2.exists()){
             file2.mkdirs();
         }
+        //XML命名文件夹
+        File file3 = new File(Constant.TEMP_PATH);
+        if (!file3.exists()){
+            file3.mkdirs();
+        }
+
         new MainFrame().init();
     }
 }
