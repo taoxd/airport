@@ -6,10 +6,12 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import util.DOMUtils;
+import util.ZipCompressor;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.filechooser.FileSystemView;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.io.File;
@@ -100,8 +102,7 @@ public class MainFrame extends JFrame {
             for (int i = 0; i < tempList.length; i++) {
                 if (tempList[i].isFile()) {
                     String engXMLName = tempList[i].getName();
-                    Element xmlElement = (Element) tempDocument.selectSingleNode("//resource[@engXML='" + engXMLName.substring(0, engXMLName.lastIndexOf(".")) + "']");
-                    String chnXML = xmlElement.attributeValue("chnXML");
+                    String chnXML = DOMUtils.getChnXMLName(engXMLName.substring(0, engXMLName.lastIndexOf(".")));
 
                     DefaultMutableTreeNode chnXMLTreeNode = new DefaultMutableTreeNode(chnXML);
 
@@ -280,6 +281,22 @@ public class MainFrame extends JFrame {
             panel.setBackground(Color.GREEN);
             panel.setBounds(5, 5, 1400, 800);
             rightPanel.add(panel);
+        } else if (pathCount == 4 && Menu.PREVIEW_TEMPLATE_XML.getName().equals(e.getPath().getLastPathComponent().toString())) {//点击预览
+            String chnXML = e.getPath().getPathComponent(2).toString();
+            String engXML = DOMUtils.getEngXMLName(chnXML);
+
+            //获取模版document
+            StringBuilder templatePath = new StringBuilder(Constant.UPLOAD_BROADCAST_PATH)
+                    .append("\\").append(engXML).append(".xml");
+            Document templateDocument = DOMUtils.getDocumentTemplate(templatePath.toString());
+
+            String document = DOMUtils.documentToString(templateDocument, "utf8");
+
+            JTextArea jTextArea = new JTextArea(document);
+            jTextArea.setEditable(false);
+            jTextArea.setBackground(Color.GREEN);
+            jTextArea.setBounds(5, 5, 800, 800);
+            rightPanel.add(jTextArea);
         } else if (pathCount == 4 && Menu.TEMPLATE_LIST.getName().equals(e.getPath().getPathComponent(1).toString())) {//点击模版列表中的template
             JPanel panel = new AdvertisingWord(e.getPath()).init();
             panel.setBackground(Color.RED);
@@ -287,7 +304,16 @@ public class MainFrame extends JFrame {
             rightPanel.add(panel);
         } else if (pathCount == 2 && Menu.EXPORT.getName().equals(e.getPath().getPathComponent(1).toString())) {//点击导出
 
+            //列出Windows下所有可用磁盘
+            File[] parts =File.listRoots();
+            for(File part : parts){
+                System.out.println(part.getAbsolutePath());
+            }
 
+            FileSystemView fsv = FileSystemView.getFileSystemView();
+            File com = fsv.getHomeDirectory();    //这便是读取桌面路径的方法了
+            ZipCompressor zc = new ZipCompressor(com.getPath() + Constant.EXPORT_DEST_DIR);// 压缩后的目标文件
+            zc.compress(Constant.EXPORT_SRC_DIR);// 需要压缩的文件
         } else {
             JLabel l = new JLabel(e.getPath().toString());
             l.setBounds(5, 190, 250, 20);

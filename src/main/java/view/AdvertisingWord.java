@@ -4,17 +4,16 @@ import config.Constant;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import util.DOMUtils;
-import util.SwingUtils;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -47,24 +46,23 @@ public class AdvertisingWord extends JPanel {
         String engXMLName = DOMUtils.getEngXMLName(chnXMLName);
 
         StringBuilder stringBuilder = new StringBuilder(Constant.UPLOAD_BROADCAST_PATH);
-        stringBuilder.append("\\").append("engXML").append(".xml");
+        stringBuilder.append("\\").append(engXMLName).append(".xml");
         Document documentTemplate = DOMUtils.getDocumentTemplate(stringBuilder.toString());
-        documentTemplate.selectNodes("//template[@caption='" + treePath.getLastPathComponent().toString() + "']/templateObjs");
+        Element templateElement = (Element) documentTemplate.selectSingleNode("//template[@caption='" + treePath.getLastPathComponent().toString() + "']");
+        String index = templateElement.attributeValue("index");
 
-
-        List<Element> contentList = tempDocument.selectNodes("//resource[@chnXML='" + treePath.getLastPathComponent().toString() + "']/content");
+        List<Element> contentList = tempDocument.selectNodes("//resource[@chnXML='" + chnXMLName + "' and @engXML='" + engXMLName + "']/content[@index='" + index + "']");
 
         //JTable的初始化数据
         String[][] datas = new String[contentList.size()][];
         for (int i = 0; i < contentList.size(); i++) {
-            String language = contentList.get(i).attributeValue("language");
             String value = contentList.get(i).attributeValue("value");
-            String[] contentArr = {language, value};
+            String[] contentArr = {value};
             datas[i] = contentArr;
         }
 
         //JTable的表头标题
-        String[] head = {"语种", "内容"};
+        String[] head = {"内容"};
 
 
         //初始化JTable的数据模型
@@ -82,19 +80,17 @@ public class AdvertisingWord extends JPanel {
 
         render.setHorizontalAlignment(SwingConstants.CENTER);
 
-        table.getColumn("语种").setCellRenderer(render);
-
         table.getColumn("内容").setCellRenderer(render);
 
         //设置表格宽度情况
 
-        DefaultTableColumnModel dcm = (DefaultTableColumnModel) table.getColumnModel();
+/*        DefaultTableColumnModel dcm = (DefaultTableColumnModel) table.getColumnModel();
 
         dcm.getColumn(0).setPreferredWidth(60); //设置表格显示的最好宽度，即此时表格显示的宽度。
 
         dcm.getColumn(0).setMinWidth(45);//设置表格通过拖动列可以的最小宽度。
 
-        dcm.getColumn(0).setMaxWidth(75);//设置表格通过拖动列可以的最大宽度。
+        dcm.getColumn(0).setMaxWidth(75);//设置表格通过拖动列可以的最大宽度。*/
 
         //给表格设置行高
 
@@ -123,42 +119,51 @@ public class AdvertisingWord extends JPanel {
         delButton.setFont(new Font("宋体", Font.PLAIN, 16));
         delButton.setBounds(93, 700, 93, 44);
         this.add(delButton);
+
         delButton.addActionListener(new ActionListener() {
-            @Override
             public void actionPerformed(ActionEvent e) {
 
-            }
-        });
 
-        JButton previewButton = new JButton("预览");
-        previewButton.setBackground(new Color(35, 248, 255));
-        previewButton.setFont(new Font("宋体", Font.PLAIN, 16));
-        previewButton.setBounds(200, 700, 93, 44);
-        this.add(previewButton);
-        previewButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+                int isDelete  = JOptionPane.showConfirmDialog(null, "确定要删除吗？", "删除提示", 0);
+                if(isDelete == JOptionPane.YES_OPTION){
+                    System.out.println("确定删除啦！！！");
+                    delTemplate();
+                }
 
-                JFrame jf = (JFrame) getRootPane().getParent();
-                JPanel rightPanel = SwingUtils.getRightPanel(jf);
-
-                Element resourceElement = (Element) tempDocument.selectSingleNode("//resource[@chnXML='" + treePath.getLastPathComponent().toString() + "']");
-                String engXML = resourceElement.attributeValue("engXML");
-
-                //获取模版document
-                StringBuilder templatePath = new StringBuilder(Constant.UPLOAD_BROADCAST_PATH)
-                        .append("\\").append(engXML).append(".xml");
-                Document templateDocument = DOMUtils.getDocumentTemplate(templatePath.toString());
-
-                String utf8 = DOMUtils.documentToString(templateDocument, "utf8");
-                rightPanel.removeAll();
-                JTextArea jTextArea = new JTextArea(utf8);
-                jTextArea.setEditable(false);
-                jTextArea.setBackground(Color.GREEN);
-                jTextArea.setBounds(5, 5, 800, 800);
-                rightPanel.add(jTextArea);
-                rightPanel.repaint();
             }
         });
         return this;
+    }
+
+    public void delTemplate() {
+        //中文别名
+        String caption = treePath.getLastPathComponent().toString();
+        String chnXML = treePath.getPathComponent(2).toString();
+        String engXML = DOMUtils.getEngXMLName(chnXML);
+
+
+        //获取模版document
+        StringBuilder templatePath = new StringBuilder(Constant.UPLOAD_BROADCAST_PATH)
+                .append("\\").append(engXML).append(".xml");
+        Document templateDocument = DOMUtils.getDocumentTemplate(templatePath.toString());
+        Element templateElement = (Element) templateDocument.selectSingleNode("//templateGroup[@grCaption='" + chnXML + "' and @grCaptionEng='" + engXML + "']/template[@caption='" + caption + "']");
+        String index = templateElement.attributeValue("index");
+        templateElement.getParent().remove(templateElement);
+
+
+        List<Element> contentList = tempDocument.selectNodes("//resource[@chnXML='" + chnXML + "' and @engXML='" + engXML + "']/content[@index='" + index + "']");
+        for (Element content : contentList) {
+            content.getParent().remove(content);
+        }
+
+        try {
+            //写xml文件
+            DOMUtils.writeXMLToFile(templateDocument, templatePath.toString());
+            //写xml文件
+            DOMUtils.writeXMLToFile(tempDocument, Constant.TEMP_PATH + Constant.TEMP_FILE);
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+
     }
 }

@@ -8,8 +8,10 @@ package config;
  */
 public class Constant {
 
-    //导出源文件
+    //导出读取源文件
     public static final String EXPORT_SRC_DIR="C:\\DHKC";
+    //导出文件类型
+    public static final String EXPORT_DEST_DIR="\\DHKC.zip";
 
     //导入音频默认打开文件目录
     public static final String IMPORT_VOICE_OPEN_URL = "F:\\";
