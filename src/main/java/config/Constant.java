@@ -8,6 +8,9 @@ package config;
  */
 public class Constant {
 
+    //导出源文件
+    public static final String EXPORT_SRC_DIR="C:\\DHKC";
+
     //导入音频默认打开文件目录
     public static final String IMPORT_VOICE_OPEN_URL = "F:\\";
     //音频上传路径
@@ -36,6 +39,8 @@ public class Constant {
     public static final String TEMP_PATH = "C:\\DHKC\\temp";
     //新增类别的文件名
     public static final String TEMP_FILE = "\\temp.xml";
+
+
 
 
 }

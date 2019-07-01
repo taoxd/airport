@@ -12,6 +12,7 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +39,10 @@ public class MainFrame extends JFrame {
         DefaultMutableTreeNode child1 = new DefaultMutableTreeNode(Menu.HOME_PAGE.getName());//主页
 
         DefaultMutableTreeNode child2 = new DefaultMutableTreeNode(Menu.TEMPLATE_LIST.getName());//模版列表
+        List<DefaultMutableTreeNode> chnXMLList = getTemplateXMLList();
+        for (DefaultMutableTreeNode chnXML : chnXMLList) {
+            child2.add(chnXML);
+        }
 
         DefaultMutableTreeNode child3 = new DefaultMutableTreeNode(Menu.RESOURCE_ADD.getName());//资源添加
 
@@ -75,6 +80,43 @@ public class MainFrame extends JFrame {
             }
         });
         return tree;
+    }
+
+    /**
+     * 获取所有中文模版名称
+     *
+     * @return
+     */
+    public List<DefaultMutableTreeNode> getTemplateXMLList() {
+        List<DefaultMutableTreeNode> templateXMLList = new ArrayList<>();
+
+        Document tempDocument = DOMUtils.getDocument(Constant.TEMP_PATH + Constant.TEMP_FILE);
+
+        //获取所有模版文件
+        File file = new File(Constant.UPLOAD_BROADCAST_PATH);
+        File[] tempList = file.listFiles();
+
+        if (tempList != null && tempList.length > 0) {
+            for (int i = 0; i < tempList.length; i++) {
+                if (tempList[i].isFile()) {
+                    String engXMLName = tempList[i].getName();
+                    Element xmlElement = (Element) tempDocument.selectSingleNode("//resource[@engXML='" + engXMLName.substring(0, engXMLName.lastIndexOf(".")) + "']");
+                    String chnXML = xmlElement.attributeValue("chnXML");
+
+                    DefaultMutableTreeNode chnXMLTreeNode = new DefaultMutableTreeNode(chnXML);
+
+                    Document documentTemplate = DOMUtils.getDocumentTemplate(Constant.UPLOAD_BROADCAST_PATH + "\\" + engXMLName);
+                    List<Element> templateList = documentTemplate.selectNodes("//template");
+                    for (Element template : templateList) {
+                        String caption = template.attributeValue("caption");
+                        chnXMLTreeNode.add(new DefaultMutableTreeNode(caption));
+                    }
+                    chnXMLTreeNode.add(new DefaultMutableTreeNode(Menu.PREVIEW_TEMPLATE_XML.getName()));
+                    templateXMLList.add(chnXMLTreeNode);
+                }
+            }
+        }
+        return templateXMLList;
     }
 
     /**
@@ -236,8 +278,16 @@ public class MainFrame extends JFrame {
         } else if (pathCount == 6 && Menu.VARIABLE_BROAD.getName().equals(e.getPath().getPathComponent(2).toString())) {//变量非中文VariableBroadNotChn
             JPanel panel = new VariableBroadNotChn(e.getPath()).init();
             panel.setBackground(Color.GREEN);
-            panel.setBounds(5, 5, 800, 800);
+            panel.setBounds(5, 5, 1400, 800);
             rightPanel.add(panel);
+        } else if (pathCount == 4 && Menu.TEMPLATE_LIST.getName().equals(e.getPath().getPathComponent(1).toString())) {//点击模版列表中的template
+            JPanel panel = new AdvertisingWord(e.getPath()).init();
+            panel.setBackground(Color.RED);
+            panel.setBounds(5, 5, 1000, 1000);
+            rightPanel.add(panel);
+        } else if (pathCount == 2 && Menu.EXPORT.getName().equals(e.getPath().getPathComponent(1).toString())) {//点击导出
+
+
         } else {
             JLabel l = new JLabel(e.getPath().toString());
             l.setBounds(5, 190, 250, 20);

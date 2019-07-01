@@ -87,6 +87,35 @@ public class DOMUtils {
         return document;
     }
 
+
+    /**
+     * 根据xml英文名获取中文xml
+     * @param engXMLName 英文xml
+     * @return 中文xml
+     */
+    public static String getChnXMLName(String engXMLName){
+        Document document = getDocument(Constant.TEMP_PATH + Constant.TEMP_FILE);
+        Element resourceElement = (Element)document.selectSingleNode("//resource[@engXML='" + engXMLName + "']");
+       return resourceElement.attributeValue("chnXML");
+    }
+
+
+    /**
+     * 根据中文xml获取英文xml
+     * @param chnXMLName 中文xml
+     * @return 英文xml
+     */
+    public static String getEngXMLName(String chnXMLName){
+        Document document = getDocument(Constant.TEMP_PATH + Constant.TEMP_FILE);
+        Element resourceElement = (Element)document.selectSingleNode("//resource[@chnXML='" + chnXMLName + "']");
+       return resourceElement.attributeValue("engXML");
+    }
+
+
+
+
+
+
     /**
      * 获取某个元素的所有的子节点
      *

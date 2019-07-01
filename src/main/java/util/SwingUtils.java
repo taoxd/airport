@@ -90,7 +90,10 @@ public class SwingUtils {
 
     }
 
-
+    /**
+     * 删除节点
+     * @param jf
+     */
     public static void delNode(JFrame jf) {
         JTree tree = SwingUtils.getMenuTree(jf);
         DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
@@ -104,9 +107,7 @@ public class SwingUtils {
             model.removeNodeFromParent(node);
             tree.setSelectionPath(new TreePath(nodeNext.getPath()));
         }
-
     }
-
 
     /**
      * 进行文件的拷贝，利用带缓冲的字节流

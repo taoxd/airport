@@ -12,14 +12,17 @@ import util.SwingUtils;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.*;
 
 /**
  * @Description: 首页
@@ -53,16 +56,27 @@ public class Index extends JPanel {
 
     private JTextField chnField;
     private JTextField engField;
+    //定义初始值为1
+    private Map<String, Integer> initMap;
 
 
     private List<Element> templateElementList = new ArrayList<>();
 
     public Index() {
         this.setName("index");
+        initMap();
         document = DOMUtils.getDocument(Constant.UPLOAD_RESOURCE_PATH + Constant.RESOURCE_NAME);
         variableBroadType();
         getXMLName();
         constBroad();
+    }
+
+    //初始化数据
+    public void initMap() {
+        initMap = new HashMap<>();
+        initMap.put("c", 1);
+        initMap.put("s", 1);
+        initMap.put("e", 1);
     }
 
     /**
@@ -224,7 +238,10 @@ public class Index extends JPanel {
                 Element resourceElement = (Element) document.selectSingleNode("//resourceType[@flag='" + Constant.CONST + "']/hashValue/resource[@value='" + constBroad + "' and @language='" + languageTemp + "']");
                 String hashId = resourceElement.attributeValue("hashId");
                 Element constElement = DocumentHelper.createElement("const");
-                constElement.addAttribute("name", "c");
+
+                Integer c = initMap.get("c");
+                constElement.addAttribute("name", "c" + c);
+                initMap.put("c", c + 1);
                 constElement.addAttribute("typeId", Menu.CONSTANT_BROAD.getCode());
                 constElement.addAttribute("hashId", hashId);
                 templateElementList.add(constElement);
@@ -282,9 +299,11 @@ public class Index extends JPanel {
                     String value = ((Element) node).attributeValue("value");
                     String hashId = ((Element) node).attributeValue("hashId");
 
-
+                    String str = show.substring(0, 1);
+                    Integer num = initMap.get(str);
                     Element variableElement = DocumentHelper.createElement(show);
-                    variableElement.addAttribute("name", show.substring(0, 1));
+                    variableElement.addAttribute("name", str + num);
+                    initMap.put(str, num + 1);
                     variableElement.addAttribute("typeId", typeId);
                     variableElement.addAttribute("hashId", hashId);
                     templateElementList.add(variableElement);
@@ -332,34 +351,91 @@ public class Index extends JPanel {
                 //xml命名_中文
                 String chnXml = xmlComboBox.getSelectedItem().toString();
 
+                //根据xml中文名查询英文名
                 Document tempDocument = DOMUtils.getDocument(Constant.TEMP_PATH + Constant.TEMP_FILE);
-                Element element = (Element) tempDocument.selectSingleNode("//resource[@chnXML='" + chnXml + "']");
-                String engXML = element.attributeValue("engXML");
+                Element resourceElement = (Element) tempDocument.selectSingleNode("//resource[@chnXML='" + chnXml + "']");
+                String engXML = resourceElement.attributeValue("engXML");
 
+                //将模版内容写入到临时文件中
+                Node contentNode = tempDocument.selectSingleNode("//resource[@chnXML='" + chnXml + "']/content[@language='" + languageTemp + "']");
+                if (contentNode == null) {
+                    Element contentElement = resourceElement.addElement("content");
+                    contentElement.addAttribute("language", languageTemp);
+                    contentElement.addAttribute("value", templateContent.getText());
+                }
+                try {
+                    //写xml文件
+                    DOMUtils.writeXMLToFile(tempDocument, Constant.TEMP_PATH + Constant.TEMP_FILE);
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+
+
+                //获取模版document
                 StringBuilder templatePath = new StringBuilder(Constant.UPLOAD_BROADCAST_PATH)
                         .append("\\").append(engXML).append(".xml");
                 Document templateDocument = DOMUtils.getDocumentTemplate(templatePath.toString());
 
-                Element rootElement = templateDocument.addElement("templateGroup");
-                rootElement.addAttribute("id", "1").addAttribute("grCaption", chnXml)
-                        .addAttribute("grCaptionEng", engXML);
+                Element templateGroupElement = templateDocument.getRootElement();
+                //没有根节点
+                if (templateGroupElement == null) {
+                    Element rootElement = templateDocument.addElement("templateGroup");
+                    rootElement.addAttribute("id", "1").addAttribute("grCaption", chnXml)
+                            .addAttribute("grCaptionEng", engXML);
 
-                Element templateElement = rootElement.addElement("template");
-                templateElement.addAttribute("index", "1").addAttribute("caption", chnField.getText())
-                        .addAttribute("captionEng", engField.getText());
+                    Element templateElement = rootElement.addElement("template");
+                    templateElement.addAttribute("index", "1").addAttribute("caption", chnField.getText())
+                            .addAttribute("captionEng", engField.getText());
 
-                Element templateObjsElement = templateElement.addElement("templateObjs");
-                templateObjsElement.addAttribute("language",languageTemp).addAttribute("playCheckBox","0");
+                    Element templateObjsElement = templateElement.addElement("templateObjs");
+                    templateObjsElement.addAttribute("language", languageTemp).addAttribute("playCheckBox", "0");
 
-                for (Element ele : templateElementList) {
-                    templateObjsElement.add(ele);
+                    for (Element ele : templateElementList) {
+                        templateObjsElement.add(ele);
+                    }
                 }
+
+                Node templateObjsNode = templateDocument.selectSingleNode("//templateObjs[@language='" + languageTemp + "']");
+                if (templateObjsNode == null) {
+                    Element templateElement = (Element) templateDocument.selectSingleNode("//template");
+                    templateElement.addAttribute("caption", chnField.getText()).addAttribute("captionEng", engField.getText());
+                    Element templateObjsElement = templateElement.addElement("templateObjs");
+                    templateObjsElement.addAttribute("language", languageTemp).addAttribute("playCheckBox", "0");
+
+                    for (Element ele : templateElementList) {
+                        templateObjsElement.add(ele);
+                    }
+                }
+
                 try {
                     //写xml文件
                     DOMUtils.writeXMLToFile(templateDocument, templatePath.toString());
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
+
+                JFrame jf = (JFrame) (getRootPane().getParent());
+                JTree menuTree = SwingUtils.getMenuTree(jf);
+
+                TreeNode rootTreeNode = (TreeNode) menuTree.getModel().getRoot();//取得tree的根节点
+                //是否有相同中文xml
+                boolean haveSameChnXML = visitAllNodes(rootTreeNode, chnXml);
+                if (!haveSameChnXML) {
+                    //模版列表路径
+                    TreePath treePath = menuTree.getPathForRow(2);
+                    //添加节点
+                    SwingUtils.addNode(jf, chnXml, treePath);
+                }
+
+                //清空模版内容
+                templateContent.setText("");
+                //清空
+                templateElementList.clear();
+                chnField.setText("");
+                engField.setText("");
+
+                //初始化数据
+                initMap();
             }
         });
         submitButton.setFont(new Font("宋体", Font.PLAIN, 16));
@@ -369,5 +445,36 @@ public class Index extends JPanel {
         return this;
     }
 
+    public boolean visitAllNodes(TreeNode node, String chnXML) {
 
+        //默认没有相同中文xml
+        boolean isSameChnXML = false;
+        TreeNode templateList = null;
+        if (node.getChildCount() >= 0) {//判断是否有子节点
+            for (Enumeration e = node.children(); e.hasMoreElements(); ) {
+                TreeNode n = (TreeNode) e.nextElement();
+                String nodeName = ((DefaultMutableTreeNode) n).getUserObject().toString();
+                //从根节点查找模版列表
+                if (Menu.TEMPLATE_LIST.getName().equals(nodeName)) {
+                    templateList = n;
+                    break;
+                }
+            }
+        }
+
+        if (templateList.getChildCount() > 0) {
+            for (Enumeration temp = templateList.children(); temp.hasMoreElements(); ) {
+                TreeNode tempNode = (TreeNode) temp.nextElement();
+                String nodeName = ((DefaultMutableTreeNode) tempNode).getUserObject().toString();
+                //从模版列表查找是否有相同中文xml
+                if (chnXML.equals(nodeName)) {
+                    isSameChnXML = true;
+                    break;
+                }
+            }
+
+        }
+        return isSameChnXML;
+
+    }
 }

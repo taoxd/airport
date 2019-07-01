@@ -1,111 +1,164 @@
 package view;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
+import config.Constant;
+import org.dom4j.Document;
+import org.dom4j.Element;
+import util.DOMUtils;
+import util.SwingUtils;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import java.awt.Font;
-import java.awt.Color;
-import javax.swing.SwingConstants;
-import javax.swing.JTextArea;
-import javax.swing.JTextPane;
-import javax.swing.JSplitPane;
-import javax.swing.JDesktopPane;
-import javax.swing.JButton;
-import java.awt.GridBagLayout;
-import javax.swing.border.BevelBorder;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableColumnModel;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.tree.TreePath;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
 
 /**
  * 广告词模版
- * @author ZYY
  *
+ * @author ZYY
  */
-public class AdvertisingWord extends JFrame {
+public class AdvertisingWord extends JPanel {
 
-	private JPanel contentPane;
+    private Document tempDocument;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					AdvertisingWord frame = new AdvertisingWord();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+    //定义表格的数据模型
+    private DefaultTableModel model;
 
-	/**
-	 * Create the frame.
-	 */
-	public AdvertisingWord() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 989, 793);
-		contentPane = new JPanel();
-		contentPane.setBackground(Color.WHITE);
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(null);
-		setContentPane(contentPane);
-		
-		JDesktopPane desktopPane = new JDesktopPane();
-		desktopPane.setBackground(new Color(211, 211, 211));
-		desktopPane.setBounds(93, 137, 788, 49);
-		contentPane.add(desktopPane);
-		
-		JLabel lblNewLabel = new JLabel("内容");
-		lblNewLabel.setFont(new Font("宋体", Font.PLAIN, 16));
-		lblNewLabel.setBounds(220, 10, 78, 36);
-		desktopPane.add(lblNewLabel);
-		
-		JLabel label = new JLabel("操作");
-		label.setFont(new Font("宋体", Font.PLAIN, 16));
-		label.setBounds(670, 14, 54, 28);
-		desktopPane.add(label);
-		
-		JDesktopPane desktopPane_1 = new JDesktopPane();
-		desktopPane_1.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(211, 211, 211), new Color(211, 211, 211), new Color(211, 211, 211), new Color(211, 211, 211)));
-		desktopPane_1.setBackground(new Color(255, 255, 255));
-		desktopPane_1.setBounds(93, 186, 586, 198);
-		contentPane.add(desktopPane_1);
-		desktopPane_1.setLayout(null);
-		
-		JDesktopPane desktopPane_2 = new JDesktopPane();
-		desktopPane_2.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(211, 211, 211), new Color(211, 211, 211), new Color(211, 211, 211), new Color(211, 211, 211)));
-		desktopPane_2.setBackground(Color.WHITE);
-		desktopPane_2.setBounds(93, 384, 586, 198);
-		contentPane.add(desktopPane_2);
-		desktopPane_2.setLayout(null);
-		
-		JDesktopPane desktopPane_3 = new JDesktopPane();
-		desktopPane_3.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(211, 211, 211), new Color(211, 211, 211), new Color(211, 211, 211), new Color(211, 211, 211)));
-		desktopPane_3.setBounds(678, 186, 203, 198);
-		contentPane.add(desktopPane_3);
-		desktopPane_3.setBackground(Color.WHITE);
-		
-		JButton button = new JButton("删除");
-		button.setBackground(new Color(255, 255, 255));
-		button.setFont(new Font("宋体", Font.PLAIN, 16));
-		button.setBounds(52, 80, 93, 44);
-		desktopPane_3.add(button);
-		
-		JDesktopPane desktopPane_4 = new JDesktopPane();
-		desktopPane_4.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(211, 211, 211), new Color(211, 211, 211), new Color(211, 211, 211), new Color(211, 211, 211)));
-		desktopPane_4.setBackground(Color.WHITE);
-		desktopPane_4.setBounds(678, 384, 203, 198);
-		contentPane.add(desktopPane_4);
-		
-		JButton button_1 = new JButton("删除");
-		button_1.setBackground(new Color(255, 255, 255));
-		button_1.setFont(new Font("宋体", Font.PLAIN, 16));
-		button_1.setBounds(52, 77, 93, 44);
-		desktopPane_4.add(button_1);
-	}
+    //定义一个表格
+    private JTable table;
+
+    //定义一个滚动面板，用于放置表格
+    private JScrollPane scrollPane;
+
+    private TreePath treePath;
+
+    public AdvertisingWord(TreePath treePath) {
+        this.treePath = treePath;
+        tempDocument = DOMUtils.getDocument(Constant.TEMP_PATH + Constant.TEMP_FILE);
+
+        //xml中文名
+        String chnXMLName = treePath.getPathComponent(2).toString();
+        //xml英文名
+        String engXMLName = DOMUtils.getEngXMLName(chnXMLName);
+
+        StringBuilder stringBuilder = new StringBuilder(Constant.UPLOAD_BROADCAST_PATH);
+        stringBuilder.append("\\").append("engXML").append(".xml");
+        Document documentTemplate = DOMUtils.getDocumentTemplate(stringBuilder.toString());
+        documentTemplate.selectNodes("//template[@caption='" + treePath.getLastPathComponent().toString() + "']/templateObjs");
+
+
+        List<Element> contentList = tempDocument.selectNodes("//resource[@chnXML='" + treePath.getLastPathComponent().toString() + "']/content");
+
+        //JTable的初始化数据
+        String[][] datas = new String[contentList.size()][];
+        for (int i = 0; i < contentList.size(); i++) {
+            String language = contentList.get(i).attributeValue("language");
+            String value = contentList.get(i).attributeValue("value");
+            String[] contentArr = {language, value};
+            datas[i] = contentArr;
+        }
+
+        //JTable的表头标题
+        String[] head = {"语种", "内容"};
+
+
+        //初始化JTable的数据模型
+        model = new DefaultTableModel(datas, head);
+
+        //初始化表格
+        table = new JTable(model);
+
+        //初始化面板
+        scrollPane = new JScrollPane(table);
+
+        //设置表格单元格字体居中显示
+
+        DefaultTableCellRenderer render = new DefaultTableCellRenderer();
+
+        render.setHorizontalAlignment(SwingConstants.CENTER);
+
+        table.getColumn("语种").setCellRenderer(render);
+
+        table.getColumn("内容").setCellRenderer(render);
+
+        //设置表格宽度情况
+
+        DefaultTableColumnModel dcm = (DefaultTableColumnModel) table.getColumnModel();
+
+        dcm.getColumn(0).setPreferredWidth(60); //设置表格显示的最好宽度，即此时表格显示的宽度。
+
+        dcm.getColumn(0).setMinWidth(45);//设置表格通过拖动列可以的最小宽度。
+
+        dcm.getColumn(0).setMaxWidth(75);//设置表格通过拖动列可以的最大宽度。
+
+        //给表格设置行高
+
+        table.setRowHeight(35);
+    }
+
+    public JPanel init() {
+        //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //setBounds(5, 5, 989, 793);
+        //contentPane = new JPanel();
+        this.setBackground(Color.WHITE);
+        this.setBorder(new EmptyBorder(5, 5, 5, 5));
+        this.setLayout(null);
+        //setContentPane(contentPane);
+
+        JDesktopPane desktopPane = new JDesktopPane();
+        desktopPane.setBackground(Color.YELLOW);
+        desktopPane.setBounds(93, 137, 800, 800);
+        scrollPane.setBounds(93, 137, 600, 400);
+        //scrollPane.setLocation(93, 27);
+        this.add(scrollPane);
+        this.setVisible(true);
+
+        JButton delButton = new JButton("删除");
+        delButton.setBackground(new Color(35, 248, 255));
+        delButton.setFont(new Font("宋体", Font.PLAIN, 16));
+        delButton.setBounds(93, 700, 93, 44);
+        this.add(delButton);
+        delButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+
+        JButton previewButton = new JButton("预览");
+        previewButton.setBackground(new Color(35, 248, 255));
+        previewButton.setFont(new Font("宋体", Font.PLAIN, 16));
+        previewButton.setBounds(200, 700, 93, 44);
+        this.add(previewButton);
+        previewButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                JFrame jf = (JFrame) getRootPane().getParent();
+                JPanel rightPanel = SwingUtils.getRightPanel(jf);
+
+                Element resourceElement = (Element) tempDocument.selectSingleNode("//resource[@chnXML='" + treePath.getLastPathComponent().toString() + "']");
+                String engXML = resourceElement.attributeValue("engXML");
+
+                //获取模版document
+                StringBuilder templatePath = new StringBuilder(Constant.UPLOAD_BROADCAST_PATH)
+                        .append("\\").append(engXML).append(".xml");
+                Document templateDocument = DOMUtils.getDocumentTemplate(templatePath.toString());
+
+                String utf8 = DOMUtils.documentToString(templateDocument, "utf8");
+                rightPanel.removeAll();
+                JTextArea jTextArea = new JTextArea(utf8);
+                jTextArea.setEditable(false);
+                jTextArea.setBackground(Color.GREEN);
+                jTextArea.setBounds(5, 5, 800, 800);
+                rightPanel.add(jTextArea);
+                rightPanel.repaint();
+            }
+        });
+        return this;
+    }
 }
