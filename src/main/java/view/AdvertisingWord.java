@@ -4,6 +4,7 @@ import config.Constant;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import util.DOMUtils;
+import util.SwingUtils;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -64,7 +65,6 @@ public class AdvertisingWord extends JPanel {
         //JTable的表头标题
         String[] head = {"内容"};
 
-
         //初始化JTable的数据模型
         model = new DefaultTableModel(datas, head);
 
@@ -94,7 +94,7 @@ public class AdvertisingWord extends JPanel {
 
         //给表格设置行高
 
-        table.setRowHeight(35);
+        table.setRowHeight(50);
     }
 
     public JPanel init() {
@@ -117,17 +117,19 @@ public class AdvertisingWord extends JPanel {
         JButton delButton = new JButton("删除");
         delButton.setBackground(new Color(35, 248, 255));
         delButton.setFont(new Font("宋体", Font.PLAIN, 16));
-        delButton.setBounds(93, 700, 93, 44);
+        delButton.setBounds(340, 570, 93, 44);
         this.add(delButton);
 
         delButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
-
-                int isDelete  = JOptionPane.showConfirmDialog(null, "确定要删除吗？", "删除提示", 0);
-                if(isDelete == JOptionPane.YES_OPTION){
-                    System.out.println("确定删除啦！！！");
+                int isDelete = JOptionPane.showConfirmDialog(null, "确定要删除吗？", "删除提示", 0);
+                if (isDelete == JOptionPane.YES_OPTION) {
+                    //模版删除template
                     delTemplate();
+                    //删除树节点
+                    JFrame jf = (JFrame) (getRootPane().getParent());
+                    SwingUtils.delNode(jf);
                 }
 
             }

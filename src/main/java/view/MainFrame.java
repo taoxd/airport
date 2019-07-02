@@ -6,16 +6,18 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import util.DOMUtils;
+import util.SwingUtils;
 import util.ZipCompressor;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.filechooser.FileSystemView;
-import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.*;
 import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
 /**
@@ -32,6 +34,7 @@ public class MainFrame extends JFrame {
         super("东航客舱");
         //获取最新的树
         loadTree();
+
     }
 
     public JTree loadTree() {
@@ -75,7 +78,8 @@ public class MainFrame extends JFrame {
         tree.setName("menuTree");
         // 设置树显示根节点句柄
         tree.setShowsRootHandles(true);
-        tree.setPreferredSize(new Dimension(200, 0));
+        //tree.setPreferredSize(new Dimension(200, 0));
+        tree.setBounds(2, 2, 195, 760);
         tree.addTreeSelectionListener(new TreeSelectionListener() {
             @Override
             public void valueChanged(TreeSelectionEvent e) {
@@ -100,12 +104,13 @@ public class MainFrame extends JFrame {
         if (tempList != null && tempList.length > 0) {
             for (int i = 0; i < tempList.length; i++) {
                 if (tempList[i].isFile()) {
+                    //有后缀的
                     String engXMLName = tempList[i].getName();
                     String chnXML = DOMUtils.getChnXMLName(engXMLName.substring(0, engXMLName.lastIndexOf(".")));
 
                     DefaultMutableTreeNode chnXMLTreeNode = new DefaultMutableTreeNode(chnXML);
 
-                    StringBuilder append = new StringBuilder(Constant.UPLOAD_BROADCAST_PATH).append("\\").append(engXMLName).append(".xml");
+                    StringBuilder append = new StringBuilder(Constant.UPLOAD_BROADCAST_PATH).append("\\").append(engXMLName);
                     Document documentTemplate = DOMUtils.getDocumentTemplate(append.toString());
                     List<Element> templateList = documentTemplate.selectNodes("//template");
                     for (Element template : templateList) {
@@ -213,7 +218,28 @@ public class MainFrame extends JFrame {
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneLayout.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneLayout.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         //scrollPane.setViewportBorder(BorderFactory.createEtchedBorder());
-        container.add(BorderLayout.WEST, scrollPane);
+
+        JPanel leftPanel = new JPanel();
+        JScrollPane js = new JScrollPane(tree);
+        js.setName("treeScrollPane");
+        //分别设置水平和垂直滚动条自动出现
+        js.setHorizontalScrollBarPolicy(
+                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        js.setVerticalScrollBarPolicy(
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+
+        leftPanel.setName("leftPanel");
+        leftPanel.setLayout(null);
+        leftPanel.setBackground(Color.LIGHT_GRAY);
+        leftPanel.setPreferredSize(new Dimension(200, 400));
+
+
+        js.setBounds(2, 2, 195, 760);
+        leftPanel.add(js);
+
+        container.add(BorderLayout.WEST, leftPanel);
+
 
         rightPanel = new JPanel();
         rightPanel.setName("rightPanel");
@@ -267,10 +293,19 @@ public class MainFrame extends JFrame {
 
             String document = DOMUtils.documentToString(DOMUtils.getDocument(Constant.UPLOAD_RESOURCE_PATH + Constant.RESOURCE_NAME), "utf8");
             JTextArea jTextArea = new JTextArea(document);
+            JScrollPane js = new JScrollPane(jTextArea);
+
+            //分别设置水平和垂直滚动条自动出现
+            js.setHorizontalScrollBarPolicy(
+                    JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            js.setVerticalScrollBarPolicy(
+                    JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
             jTextArea.setEditable(false);
             jTextArea.setBackground(Color.GREEN);
             jTextArea.setBounds(5, 5, 780, 760);
-            rightPanel.add(jTextArea);
+            js.setBounds(5, 5, 780, 760);
+            rightPanel.add(js);
         } else if (pathCount == 4 && Menu.VARIABLE_BROAD.getName().equals(e.getPath().getPathComponent(2).toString())) {//变量中文大类VariableBroadType,城市
             JPanel panel = new VariableBroadType(e.getPath()).init();
             panel.setBackground(Color.GREEN);
@@ -297,7 +332,7 @@ public class MainFrame extends JFrame {
             panel.setBackground(Color.GREEN);
             panel.setBounds(200, 200, 400, 400);
             rightPanel.add(panel);
-        } else if (pathCount == 4 && Menu.PREVIEW_TEMPLATE_XML.getName().equals(e.getPath().getLastPathComponent().toString())) {//点击预览
+        } else if (pathCount == 4 && Menu.PREVIEW_TEMPLATE_XML.getName().equals(e.getPath().getLastPathComponent().toString())) {//点击模版预览
             String chnXML = e.getPath().getPathComponent(2).toString();
             String engXML = DOMUtils.getEngXMLName(chnXML);
 
@@ -309,14 +344,24 @@ public class MainFrame extends JFrame {
             String document = DOMUtils.documentToString(templateDocument, "utf8");
 
             JTextArea jTextArea = new JTextArea(document);
+
+            JScrollPane js = new JScrollPane(jTextArea);
+
+            //分别设置水平和垂直滚动条自动出现
+            js.setHorizontalScrollBarPolicy(
+                    JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            js.setVerticalScrollBarPolicy(
+                    JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
             jTextArea.setEditable(false);
             jTextArea.setBackground(Color.GREEN);
-            jTextArea.setBounds(5, 5, 800, 800);
-            rightPanel.add(jTextArea);
+            jTextArea.setBounds(2, 3, 787, 758);
+            js.setBounds(2, 3, 787, 758);
+
+            rightPanel.add(js);
         } else if (pathCount == 4 && Menu.TEMPLATE_LIST.getName().equals(e.getPath().getPathComponent(1).toString())) {//点击模版列表中的template
             JPanel panel = new AdvertisingWord(e.getPath()).init();
             panel.setBackground(Color.RED);
-            panel.setBounds(5, 5, 1000, 1000);
+            panel.setBounds(2, 3, 787, 758);
             rightPanel.add(panel);
         } else if (pathCount == 2 && Menu.EXPORT.getName().equals(e.getPath().getPathComponent(1).toString())) {//点击导出
 
@@ -331,12 +376,11 @@ public class MainFrame extends JFrame {
             ZipCompressor zc = new ZipCompressor(com.getPath() + Constant.EXPORT_DEST_DIR);// 压缩后的目标文件
             zc.compress(Constant.EXPORT_SRC_DIR);// 需要压缩的文件
 
-            JOptionPane.showMessageDialog(null,"导出成功！","提示",JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showMessageDialog(null, "导出成功！", "提示", JOptionPane.PLAIN_MESSAGE);
         } else {
             JLabel l = new JLabel(e.getPath().toString());
             l.setBounds(5, 190, 250, 20);
             rightPanel.add(l);
-
         }
 
         rightPanel.repaint();

@@ -1,12 +1,10 @@
 package util;
 
 import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.MutableTreeNode;
-import javax.swing.tree.TreePath;
+import javax.swing.tree.*;
 import java.awt.*;
 import java.io.*;
+import java.util.Enumeration;
 
 /**
  * @Description: swing相关工具类
@@ -27,7 +25,8 @@ public class SwingUtils {
         //获得大容器
         Container contentPane = jf.getContentPane();
         //获得所有组件
-        Component[] components = contentPane.getComponents();
+        JPanel leftPanel = (JPanel) contentPane.getComponent(0);
+        Component[] components = leftPanel.getComponents();
         for (int i = 0; i < components.length; i++) {
             String name = components[i].getName();
             if ("treeScrollPane".equalsIgnoreCase(name)) {
@@ -92,6 +91,7 @@ public class SwingUtils {
 
     /**
      * 删除节点
+     *
      * @param jf
      */
     public static void delNode(JFrame jf) {
@@ -107,6 +107,32 @@ public class SwingUtils {
             model.removeNodeFromParent(node);
             tree.setSelectionPath(new TreePath(nodeNext.getPath()));
         }
+    }
+
+
+    /**
+     * 根据模版中文名查询treePath
+     * @param jf
+     * @param chnXML
+     * @return
+     */
+    public static TreePath getTreePathByXMLName(JFrame jf, String chnXML) {
+
+        TreePath visiblePath = null;
+        JTree tree = getMenuTree(jf);
+        //取得tree的根节点
+        TreeNode root = (TreeNode) tree.getModel().getRoot();
+        DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
+        //模版列表节点
+        TreeNode childAt = root.getChildAt(1);
+        for (Enumeration e = childAt.children(); e.hasMoreElements(); ) {
+            TreeNode n = (TreeNode) e.nextElement();
+            if (chnXML.equals(n.toString())) {
+                visiblePath = new TreePath(model.getPathToRoot(n));
+                break;
+            }
+        }
+        return visiblePath;
     }
 
     /**

@@ -223,22 +223,28 @@ public class Index extends JPanel {
         label_1.setBounds(217, 220, 88, 31);
         this.add(label_1);
 
-        System.out.print("固定广播词数组: " + Arrays.toString(constArr));
         //固定广播词列表
         constBroadList = new JList(constArr);
+        JScrollPane jsp = new JScrollPane(constBroadList);
+        //分别设置水平和垂直滚动条自动出现
+        jsp.setHorizontalScrollBarPolicy(
+                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        jsp.setVerticalScrollBarPolicy(
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+
         constBroadList.setBackground(SystemColor.control);
         constBroadList.setForeground(new Color(0, 0, 0));
         constBroadList.setFont(new Font("宋体", Font.PLAIN, 16));
         //constBroadList.setLineWrap(true);
         constBroadList.setBounds(318, 220, 400, 192);
         //constBroadList.setListData(constArr);
-        JScrollPane s = new JScrollPane(constBroadList);
-        s.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        s.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        s.setBounds(318, 220, 400, 192);
-        this.add(s);
+        jsp.setBounds(318, 220, 400, 192);
+
+
+        this.add(jsp);
         ListModel<String> model = constBroadList.getModel();
-        for (int i =0;i<model.getSize();i++){
+        for (int i = 0; i < model.getSize(); i++) {
             System.out.print(model.getElementAt(i));
 
         }
@@ -337,17 +343,24 @@ public class Index extends JPanel {
          * 这样，每次输入的话，都是另起一行的。
          */
         templateContent = new JTextArea();
+
+        JScrollPane js = new JScrollPane(templateContent);
+        //分别设置水平和垂直滚动条自动出现
+        js.setHorizontalScrollBarPolicy(
+                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        js.setVerticalScrollBarPolicy(
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+
         //自动换行
         templateContent.setLineWrap(true);
         //不可编辑
-        //templateContent.setEditable(false);
+        templateContent.setEditable(false);
         templateContent.setFont(new Font("宋体", Font.PLAIN, 16));
-        //templateContent.setBounds(317, 534, 340, 86);
-        templateContent.setPreferredSize(new Dimension(400, 130));
-        Dimension preferredSize = templateContent.getPreferredSize();
-        JScrollPane jScrollPane = new JScrollPane(templateContent);
-        jScrollPane.setBounds(317, 515, (int) preferredSize.getWidth(), (int) preferredSize.getHeight());
-        this.add(jScrollPane);
+        templateContent.setBounds(317, 515, 400, 130);
+        js.setBounds(317, 515, 400, 130);
+
+        this.add(js);
 
         JButton resetButton = new JButton("重置");
         resetButton.setBackground(new Color(30, 144, 255));
@@ -392,9 +405,12 @@ public class Index extends JPanel {
                     return;
                 }
 
-
                 //提交数据
                 //submitData();
+
+
+                JFrame jf = (JFrame) (getRootPane().getParent());
+                TreePath path = SwingUtils.getTreePathByXMLName(jf, "登机广播");
             }
         });
         submitButton.setFont(new Font("宋体", Font.PLAIN, 16));
@@ -482,12 +498,10 @@ public class Index extends JPanel {
 
         }
 
-
         if (templateGroupElement != null && templateNode != null && templateObjsNode != null) {
             JOptionPane.showMessageDialog(this, "已存在相同模版", "提示", 1);
             return;
         }
-
 
         if (templateGroupElement != null && templateNode != null && templateObjsNode == null) {
             Element templateElement = (Element) templateNode;
@@ -570,6 +584,5 @@ public class Index extends JPanel {
 
         }
         return isSameChnXML;
-
     }
 }
