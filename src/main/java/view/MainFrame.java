@@ -60,15 +60,16 @@ public class MainFrame extends JFrame {
             child32.add(node);
         }
 
-        DefaultMutableTreeNode child4 = new DefaultMutableTreeNode(Menu.PREVIEW_RESOURCE_XML.getName());//资源XML预览
+        DefaultMutableTreeNode child33 = new DefaultMutableTreeNode(Menu.PREVIEW_RESOURCE_XML.getName());//资源XML预览
+
         DefaultMutableTreeNode child5 = new DefaultMutableTreeNode(Menu.EXPORT.getName());//导出
         root.add(child1);
         root.add(child2);
         root.add(child3);
-        root.add(child4);
         root.add(child5);
         child3.add(child31);
         child3.add(child32);
+        child3.add(child33);
         tree = new JTree(root);
         tree.setBackground(Color.blue);
         tree.setName("menuTree");
@@ -92,8 +93,6 @@ public class MainFrame extends JFrame {
     public List<DefaultMutableTreeNode> getTemplateXMLList() {
         List<DefaultMutableTreeNode> templateXMLList = new ArrayList<>();
 
-        Document tempDocument = DOMUtils.getDocument(Constant.TEMP_PATH + Constant.TEMP_FILE);
-
         //获取所有模版文件
         File file = new File(Constant.UPLOAD_BROADCAST_PATH);
         File[] tempList = file.listFiles();
@@ -106,7 +105,8 @@ public class MainFrame extends JFrame {
 
                     DefaultMutableTreeNode chnXMLTreeNode = new DefaultMutableTreeNode(chnXML);
 
-                    Document documentTemplate = DOMUtils.getDocumentTemplate(Constant.UPLOAD_BROADCAST_PATH + "\\" + engXMLName);
+                    StringBuilder append = new StringBuilder(Constant.UPLOAD_BROADCAST_PATH).append("\\").append(engXMLName).append(".xml");
+                    Document documentTemplate = DOMUtils.getDocumentTemplate(append.toString());
                     List<Element> templateList = documentTemplate.selectNodes("//template");
                     for (Element template : templateList) {
                         String caption = template.attributeValue("caption");
@@ -207,8 +207,13 @@ public class MainFrame extends JFrame {
         // 创建滚动面板，包裹树（因为树节点展开后可能需要很大的空间来显示，所以需要用一个滚动面板来包裹）
         JScrollPane scrollPane = new JScrollPane(tree);
         scrollPane.setName("treeScrollPane");
-        scrollPane.getViewport().add(tree, null);
-        container.add(scrollPane, BorderLayout.WEST);
+        //scrollPane.getViewport().add(tree, null);
+        //scrollPane.setVisible(true);
+
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneLayout.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneLayout.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        //scrollPane.setViewportBorder(BorderFactory.createEtchedBorder());
+        container.add(BorderLayout.WEST, scrollPane);
 
         rightPanel = new JPanel();
         rightPanel.setName("rightPanel");
@@ -216,10 +221,21 @@ public class MainFrame extends JFrame {
         rightPanel.setBackground(Color.pink);
         //p.setPreferredSize(new Dimension(180, 400));
         container.add(rightPanel, BorderLayout.CENTER);
-        this.setBounds(400, 100, 1000, 800);
-        this.setResizable(true);
-        this.setVisible(true);
+
+        //获取屏幕的宽度高度
+        int screenWidth = (int) this.getToolkit().getScreenSize().getWidth();
+        int screenHeight = (int) this.getToolkit().getScreenSize().getHeight();
+
+        int width = 1000;
+        int height = 800;
+
+        //设置jframe位置
+        this.setBounds((screenWidth - width) / 2, (screenHeight - height) / 2, width, height);
+
+        //不能改变frame大小
+        this.setResizable(false);
         this.setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
+        this.setVisible(true);
     }
 
     private void treeSelect(TreeSelectionEvent e) {
@@ -228,23 +244,23 @@ public class MainFrame extends JFrame {
         int pathCount = e.getPath().getPathCount();
         //选中菜单名
         String selectLastPathName = e.getPath().getLastPathComponent().toString();
-        System.out.println("路径个数: " + e.getPath());
-        System.out.println("路径: " + pathCount);
+        System.out.println("路径: " + e.getPath());
+        System.out.println("路径个数: " + pathCount);
         System.out.println("选择: " + e.getPath().getPathComponent(pathCount - 1));
         if (Menu.CONSTANT_BROAD.getName().equals(selectLastPathName)) {//常量广播词ConstBroadAdd
             JPanel panel = new ConstBroadAdd(e.getPath()).init();
             panel.setBackground(Color.GREEN);
-            panel.setBounds(5, 5, 800, 800);
+            panel.setBounds(100, 140, 620, 400);
             rightPanel.add(panel);
         } else if (Menu.VARIABLE_BROAD.getName().equals(selectLastPathName)) {//点击变量广播词VariableBroadAdd
             JPanel panel = new VariableBroadAdd(e.getPath()).init();
             panel.setBackground(Color.GREEN);
-            panel.setBounds(5, 5, 800, 800);
+            panel.setBounds(120, 120, 600, 400);
             rightPanel.add(panel);
         } else if (Menu.HOME_PAGE.getName().equals(selectLastPathName)) {//点击首页
             JPanel panel = new Index().init();
             panel.setBackground(Color.GREEN);
-            panel.setBounds(5, 5, 800, 800);
+            panel.setBounds(-90, 0, 900, 760);
             rightPanel.add(panel);
 
         } else if (Menu.PREVIEW_RESOURCE_XML.getName().equals(selectLastPathName)) {//点击资源XML预览
@@ -253,33 +269,33 @@ public class MainFrame extends JFrame {
             JTextArea jTextArea = new JTextArea(document);
             jTextArea.setEditable(false);
             jTextArea.setBackground(Color.GREEN);
-            jTextArea.setBounds(5, 5, 800, 800);
+            jTextArea.setBounds(5, 5, 780, 760);
             rightPanel.add(jTextArea);
-        } else if (pathCount == 4 && Menu.VARIABLE_BROAD.getName().equals(e.getPath().getPathComponent(2).toString())) {//变量中文大类VariableBroadType
+        } else if (pathCount == 4 && Menu.VARIABLE_BROAD.getName().equals(e.getPath().getPathComponent(2).toString())) {//变量中文大类VariableBroadType,城市
             JPanel panel = new VariableBroadType(e.getPath()).init();
             panel.setBackground(Color.GREEN);
-            panel.setBounds(5, 5, 800, 800);
+            panel.setBounds(100, 150, 620, 350);
             rightPanel.add(panel);
         } else if (pathCount == 4 && Menu.CONSTANT_BROAD.getName().equals(e.getPath().getPathComponent(2).toString())) {//常量中文ConstBroadChn
             JPanel panel = new ConstBroadChn(e.getPath()).init();
             panel.setBackground(Color.GREEN);
-            panel.setBounds(5, 5, 800, 800);
+            panel.setBounds(10, 150, 700, 400);
             rightPanel.add(panel);
         } else if (pathCount == 5 && Menu.VARIABLE_BROAD.getName().equals(e.getPath().getPathComponent(2).toString())) {//变量中文VariableBroadChn
             JPanel panel = new VariableBroadChn(e.getPath()).init();
             panel.setBackground(Color.GREEN);
-            panel.setBounds(5, 5, 800, 800);
+            panel.setBounds(5, 130, 750, 500);
             rightPanel.add(panel);
 
         } else if (pathCount == 5 && Menu.CONSTANT_BROAD.getName().equals(e.getPath().getPathComponent(2).toString())) {//常量非中文ConstBroadNotChn
             JPanel panel = new ConstBroadNotChn(e.getPath()).init();
             panel.setBackground(Color.GREEN);
-            panel.setBounds(5, 5, 800, 800);
+            panel.setBounds(200, 200, 400, 400);
             rightPanel.add(panel);
         } else if (pathCount == 6 && Menu.VARIABLE_BROAD.getName().equals(e.getPath().getPathComponent(2).toString())) {//变量非中文VariableBroadNotChn
             JPanel panel = new VariableBroadNotChn(e.getPath()).init();
             panel.setBackground(Color.GREEN);
-            panel.setBounds(5, 5, 1400, 800);
+            panel.setBounds(200, 200, 400, 400);
             rightPanel.add(panel);
         } else if (pathCount == 4 && Menu.PREVIEW_TEMPLATE_XML.getName().equals(e.getPath().getLastPathComponent().toString())) {//点击预览
             String chnXML = e.getPath().getPathComponent(2).toString();
@@ -305,8 +321,8 @@ public class MainFrame extends JFrame {
         } else if (pathCount == 2 && Menu.EXPORT.getName().equals(e.getPath().getPathComponent(1).toString())) {//点击导出
 
             //列出Windows下所有可用磁盘
-            File[] parts =File.listRoots();
-            for(File part : parts){
+            File[] parts = File.listRoots();
+            for (File part : parts) {
                 System.out.println(part.getAbsolutePath());
             }
 
@@ -314,6 +330,8 @@ public class MainFrame extends JFrame {
             File com = fsv.getHomeDirectory();    //这便是读取桌面路径的方法了
             ZipCompressor zc = new ZipCompressor(com.getPath() + Constant.EXPORT_DEST_DIR);// 压缩后的目标文件
             zc.compress(Constant.EXPORT_SRC_DIR);// 需要压缩的文件
+
+            JOptionPane.showMessageDialog(null,"导出成功！","提示",JOptionPane.PLAIN_MESSAGE);
         } else {
             JLabel l = new JLabel(e.getPath().toString());
             l.setBounds(5, 190, 250, 20);

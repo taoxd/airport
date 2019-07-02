@@ -5,6 +5,7 @@ import config.Menu;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.Node;
+import org.springframework.util.StringUtils;
 import util.DOMUtils;
 import util.SwingUtils;
 
@@ -64,14 +65,14 @@ public class ConstBroadChn extends JPanel {
 
         JLabel label = new JLabel("语种:");
         label.setFont(new Font("宋体", Font.PLAIN, 16));
-        label.setBounds(106, 142, 54, 22);
+        label.setBounds(106, 132, 54, 22);
         this.add(label);
 
         languageComboBox = new JComboBox();
         languageComboBox.setModel(new DefaultComboBoxModel(new String[]{"Eng"}));
         languageComboBox.setFont(new Font("宋体", Font.PLAIN, 24));
         languageComboBox.setToolTipText("1");
-        languageComboBox.setBounds(161, 132, 91, 36);
+        languageComboBox.setBounds(161, 125, 91, 36);
         this.add(languageComboBox);
 
 
@@ -105,7 +106,7 @@ public class ConstBroadChn extends JPanel {
                     audioName.setText(fc.getSelectedFile().toString());
                 } else {
                     //未正常选择文件，如选择取消按钮
-                    audioName.setText("未选择文件");
+                    audioName.setText("");
                 }
             }
         });
@@ -116,58 +117,64 @@ public class ConstBroadChn extends JPanel {
         delButton.setForeground(Color.WHITE);
         delButton.setFont(new Font("宋体", Font.PLAIN, 16));
         delButton.setBackground(new Color(30, 144, 255));
-        delButton.setBounds(180, 296, 93, 36);
+        delButton.setBounds(180, 265, 93, 36);
         this.add(delButton);
         delButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
-                //删除树节点
-                JFrame jf = (JFrame) (getRootPane().getParent());
-                SwingUtils.delNode(jf);
-
-                //删除xml
-                element.getParent().getParent().remove(element.getParent());
-                //写xml文件
-                try {
-                    DOMUtils.writeXMLToFile(document, Constant.UPLOAD_RESOURCE_PATH + Constant.RESOURCE_NAME);
-                } catch (IOException e1) {
-                    e1.printStackTrace();
+                int i = JOptionPane.showConfirmDialog(null, "确定要删除吗？", "删除提示", 0);
+                //确认删除
+                if (i == JOptionPane.YES_OPTION) {
+                    //删除树节点
+                    JFrame jf = (JFrame) (getRootPane().getParent());
+                    SwingUtils.delNode(jf);
+                    //删除xml
+                    element.getParent().getParent().remove(element.getParent());
+                    //写xml文件
+                    try {
+                        DOMUtils.writeXMLToFile(document, Constant.UPLOAD_RESOURCE_PATH + Constant.RESOURCE_NAME);
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
                 }
             }
         });
-
-
 
         JButton submitButton = new JButton("提交");
         submitButton.setForeground(new Color(255, 255, 255));
         submitButton.setBackground(new Color(30, 144, 255));
         submitButton.setFont(new Font("宋体", Font.PLAIN, 16));
-        submitButton.setBounds(409, 296, 93, 36);
+        submitButton.setBounds(409, 265, 93, 36);
         this.add(submitButton);
         submitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String resourceName = resourceTextField.getText();
                 String audioNameText = audioName.getText();
-                //资源名称和音频不能为空
-                if (resourceName != null && !"".equals(resourceName) && audioNameText != null && !"".equals(audioNameText)){
+
+                //判断空
+                if (StringUtils.isEmpty(resourceName) || StringUtils.isEmpty(audioNameText)) {
+                    JOptionPane.showMessageDialog(null, "输入不能为空哦！", "提示", 1);
+                    return;
+                } else {
                     submitData(getNewId());
+                    //提交完之后，清空
+                    resourceTextField.setText("");
+                    audioName.setText("");
                 }
-                //提交完之后，清空
-                resourceTextField.setText("");
-                audioName.setText("");
             }
         });
-
         return this;
-
     }
 
     //提交数据
     public void submitData(Map<String, String> map) {
         //根据语言判断
         Node node = document.selectSingleNode("//resourceType[@typeId='" + Menu.CONSTANT_BROAD.getCode() + "']/hashValue[@id='" + map.get("id") + "']/resource[@language='" + languageComboBox.getSelectedItem().toString() + "']");
-        //新增
-        if (null == node) {
+
+        if (node != null) {
+            JOptionPane.showMessageDialog(null, "存在相同资源！", "提示", 1);
+            return;
+        } else {
             addXML(document, getNewId());
         }
     }

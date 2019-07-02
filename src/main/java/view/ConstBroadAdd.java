@@ -99,7 +99,7 @@ public class ConstBroadAdd extends JPanel {
                     audioName.setText(fc.getSelectedFile().toString());
                 } else {
                     //未正常选择文件，如选择取消按钮
-                    audioName.setText("未选择文件");
+                    audioName.setText("");
                 }
             }
         });
@@ -119,6 +119,13 @@ public class ConstBroadAdd extends JPanel {
 
         submitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                String resourceName = resourceTextField.getText();
+                String audioNameText = audioName.getText();
+                //判断空
+                if (StringUtils.isEmpty(resourceName) || StringUtils.isEmpty(audioNameText)) {
+                    JOptionPane.showMessageDialog(null, "输入不能为空哦...", "提示", 1);
+                    return;
+                }
                 submitData();
             }
         });
@@ -130,19 +137,19 @@ public class ConstBroadAdd extends JPanel {
         String resourceName = resourceTextField.getText();
         String audioNameText = audioName.getText();
 
-        //资源名称和音频不能为空
-        if (!StringUtils.isEmpty(resourceName) && !StringUtils.isEmpty(audioNameText)) {
+        //避免添加重复值,根据常量类型查看
+        Node node = document.selectSingleNode("//resourceType[@typeId='" + Menu.CONSTANT_BROAD.getCode() + "']/hashValue/resource[@language='" + languageComboBox.getSelectedItem().toString() + "' and @value='" + resourceName + "']");
 
-            //避免添加重复值,根据常量类型查看
-            Node node = document.selectSingleNode("//resourceType[@typeId='" + Menu.CONSTANT_BROAD.getCode() + "']/hashValue/resource[@value='" + resourceName + "']");
-            //新增
-            if (null == node) {
-                addXML(getNewId());
-            }
+        if (node != null) {
+            JOptionPane.showMessageDialog(null, "存在相同资源！", "提示", 1);
+            return;
+        } else {
+            addXML(getNewId());
+            //提交完之后，清空
+            resourceTextField.setText("");
+            audioName.setText("");
         }
-        //提交完之后，清空
-        resourceTextField.setText("");
-        audioName.setText("");
+
     }
 
     public void addXML(Map<String, String> map) {

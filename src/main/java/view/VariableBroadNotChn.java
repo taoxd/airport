@@ -32,8 +32,6 @@ public class VariableBroadNotChn extends JPanel {
         this.treePath = treePath;
         document = DOMUtils.getDocument(Constant.UPLOAD_RESOURCE_PATH + Constant.RESOURCE_NAME);
         element = (Element) document.selectSingleNode("//resource[@value='" + treePath.getLastPathComponent().toString() + "']");
-
-
     }
 
     public JPanel init() {
@@ -57,13 +55,13 @@ public class VariableBroadNotChn extends JPanel {
 
         JLabel label = new JLabel("语种:");
         label.setFont(new Font("宋体", Font.PLAIN, 16));
-        label.setBounds(106, 142, 54, 22);
+        label.setBounds(106, 120, 54, 22);
         this.add(label);
 
 
         JLabel languageLabel = new JLabel();
         languageLabel.setFont(new Font("宋体", Font.PLAIN, 16));
-        languageLabel.setBounds(161, 142, 91, 22);
+        languageLabel.setBounds(161, 120, 91, 22);
         languageLabel.setText(element.attributeValue("language"));
         this.add(languageLabel);
 
@@ -72,28 +70,29 @@ public class VariableBroadNotChn extends JPanel {
         delButton.setForeground(Color.WHITE);
         delButton.setFont(new Font("宋体", Font.PLAIN, 16));
         delButton.setBackground(new Color(30, 144, 255));
-        delButton.setBounds(150, 220, 93, 36);
+        delButton.setBounds(161, 170, 93, 36);
         this.add(delButton);
 
         delButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
-                //删除树节点
-                JFrame jf = (JFrame) (getRootPane().getParent());
-                SwingUtils.delNode(jf);
+                int i = JOptionPane.showConfirmDialog(null, "确定要删除吗？", "删除提示", 0);
+                if (i == JOptionPane.YES_OPTION) {
+                    //删除树节点
+                    JFrame jf = (JFrame) (getRootPane().getParent());
+                    SwingUtils.delNode(jf);
 
-                //删除xml
-                element.getParent().remove(element);
-                //写xml文件
-                try {
-                    DOMUtils.writeXMLToFile(document, Constant.UPLOAD_RESOURCE_PATH + Constant.RESOURCE_NAME);
-                } catch (IOException e1) {
-                    e1.printStackTrace();
+                    //删除xml
+                    element.getParent().remove(element);
+                    //写xml文件
+                    try {
+                        DOMUtils.writeXMLToFile(document, Constant.UPLOAD_RESOURCE_PATH + Constant.RESOURCE_NAME);
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
                 }
             }
         });
-
-
         return this;
 
     }

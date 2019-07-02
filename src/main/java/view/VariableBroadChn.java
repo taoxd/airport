@@ -4,6 +4,7 @@ import config.Constant;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.Node;
+import org.springframework.util.StringUtils;
 import util.DOMUtils;
 import util.SwingUtils;
 
@@ -26,8 +27,6 @@ import java.util.Map;
 public class VariableBroadChn extends JPanel {
 
     private static final long serialVersionUID = 1L;
-    private String category;
-    private String variableBroadName;
     private JLabel audioName;
     private JComboBox languageComboBox;
     private JTextField textField;
@@ -40,8 +39,6 @@ public class VariableBroadChn extends JPanel {
         this.treePath = treePath;
         document = DOMUtils.getDocument(Constant.UPLOAD_RESOURCE_PATH + Constant.RESOURCE_NAME);
         element = (Element) document.selectSingleNode("//resource[@value='" + treePath.getLastPathComponent().toString() + "']");
-        this.category = treePath.getPathComponent(3).toString();
-        this.variableBroadName = treePath.getLastPathComponent().toString();
     }
 
     public JPanel init() {
@@ -57,7 +54,7 @@ public class VariableBroadChn extends JPanel {
         label_2.setBounds(141, 58, 91, 28);
         this.add(label_2);
 
-        JLabel label_3 = new JLabel(category);
+        JLabel label_3 = new JLabel(treePath.getPathComponent(3).toString());
         label_3.setFont(new Font("宋体", Font.PLAIN, 16));
         label_3.setBounds(223, 58, 91, 28);
         this.add(label_3);
@@ -68,7 +65,7 @@ public class VariableBroadChn extends JPanel {
         label_4.setBounds(126, 111, 91, 28);
         this.add(label_4);
 
-        JLabel label_5 = new JLabel(variableBroadName);
+        JLabel label_5 = new JLabel(treePath.getLastPathComponent().toString());
         label_5.setFont(new Font("宋体", Font.PLAIN, 16));
         label_5.setBounds(223, 111, 91, 28);
         this.add(label_5);
@@ -105,7 +102,7 @@ public class VariableBroadChn extends JPanel {
                     audioName.setText(fc.getSelectedFile().toString());
                 } else {
                     //未正常选择文件，如选择取消按钮
-                    audioName.setText("未选择文件");
+                    audioName.setText("");
                 }
             }
         });
@@ -124,36 +121,47 @@ public class VariableBroadChn extends JPanel {
         delButton.setForeground(Color.WHITE);
         delButton.setFont(new Font("宋体", Font.PLAIN, 16));
         delButton.setBackground(new Color(30, 144, 255));
-        delButton.setBounds(277, 332, 93, 36);
+        delButton.setBounds(223, 320, 93, 36);
         this.add(delButton);
 
         delButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                int i = JOptionPane.showConfirmDialog(null, "确定要删除吗？", "删除提示", 0);
+                if (i==JOptionPane.YES_OPTION){
+                    //删除树节点
+                    JFrame jf = (JFrame) (getRootPane().getParent());
+                    SwingUtils.delNode(jf);
 
-                //删除树节点
-                JFrame jf = (JFrame) (getRootPane().getParent());
-                SwingUtils.delNode(jf);
-
-                //删除xml
-                element.getParent().getParent().remove(element.getParent());
-                //写xml文件
-                try {
-                    DOMUtils.writeXMLToFile(document, Constant.UPLOAD_RESOURCE_PATH + Constant.RESOURCE_NAME);
-                } catch (IOException e1) {
-                    e1.printStackTrace();
+                    //删除xml
+                    element.getParent().getParent().remove(element.getParent());
+                    //写xml文件
+                    try {
+                        DOMUtils.writeXMLToFile(document, Constant.UPLOAD_RESOURCE_PATH + Constant.RESOURCE_NAME);
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
                 }
             }
         });
 
-
         JButton submitButton = new JButton("提交");
-        submitButton.setForeground(new Color(255, 255, 255));
         submitButton.setBackground(new Color(30, 144, 255));
         submitButton.setFont(new Font("宋体", Font.PLAIN, 16));
-        submitButton.setBounds(501, 332, 93, 36);
+        submitButton.setBounds(400, 320, 93, 36);
         this.add(submitButton);
         submitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                String text = textField.getText();
+                String audioNameText = audioName.getText();
+
+                if (StringUtils.isEmpty(text)) {
+                    JOptionPane.showMessageDialog(null, "请输入广播词!", "提示", 1);
+                    return;
+                }
+                if (StringUtils.isEmpty(audioNameText)) {
+                    JOptionPane.showMessageDialog(null, "请导入音频！", "提示", 1);
+                    return;
+                }
                 writeToXML();
             }
         });
@@ -163,21 +171,22 @@ public class VariableBroadChn extends JPanel {
 
     //xml处理
     public void writeToXML() {
-        Document document = DOMUtils.getDocument(Constant.UPLOAD_RESOURCE_PATH + Constant.RESOURCE_NAME);
+        Element hashValueElement = document.selectSingleNode("//resourceType[@type='" + treePath.getPathComponent(3).toString() + "']/hashValue/resource[@value='" + treePath.getLastPathComponent().toString() + "']").getParent();
+        String hashValuId = hashValueElement.attributeValue("id");
         //避免重复值
-        Element hashValueElement = document.selectSingleNode("//resourceType[@type='" + category + "']/hashValue/resource[@value='" + variableBroadName + "']").getParent();
-        String hashValueId = hashValueElement.attributeValue("id");
-        Node node = document.selectSingleNode("//hashValue[@id='" + hashValueId + "']/resource[@language='" + languageComboBox.getSelectedItem().toString() + "']");
-        if (node == null) {
-            addXML(document, getNewId());
+        Node node = document.selectSingleNode("//hashValue[@id='" + hashValuId + "']/resource[@language='" + languageComboBox.getSelectedItem().toString() + "']");
+        if (node != null) {
+            JOptionPane.showMessageDialog(null, "已存在相同资源！", "提示", 1);
+            return;
+        } else {
+            addXML(getNewId());
+            textField.setText("");
+            audioName.setText("");
         }
-        textField.setText("");
-        audioName.setText("");
     }
 
-    public void addXML(Document document, Map<String, String> map) {
-        Element hashValueElement = document.selectSingleNode("//resourceType[@type='" + category + "']/hashValue/resource[@value='" + variableBroadName + "']").getParent();
-
+    public void addXML(Map<String, String> map) {
+        Element hashValueElement = document.selectSingleNode("//resourceType[@type='" + treePath.getPathComponent(3).toString() + "']/hashValue/resource[@value='" + treePath.getLastPathComponent().toString() + "']").getParent();
         Element resourceElement = hashValueElement.addElement("resource");
         resourceElement.addAttribute("language", languageComboBox.getSelectedItem().toString());
         resourceElement.addAttribute("value", textField.getText());
@@ -199,7 +208,7 @@ public class VariableBroadChn extends JPanel {
 
     private Map<String, String> getNewId() {
         Map<String, String> map = new HashMap<>();
-        Element hashValueElement = document.selectSingleNode("//resourceType[@type='" + category + "']/hashValue/resource[@value='" + variableBroadName + "']").getParent();
+        Element hashValueElement = document.selectSingleNode("//resourceType[@type='" + treePath.getPathComponent(3).toString() + "']/hashValue/resource[@value='" + treePath.getLastPathComponent().toString() + "']").getParent();
         String hashValueId = hashValueElement.attributeValue("id");
         Element lastResourceElement = (Element) document.selectSingleNode("//hashValue[@id='" + hashValueId + "']/resource[last()]");
         String lastHashId = lastResourceElement.attributeValue("hashId");

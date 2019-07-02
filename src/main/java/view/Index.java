@@ -7,6 +7,7 @@ import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.Node;
+import org.springframework.util.StringUtils;
 import util.DOMUtils;
 import util.SwingUtils;
 
@@ -41,7 +42,7 @@ public class Index extends JPanel {
     private String[] variableTypeArr;
 
     //固定广播词容器
-    private JList constBroadList;
+    private JList<String> constBroadList;
 
     //固定广播词数组
     private String[] constArr;
@@ -185,13 +186,13 @@ public class Index extends JPanel {
 
         JLabel label = new JLabel("语种选择:");
         label.setFont(new Font("宋体", Font.PLAIN, 16));
-        label.setBounds(234, 169, 72, 15);
+        label.setBounds(234, 165, 72, 15);
         this.add(label);
 
         JComboBox languageCcomboBox = new JComboBox();
         languageCcomboBox.setFont(new Font("宋体", Font.PLAIN, 16));
         languageCcomboBox.setModel(new DefaultComboBoxModel(new String[]{"Chn", "Eng"}));
-        languageCcomboBox.setBounds(318, 161, 225, 31);
+        languageCcomboBox.setBounds(318, 156, 225, 31);
         this.add(languageCcomboBox);
 
         languageCcomboBox.addActionListener(new ActionListener() {
@@ -219,17 +220,30 @@ public class Index extends JPanel {
 
         JLabel label_1 = new JLabel("固定广播词:");
         label_1.setFont(new Font("宋体", Font.PLAIN, 16));
-        label_1.setBounds(217, 231, 88, 31);
+        label_1.setBounds(217, 220, 88, 31);
         this.add(label_1);
 
-        constBroadList = new JList();
+        System.out.print("固定广播词数组: " + Arrays.toString(constArr));
+        //固定广播词列表
+        constBroadList = new JList(constArr);
         constBroadList.setBackground(SystemColor.control);
         constBroadList.setForeground(new Color(0, 0, 0));
         constBroadList.setFont(new Font("宋体", Font.PLAIN, 16));
         //constBroadList.setLineWrap(true);
-        constBroadList.setBounds(318, 235, 340, 192);
-        this.add(constBroadList);
-        constBroadList.setListData(constArr);
+        constBroadList.setBounds(318, 220, 400, 192);
+        //constBroadList.setListData(constArr);
+        JScrollPane s = new JScrollPane(constBroadList);
+        s.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        s.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        s.setBounds(318, 220, 400, 192);
+        this.add(s);
+        ListModel<String> model = constBroadList.getModel();
+        for (int i =0;i<model.getSize();i++){
+            System.out.print(model.getElementAt(i));
+
+        }
+
+
         constBroadList.addMouseListener(new MouseListener() {
             //鼠标单击事件
             @Override
@@ -271,15 +285,15 @@ public class Index extends JPanel {
 
         });
 
-        JLabel label_2 = new JLabel("可变广告词:");
+        JLabel label_2 = new JLabel("可变广播词:");
         label_2.setFont(new Font("宋体", Font.PLAIN, 16));
-        label_2.setBounds(216, 464, 93, 31);
+        label_2.setBounds(216, 450, 93, 31);
         this.add(label_2);
 
         JComboBox variableBroadComboBox = new JComboBox();
         variableBroadComboBox.setFont(new Font("宋体", Font.PLAIN, 16));
         variableBroadComboBox.setModel(new DefaultComboBoxModel(variableTypeArr));
-        variableBroadComboBox.setBounds(318, 464, 225, 31);
+        variableBroadComboBox.setBounds(318, 450, 225, 31);
         this.add(variableBroadComboBox);
         variableBroadComboBox.addActionListener(new ActionListener() {
 
@@ -313,22 +327,29 @@ public class Index extends JPanel {
             }
         });
 
-
         JLabel label_3 = new JLabel("模版内容:");
         label_3.setFont(new Font("宋体", Font.PLAIN, 16));
-        label_3.setBounds(232, 534, 72, 25);
+        label_3.setBounds(232, 515, 72, 25);
         this.add(label_3);
 
-        templateContent = new JTextArea(10, 20);
-        //templateContent.setHorizontalAlignment(SwingConstants.RIGHT);
-        templateContent.setEditable(false);
+        /**
+         * jTextArea.append("输入内容"+"\r\n");
+         * 这样，每次输入的话，都是另起一行的。
+         */
+        templateContent = new JTextArea();
+        //自动换行
+        templateContent.setLineWrap(true);
+        //不可编辑
+        //templateContent.setEditable(false);
         templateContent.setFont(new Font("宋体", Font.PLAIN, 16));
-        templateContent.setBounds(317, 534, 340, 86);
-        this.add(templateContent);
-        templateContent.setColumns(20);
+        //templateContent.setBounds(317, 534, 340, 86);
+        templateContent.setPreferredSize(new Dimension(400, 130));
+        Dimension preferredSize = templateContent.getPreferredSize();
+        JScrollPane jScrollPane = new JScrollPane(templateContent);
+        jScrollPane.setBounds(317, 515, (int) preferredSize.getWidth(), (int) preferredSize.getHeight());
+        this.add(jScrollPane);
 
         JButton resetButton = new JButton("重置");
-        resetButton.setForeground(new Color(255, 255, 255));
         resetButton.setBackground(new Color(30, 144, 255));
         resetButton.setFont(new Font("宋体", Font.PLAIN, 16));
         resetButton.addActionListener(new ActionListener() {
@@ -339,21 +360,48 @@ public class Index extends JPanel {
                 templateElementList.clear();
             }
         });
-        resetButton.setBounds(316, 651, 93, 31);
+        resetButton.setBounds(316, 680, 93, 31);
         this.add(resetButton);
 
         JButton submitButton = new JButton("提交");
-        submitButton.setForeground(new Color(255, 255, 255));
         submitButton.setBackground(new Color(30, 144, 255));
         submitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+
+                //中文别名
+                String chnFieldText = chnField.getText();
+                //英文别名
+                String engFieldText = engField.getText();
+                //模版内容
+                String text = templateContent.getText();
+
+                if (xmlComboBox.getSelectedItem() == null) {
+                    JOptionPane.showMessageDialog(null, "XML命名不能为空！请新增类别...", "提示", 1);
+                    return;
+                }
+                if (StringUtils.isEmpty(chnFieldText)) {
+                    JOptionPane.showMessageDialog(null, "广播词中文名不能为空！", "提示", 1);
+                    return;
+                }
+                if (StringUtils.isEmpty(engFieldText)) {
+                    JOptionPane.showMessageDialog(null, "英文别名不能为空！", "提示", 1);
+                    return;
+                }
+                if (StringUtils.isEmpty(text)) {
+                    JOptionPane.showMessageDialog(null, "请添加模版内容！", "提示", 1);
+                    return;
+                }
+
+
                 //提交数据
-                submitData();
+                //submitData();
             }
         });
         submitButton.setFont(new Font("宋体", Font.PLAIN, 16));
-        submitButton.setBounds(564, 651, 93, 31);
+        submitButton.setBounds(564, 680, 93, 31);
         this.add(submitButton);
+
+        this.setVisible(true);
 
         return this;
     }
@@ -436,13 +484,13 @@ public class Index extends JPanel {
 
 
         if (templateGroupElement != null && templateNode != null && templateObjsNode != null) {
-            JOptionPane.showMessageDialog(this, "已存在相同模版","提示",1);
+            JOptionPane.showMessageDialog(this, "已存在相同模版", "提示", 1);
             return;
         }
 
 
-        if (templateGroupElement != null && templateNode != null && templateObjsNode == null){
-            Element templateElement = (Element)templateNode;
+        if (templateGroupElement != null && templateNode != null && templateObjsNode == null) {
+            Element templateElement = (Element) templateNode;
             Element templateObjsElement = templateElement.addElement("templateObjs");
             templateObjsElement.addAttribute("language", languageTemp).addAttribute("playCheckBox", "0");
             for (Element ele : templateElementList) {

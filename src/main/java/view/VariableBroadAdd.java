@@ -5,6 +5,7 @@ import config.Menu;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.Node;
+import org.springframework.util.StringUtils;
 import util.DOMUtils;
 import util.SwingUtils;
 
@@ -76,11 +77,13 @@ public class VariableBroadAdd extends JPanel {
         submitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 //变量类型不能为空
-                if (variableTypeField.getText() != null && !"".equals(variableTypeField.getText())) {
+                if (StringUtils.isEmpty(variableTypeField.getText())) {
+                    JOptionPane.showMessageDialog(null, "请输入变量类别...", "提示", 1);
+                } else {
                     writeToXML();
+                    //提交完清空变量类型
+                    variableTypeField.setText("");
                 }
-                //提交完清空变量类型
-                variableTypeField.setText("");
             }
         });
         return this;
@@ -115,10 +118,7 @@ public class VariableBroadAdd extends JPanel {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
-
 
     private Map<String, String> getNewId(Node node) {
         Map<String, String> map = new HashMap<>();

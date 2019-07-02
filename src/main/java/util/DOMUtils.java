@@ -2,16 +2,12 @@ package util;
 
 
 import config.Constant;
-import config.Menu;
 import org.dom4j.*;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.StringWriter;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -50,6 +46,7 @@ public class DOMUtils {
 
     /**
      * 初始化没有跟节点
+     *
      * @param xmlPath
      * @return
      */
@@ -90,30 +87,28 @@ public class DOMUtils {
 
     /**
      * 根据xml英文名获取中文xml
+     *
      * @param engXMLName 英文xml
      * @return 中文xml
      */
-    public static String getChnXMLName(String engXMLName){
+    public static String getChnXMLName(String engXMLName) {
         Document document = getDocument(Constant.TEMP_PATH + Constant.TEMP_FILE);
-        Element resourceElement = (Element)document.selectSingleNode("//resource[@engXML='" + engXMLName + "']");
-       return resourceElement.attributeValue("chnXML");
+        Element resourceElement = (Element) document.selectSingleNode("//resource[@engXML='" + engXMLName + "']");
+        return resourceElement.attributeValue("chnXML");
     }
 
 
     /**
      * 根据中文xml获取英文xml
+     *
      * @param chnXMLName 中文xml
      * @return 英文xml
      */
-    public static String getEngXMLName(String chnXMLName){
+    public static String getEngXMLName(String chnXMLName) {
         Document document = getDocument(Constant.TEMP_PATH + Constant.TEMP_FILE);
-        Element resourceElement = (Element)document.selectSingleNode("//resource[@chnXML='" + chnXMLName + "']");
-       return resourceElement.attributeValue("engXML");
+        Element resourceElement = (Element) document.selectSingleNode("//resource[@chnXML='" + chnXMLName + "']");
+        return resourceElement.attributeValue("engXML");
     }
-
-
-
-
 
 
     /**
@@ -656,7 +651,8 @@ public class DOMUtils {
         }
         //OutputFormat format=OutputFormat.createCompactFormat();  //紧凑格式:去除空格换行
         OutputFormat format = OutputFormat.createPrettyPrint();   //漂亮格式：有空格换行
-        XMLWriter writer = new XMLWriter(new FileWriter(path), format);
+        format.setEncoding("UTF-8");
+        XMLWriter writer = new XMLWriter(new OutputStreamWriter(new FileOutputStream(path), "UTF-8"), format);
         writer.write(document);
         writer.close();
     }
@@ -674,6 +670,7 @@ public class DOMUtils {
         Document document = DocumentHelper.createDocument();
         document.addElement("resources");
         OutputFormat format = OutputFormat.createPrettyPrint();
+        format.setEncoding("UTF-8");
         try {
             output = new XMLWriter(new FileWriter(xmlPath), format);
             output.write(document);
@@ -691,6 +688,7 @@ public class DOMUtils {
         XMLWriter output;
         Document document = DocumentHelper.createDocument();
         OutputFormat format = OutputFormat.createPrettyPrint();
+        format.setEncoding("UTF-8");
         try {
             output = new XMLWriter(new FileWriter(xmlPath), format);
             output.write(document);
