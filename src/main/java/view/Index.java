@@ -135,7 +135,7 @@ public class Index extends JPanel {
         this.setLayout(null);
         //setContentPane(contentPane);
 
-        JLabel lblXml = new JLabel("XML命名:");
+        JLabel lblXml = new JLabel("模版类别:");
         lblXml.setFont(new Font("宋体", Font.PLAIN, 16));
         lblXml.setBounds(239, 44, 81, 15);
         this.add(lblXml);
@@ -144,11 +144,12 @@ public class Index extends JPanel {
         xmlComboBox.setFont(new Font("宋体", Font.PLAIN, 16));
         xmlComboBox.setModel(new DefaultComboBoxModel(chnXMLArr));
         xmlComboBox.setBounds(318, 36, 105, 31);
+        xmlComboBox.setBackground(Color.WHITE);
         this.add(xmlComboBox);
 
-        JButton addTypeButton = new JButton("新增类别");
+        JButton addTypeButton = new JButton("新增模版类别");
         addTypeButton.setFont(new Font("宋体", Font.PLAIN, 16));
-        addTypeButton.setForeground(new Color(255, 255, 255));
+        //addTypeButton.setForeground(new Color(255, 255, 255));
         addTypeButton.setBackground(new Color(30, 144, 255));
         addTypeButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -159,7 +160,7 @@ public class Index extends JPanel {
                 init.setVisible(true);
             }
         });
-        addTypeButton.setBounds(564, 37, 104, 31);
+        addTypeButton.setBounds(564, 37, 130, 31);
         this.add(addTypeButton);
 
         JLabel chnLable = new JLabel("广播词中文名-Chn:");
@@ -190,6 +191,7 @@ public class Index extends JPanel {
 
         JComboBox languageCcomboBox = new JComboBox();
         languageCcomboBox.setFont(new Font("宋体", Font.PLAIN, 16));
+        languageCcomboBox.setBackground(Color.WHITE);
         languageCcomboBox.setModel(new DefaultComboBoxModel(new String[]{"Chn", "Eng"}));
         languageCcomboBox.setBounds(318, 156, 225, 31);
         this.add(languageCcomboBox);
@@ -234,6 +236,7 @@ public class Index extends JPanel {
 
         constBroadList.setBackground(SystemColor.control);
         constBroadList.setForeground(new Color(0, 0, 0));
+        constBroadList.setBackground(Color.WHITE);
         constBroadList.setFont(new Font("宋体", Font.PLAIN, 16));
         //constBroadList.setLineWrap(true);
         constBroadList.setBounds(318, 220, 400, 192);
@@ -296,6 +299,7 @@ public class Index extends JPanel {
         this.add(label_2);
 
         JComboBox variableBroadComboBox = new JComboBox();
+        variableBroadComboBox.setBackground(Color.WHITE);
         variableBroadComboBox.setFont(new Font("宋体", Font.PLAIN, 16));
         variableBroadComboBox.setModel(new DefaultComboBoxModel(variableTypeArr));
         variableBroadComboBox.setBounds(318, 450, 225, 31);

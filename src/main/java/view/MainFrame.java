@@ -244,7 +244,7 @@ public class MainFrame extends JFrame {
         rightPanel = new JPanel();
         rightPanel.setName("rightPanel");
         rightPanel.setLayout(null);
-        rightPanel.setBackground(Color.PINK);
+        rightPanel.setBackground(new Color(238, 238, 238));
         //p.setPreferredSize(new Dimension(180, 400));
         container.add(rightPanel, BorderLayout.CENTER);
 
@@ -275,17 +275,17 @@ public class MainFrame extends JFrame {
         System.out.println("选择: " + e.getPath().getPathComponent(pathCount - 1));
         if (Menu.CONSTANT_BROAD.getName().equals(selectLastPathName)) {//常量广播词ConstBroadAdd
             JPanel panel = new ConstBroadAdd(e.getPath()).init();
-            //panel.setBackground(Color.GREEN);
+            panel.setBackground(new Color(0, 0, 0, 0));
             panel.setBounds(2, 140, 789, 400);
             rightPanel.add(panel);
         } else if (Menu.VARIABLE_BROAD.getName().equals(selectLastPathName)) {//点击变量广播词VariableBroadAdd
             JPanel panel = new VariableBroadAdd(e.getPath()).init();
-            panel.setBackground(Color.WHITE);
+            panel.setBackground(new Color(0, 0, 0, 0));
             panel.setBounds(2, 140, 789, 400);
             rightPanel.add(panel);
         } else if (pathCount == 1 || Menu.HOME_PAGE.getName().equals(selectLastPathName)) {//点击首页或根目录
             JPanel panel = new Index().init();
-            panel.setBackground(Color.GREEN);
+            panel.setBackground(new Color(0, 0, 0, 0));
             panel.setBounds(-90, 2, 900, 766);
             rightPanel.add(panel);
 
@@ -302,34 +302,35 @@ public class MainFrame extends JFrame {
                     JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
             jTextArea.setEditable(false);
-            //jTextArea.setBackground(Color.GREEN);
+            jTextArea.setBackground(new Color(238, 238, 238));
             jTextArea.setBounds(2, 2, 789, 766);
             js.setBounds(2, 2, 789, 766);
+            js.setBorder(null);
             rightPanel.add(js);
         } else if (pathCount == 4 && Menu.VARIABLE_BROAD.getName().equals(e.getPath().getPathComponent(2).toString())) {//变量中文大类VariableBroadType,城市
             JPanel panel = new VariableBroadType(e.getPath()).init();
-            //panel.setBackground(Color.GREEN);
+            panel.setBackground(new Color(0, 0, 0, 0));
             panel.setBounds(2, 150, 789, 350);
             rightPanel.add(panel);
         } else if (pathCount == 4 && Menu.CONSTANT_BROAD.getName().equals(e.getPath().getPathComponent(2).toString())) {//常量中文ConstBroadChn
             JPanel panel = new ConstBroadChn(e.getPath()).init();
-            panel.setBackground(Color.WHITE);
+            panel.setBackground(new Color(0, 0, 0, 0));
             panel.setBounds(2, 150, 789, 400);
             rightPanel.add(panel);
         } else if (pathCount == 5 && Menu.VARIABLE_BROAD.getName().equals(e.getPath().getPathComponent(2).toString())) {//变量中文VariableBroadChn
             JPanel panel = new VariableBroadChn(e.getPath()).init();
-            //panel.setBackground(Color.GREEN);
+            panel.setBackground(new Color(0, 0, 0, 0));
             panel.setBounds(2, 130, 789, 500);
             rightPanel.add(panel);
 
         } else if (pathCount == 5 && Menu.CONSTANT_BROAD.getName().equals(e.getPath().getPathComponent(2).toString())) {//常量非中文ConstBroadNotChn
             JPanel panel = new ConstBroadNotChn(e.getPath()).init();
-            panel.setBackground(Color.WHITE);
+            panel.setBackground(new Color(0, 0, 0, 0));
             panel.setBounds(2, 200, 789, 400);
             rightPanel.add(panel);
         } else if (pathCount == 6 && Menu.VARIABLE_BROAD.getName().equals(e.getPath().getPathComponent(2).toString())) {//变量非中文VariableBroadNotChn
             JPanel panel = new VariableBroadNotChn(e.getPath()).init();
-            panel.setBackground(Color.WHITE);
+            panel.setBackground(new Color(0, 0, 0, 0));
             panel.setBounds(2, 200, 789, 400);
             rightPanel.add(panel);
         } else if (pathCount == 2 && Menu.TEMPLATE_LIST.getName().equals(e.getPath().getLastPathComponent().toString())) {//点击模版列表
@@ -339,7 +340,7 @@ public class MainFrame extends JFrame {
             if (node == null) {
                 //跳首页
                 JPanel panel = new Index().init();
-                //panel.setBackground(Color.GREEN);
+                panel.setBackground(new Color(0, 0, 0, 0));
                 panel.setBounds(-90, 2, 900, 766);
                 rightPanel.add(panel);
                 return;
@@ -362,10 +363,10 @@ public class MainFrame extends JFrame {
                 js.setVerticalScrollBarPolicy(
                         JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
                 jTextArea.setEditable(false);
-                //jTextArea.setBackground(Color.GREEN);
+                jTextArea.setBackground(new Color(238, 238, 238));
                 jTextArea.setBounds(2, 2, 789, 766);
                 js.setBounds(2, 2, 789, 766);
-
+                js.setBorder(null);
                 rightPanel.add(js);
             }
 
@@ -392,7 +393,7 @@ public class MainFrame extends JFrame {
             //jTextArea.setBackground(Color.GREEN);
             jTextArea.setBounds(2, 23, 789, 766);
             js.setBounds(2, 2, 789, 766);
-
+            js.setBorder(null);
             rightPanel.add(js);
 
         } else if (pathCount == 4 && Menu.PREVIEW_TEMPLATE_XML.getName().equals(e.getPath().getLastPathComponent().toString())) {//点击模版预览
@@ -416,10 +417,10 @@ public class MainFrame extends JFrame {
             js.setVerticalScrollBarPolicy(
                     JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
             jTextArea.setEditable(false);
-            //jTextArea.setBackground(Color.GREEN);
+            jTextArea.setBackground(new Color(0, 0, 0, 0));
             jTextArea.setBounds(2, 2, 789, 766);
             js.setBounds(2, 2, 789, 766);
-
+            js.setBorder(null);
             rightPanel.add(js);
         } else if (pathCount == 4 && Menu.TEMPLATE_LIST.getName().equals(e.getPath().getPathComponent(1).toString())) {//点击模版列表中的template
             JPanel panel = new AdvertisingWord(e.getPath()).init();
@@ -431,7 +432,7 @@ public class MainFrame extends JFrame {
             js.setVerticalScrollBarPolicy(
                     JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
-            //panel.setBackground(Color.GREEN);
+            panel.setBackground(new Color(0, 0, 0, 0));
             panel.setBounds(2, 2, 789, 766);
             js.setBounds(2, 2, 789, 766);
 
