@@ -67,7 +67,8 @@ public class ConstBroadAdd extends JPanel {
         //语种下拉框
         languageComboBox = new JComboBox();
         languageComboBox.setModel(new DefaultComboBoxModel(new String[]{"Chn"}));
-        languageComboBox.setFont(new Font("宋体", Font.PLAIN, 24));
+        languageComboBox.setBackground(Color.WHITE);
+        languageComboBox.setFont(new Font("宋体", Font.PLAIN, 20));
         languageComboBox.setToolTipText("1");
         languageComboBox.setBounds(89, 36, 91, 36);
         this.add(languageComboBox);
@@ -80,14 +81,33 @@ public class ConstBroadAdd extends JPanel {
 
         //资源名称
         resourceTextField = new JTextField();
-        resourceTextField.setBounds(89, 101, 385, 36);
+        resourceTextField.setBounds(89, 101, 500, 36);
         this.add(resourceTextField);
         resourceTextField.setColumns(10);
 
         //导入音频显示文件名
         audioName = new JLabel();
-        audioName.setBounds(89, 149, 299, 15);
+        audioName.setBounds(210, 173, 299, 15);
         this.add(audioName);
+
+
+        JButton changeLineButton = new JButton("换行");
+        changeLineButton.setFont(new Font("宋体", Font.PLAIN, 12));
+        changeLineButton.setBackground(new Color(42, 163, 255));
+        changeLineButton.setBounds(620, 104, 91, 28);
+        changeLineButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String resourceName = resourceTextField.getText();
+                if (!StringUtils.isEmpty(resourceName)){
+                    StringBuilder append = new StringBuilder(resourceName).append("\\n      ");
+                    resourceTextField.setText(append.toString());
+                }
+            }
+        });
+
+        this.add(changeLineButton);
+
 
         JButton audioButton = new JButton("导入音频");
         audioButton.addActionListener(new ActionListener() {
@@ -105,16 +125,14 @@ public class ConstBroadAdd extends JPanel {
         });
 
         audioButton.setFont(new Font("宋体", Font.PLAIN, 12));
-        audioButton.setBackground(new Color(30, 144, 255));
-        audioButton.setForeground(new Color(240, 248, 255));
-        audioButton.setBounds(503, 104, 91, 28);
+        audioButton.setBackground(new Color(42, 163, 255));
+        audioButton.setBounds(89, 165, 91, 28);
         this.add(audioButton);
 
         JButton submitButton = new JButton("提交");
-        submitButton.setForeground(new Color(255, 255, 255));
-        submitButton.setBackground(new Color(30, 144, 255));
-        submitButton.setFont(new Font("宋体", Font.PLAIN, 16));
-        submitButton.setBounds(89, 174, 93, 36);
+        submitButton.setBackground(new Color(42, 163, 255));
+        submitButton.setFont(new Font("宋体", Font.PLAIN, 12));
+        submitButton.setBounds(89, 220, 91, 30);
         this.add(submitButton);
 
         submitButton.addActionListener(new ActionListener() {

@@ -50,8 +50,9 @@ public class ConstBroadNotChn extends JPanel {
 
         JLabel constLabel = new JLabel();
         constLabel.setFont(new Font("宋体", Font.PLAIN, 16));
-        constLabel.setBounds(161, 70, 400, 36);
+        constLabel.setBounds(161, 70, 550, 36);
         constLabel.setText(treePath.getLastPathComponent().toString());
+        //constLabel.setBorder(BorderFactory.createEtchedBorder());
         this.add(constLabel);
 
 
@@ -69,9 +70,9 @@ public class ConstBroadNotChn extends JPanel {
 
 
         JButton delButton = new JButton("删除");
-        delButton.setForeground(Color.WHITE);
+        //delButton.setForeground(Color.WHITE);
         delButton.setFont(new Font("宋体", Font.PLAIN, 16));
-        delButton.setBackground(new Color(30, 144, 255));
+        delButton.setBackground(new Color(42, 163, 255));
         delButton.setBounds(150, 190, 93, 36);
         this.add(delButton);
 

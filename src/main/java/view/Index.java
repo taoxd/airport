@@ -13,7 +13,6 @@ import util.SwingUtils;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import java.awt.*;
@@ -406,11 +405,7 @@ public class Index extends JPanel {
                 }
 
                 //提交数据
-                //submitData();
-
-
-                JFrame jf = (JFrame) (getRootPane().getParent());
-                TreePath path = SwingUtils.getTreePathByXMLName(jf, "登机广播");
+                submitData();
             }
         });
         submitButton.setFont(new Font("宋体", Font.PLAIN, 16));
@@ -468,6 +463,13 @@ public class Index extends JPanel {
 
         Node templateNode = templateDocument.selectSingleNode("//template[@caption='" + chnFieldText + "' and @captionEng='" + engFieldText + "']");
         Node templateObjsNode = templateDocument.selectSingleNode("//template[@caption='" + chnFieldText + "' and @captionEng='" + engFieldText + "']/templateObjs[@language='" + languageTemp + "']");
+        Node templateObjsNodeOr = templateDocument.selectSingleNode("//template[@caption='" + chnFieldText + "' or @captionEng='" + engFieldText + "']/templateObjs[@language='" + languageTemp + "']");
+        //先判断templateObjsNode
+        if (templateGroupElement != null && templateObjsNodeOr != null) {
+            JOptionPane.showMessageDialog(this, "已存在相同模版", "提示", 1);
+            return;
+        }
+
 
         //有根目录而没有相应的template
         if (templateGroupElement != null && templateNode == null) {
@@ -498,10 +500,10 @@ public class Index extends JPanel {
 
         }
 
-        if (templateGroupElement != null && templateNode != null && templateObjsNode != null) {
+/*        if (templateGroupElement != null && templateNode != null && templateObjsNode != null) {
             JOptionPane.showMessageDialog(this, "已存在相同模版", "提示", 1);
             return;
-        }
+        }*/
 
         if (templateGroupElement != null && templateNode != null && templateObjsNode == null) {
             Element templateElement = (Element) templateNode;
@@ -516,8 +518,11 @@ public class Index extends JPanel {
             contentElement.addAttribute("index", templateElement.attributeValue("index"));
             contentElement.addAttribute("language", languageTemp);
             contentElement.addAttribute("value", templateContent.getText());
-
         }
+
+        //提交后添加树节点,必须放在写xml之前，否则永远能读到
+        JFrame jf = (JFrame) (getRootPane().getParent());
+        addTreeNode(jf, chnXml);
 
         try {
             //写xml文件
@@ -526,19 +531,6 @@ public class Index extends JPanel {
             DOMUtils.writeXMLToFile(tempDocument, Constant.TEMP_PATH + Constant.TEMP_FILE);
         } catch (IOException e1) {
             e1.printStackTrace();
-        }
-
-        JFrame jf = (JFrame) (getRootPane().getParent());
-        JTree menuTree = SwingUtils.getMenuTree(jf);
-
-        TreeNode rootTreeNode = (TreeNode) menuTree.getModel().getRoot();//取得tree的根节点
-        //是否有相同中文xml
-        boolean haveSameChnXML = visitAllNodes(rootTreeNode, chnXml);
-        if (!haveSameChnXML) {
-            //模版列表路径
-            TreePath treePath = menuTree.getPathForRow(2);
-            //添加节点
-            SwingUtils.addNode(jf, chnXml, treePath);
         }
 
         //清空模版内容
@@ -550,39 +542,56 @@ public class Index extends JPanel {
 
         //初始化数据
         initMap();
-
-
     }
 
-    public boolean visitAllNodes(TreeNode node, String chnXML) {
+    //添加树节点
+    public void addTreeNode(JFrame jf, String chnXML) {
+        //获取jtree
+        JTree menuTree = SwingUtils.getMenuTree(jf);
+        //取得tree的根节点
+        TreeNode rootTreeNode = (TreeNode) menuTree.getModel().getRoot();
+        //模版列表节点
+        TreeNode templeListTreeNode = rootTreeNode.getChildAt(1);
 
-        //默认没有相同中文xml
+        //判断模版列表节点下有没有中文xml
         boolean isSameChnXML = false;
-        TreeNode templateList = null;
-        if (node.getChildCount() >= 0) {//判断是否有子节点
-            for (Enumeration e = node.children(); e.hasMoreElements(); ) {
-                TreeNode n = (TreeNode) e.nextElement();
-                String nodeName = ((DefaultMutableTreeNode) n).getUserObject().toString();
-                //从根节点查找模版列表
-                if (Menu.TEMPLATE_LIST.getName().equals(nodeName)) {
-                    templateList = n;
-                    break;
-                }
-            }
-        }
-
-        if (templateList.getChildCount() > 0) {
-            for (Enumeration temp = templateList.children(); temp.hasMoreElements(); ) {
+        if (templeListTreeNode.getChildCount() > 0) {
+            for (Enumeration temp = templeListTreeNode.children(); temp.hasMoreElements(); ) {
                 TreeNode tempNode = (TreeNode) temp.nextElement();
-                String nodeName = ((DefaultMutableTreeNode) tempNode).getUserObject().toString();
                 //从模版列表查找是否有相同中文xml
-                if (chnXML.equals(nodeName)) {
+                if (chnXML.equals(tempNode.toString())) {
                     isSameChnXML = true;
                     break;
                 }
             }
-
         }
-        return isSameChnXML;
+
+        TreePath chnXMLTreePath = null;
+
+        //如果没有中文xml，添加中文xml和预览
+        if (isSameChnXML == false) {
+            //模版列表路径
+            TreePath treePath = menuTree.getPathForRow(2);
+            //添加节点
+            SwingUtils.addNode(jf, chnXML, treePath);
+            //添加完中文xml之后才能获取treepath
+            chnXMLTreePath = SwingUtils.getTreePathByXMLName(jf, chnXML);
+            //默认添加预览
+            SwingUtils.addNode(jf, Menu.PREVIEW_TEMPLATE_XML.getName(), chnXMLTreePath);
+            //添加节点
+            SwingUtils.addNode(jf, chnField.getText(), chnXMLTreePath);
+        } else {
+            String engXML = DOMUtils.getEngXMLName(chnXML);
+            //获取模版document
+            StringBuilder templatePath = new StringBuilder(Constant.UPLOAD_BROADCAST_PATH)
+                    .append("\\").append(engXML).append(".xml");
+            Document templateDocument = DOMUtils.getDocumentTemplate(templatePath.toString());
+            Node node = templateDocument.selectSingleNode("//template[@caption='" + chnField.getText() + "']");
+            if (node == null) {
+                chnXMLTreePath = SwingUtils.getTreePathByXMLName(jf, chnXML);
+                //添加节点
+                SwingUtils.addNode(jf, chnField.getText(), chnXMLTreePath);
+            }
+        }
     }
 }

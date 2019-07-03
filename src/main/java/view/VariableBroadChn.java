@@ -77,7 +77,7 @@ public class VariableBroadChn extends JPanel {
 
         languageComboBox = new JComboBox();
         languageComboBox.setModel(new DefaultComboBoxModel(new String[]{"Eng"}));
-        languageComboBox.setFont(new Font("宋体", Font.PLAIN, 24));
+        languageComboBox.setFont(new Font("宋体", Font.PLAIN, 20));
         languageComboBox.setToolTipText("1");
         languageComboBox.setBounds(223, 167, 91, 36);
         this.add(languageComboBox);
@@ -107,8 +107,7 @@ public class VariableBroadChn extends JPanel {
             }
         });
         audioButton.setFont(new Font("宋体", Font.PLAIN, 12));
-        audioButton.setBackground(new Color(30, 144, 255));
-        audioButton.setForeground(new Color(240, 248, 255));
+        audioButton.setBackground(new Color(42, 163, 255));
         audioButton.setBounds(629, 239, 91, 28);
         this.add(audioButton);
 
@@ -118,9 +117,8 @@ public class VariableBroadChn extends JPanel {
         this.add(audioName);
 
         JButton delButton = new JButton("删除");
-        delButton.setForeground(Color.WHITE);
         delButton.setFont(new Font("宋体", Font.PLAIN, 16));
-        delButton.setBackground(new Color(30, 144, 255));
+        delButton.setBackground(new Color(42, 163, 255));
         delButton.setBounds(223, 320, 93, 36);
         this.add(delButton);
 
@@ -145,7 +143,7 @@ public class VariableBroadChn extends JPanel {
         });
 
         JButton submitButton = new JButton("提交");
-        submitButton.setBackground(new Color(30, 144, 255));
+        submitButton.setBackground(new Color(42, 163, 255));
         submitButton.setFont(new Font("宋体", Font.PLAIN, 16));
         submitButton.setBounds(400, 320, 93, 36);
         this.add(submitButton);

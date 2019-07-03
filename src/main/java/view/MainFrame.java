@@ -5,19 +5,18 @@ import config.Menu;
 import org.apache.commons.collections4.CollectionUtils;
 import org.dom4j.Document;
 import org.dom4j.Element;
+import org.dom4j.Node;
 import util.DOMUtils;
-import util.SwingUtils;
 import util.ZipCompressor;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.filechooser.FileSystemView;
-import javax.swing.tree.*;
+import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 
 /**
@@ -63,23 +62,23 @@ public class MainFrame extends JFrame {
             child32.add(node);
         }
 
-        DefaultMutableTreeNode child33 = new DefaultMutableTreeNode(Menu.PREVIEW_RESOURCE_XML.getName());//资源XML预览
+        DefaultMutableTreeNode child30 = new DefaultMutableTreeNode(Menu.PREVIEW_RESOURCE_XML.getName());//资源XML预览
 
         DefaultMutableTreeNode child5 = new DefaultMutableTreeNode(Menu.EXPORT.getName());//导出
         root.add(child1);
         root.add(child2);
         root.add(child3);
         root.add(child5);
+        child3.add(child30);
         child3.add(child31);
         child3.add(child32);
-        child3.add(child33);
         tree = new JTree(root);
-        tree.setBackground(Color.blue);
+        //tree.setBackground(new Color(199, 230, 204));
+        tree.setBackground(Color.WHITE);
         tree.setName("menuTree");
         // 设置树显示根节点句柄
         tree.setShowsRootHandles(true);
-        //tree.setPreferredSize(new Dimension(200, 0));
-        tree.setBounds(2, 2, 195, 760);
+        tree.setBounds(2, 2, 195, 766);
         tree.addTreeSelectionListener(new TreeSelectionListener() {
             @Override
             public void valueChanged(TreeSelectionEvent e) {
@@ -109,6 +108,8 @@ public class MainFrame extends JFrame {
                     String chnXML = DOMUtils.getChnXMLName(engXMLName.substring(0, engXMLName.lastIndexOf(".")));
 
                     DefaultMutableTreeNode chnXMLTreeNode = new DefaultMutableTreeNode(chnXML);
+                    //默认中文xml第一路径添加预览
+                    chnXMLTreeNode.add(new DefaultMutableTreeNode(Menu.PREVIEW_TEMPLATE_XML.getName()));
 
                     StringBuilder append = new StringBuilder(Constant.UPLOAD_BROADCAST_PATH).append("\\").append(engXMLName);
                     Document documentTemplate = DOMUtils.getDocumentTemplate(append.toString());
@@ -117,7 +118,6 @@ public class MainFrame extends JFrame {
                         String caption = template.attributeValue("caption");
                         chnXMLTreeNode.add(new DefaultMutableTreeNode(caption));
                     }
-                    chnXMLTreeNode.add(new DefaultMutableTreeNode(Menu.PREVIEW_TEMPLATE_XML.getName()));
                     templateXMLList.add(chnXMLTreeNode);
                 }
             }
@@ -235,7 +235,7 @@ public class MainFrame extends JFrame {
         leftPanel.setPreferredSize(new Dimension(200, 400));
 
 
-        js.setBounds(2, 2, 195, 760);
+        js.setBounds(2, 2, 195, 766);
         leftPanel.add(js);
 
         container.add(BorderLayout.WEST, leftPanel);
@@ -244,7 +244,7 @@ public class MainFrame extends JFrame {
         rightPanel = new JPanel();
         rightPanel.setName("rightPanel");
         rightPanel.setLayout(null);
-        rightPanel.setBackground(Color.pink);
+        rightPanel.setBackground(Color.PINK);
         //p.setPreferredSize(new Dimension(180, 400));
         container.add(rightPanel, BorderLayout.CENTER);
 
@@ -275,21 +275,21 @@ public class MainFrame extends JFrame {
         System.out.println("选择: " + e.getPath().getPathComponent(pathCount - 1));
         if (Menu.CONSTANT_BROAD.getName().equals(selectLastPathName)) {//常量广播词ConstBroadAdd
             JPanel panel = new ConstBroadAdd(e.getPath()).init();
-            panel.setBackground(Color.GREEN);
-            panel.setBounds(100, 140, 620, 400);
+            //panel.setBackground(Color.GREEN);
+            panel.setBounds(2, 140, 789, 400);
             rightPanel.add(panel);
         } else if (Menu.VARIABLE_BROAD.getName().equals(selectLastPathName)) {//点击变量广播词VariableBroadAdd
             JPanel panel = new VariableBroadAdd(e.getPath()).init();
-            panel.setBackground(Color.GREEN);
-            panel.setBounds(120, 120, 600, 400);
+            panel.setBackground(Color.WHITE);
+            panel.setBounds(2, 140, 789, 400);
             rightPanel.add(panel);
-        } else if (Menu.HOME_PAGE.getName().equals(selectLastPathName)) {//点击首页
+        } else if (pathCount == 1 || Menu.HOME_PAGE.getName().equals(selectLastPathName)) {//点击首页或根目录
             JPanel panel = new Index().init();
             panel.setBackground(Color.GREEN);
-            panel.setBounds(-90, 0, 900, 760);
+            panel.setBounds(-90, 2, 900, 766);
             rightPanel.add(panel);
 
-        } else if (Menu.PREVIEW_RESOURCE_XML.getName().equals(selectLastPathName)) {//点击资源XML预览
+        } else if ((pathCount == 2 && Menu.RESOURCE_ADD.getName().equals(selectLastPathName)) || Menu.PREVIEW_RESOURCE_XML.getName().equals(selectLastPathName)) {//点击资源XML预览资源添加
 
             String document = DOMUtils.documentToString(DOMUtils.getDocument(Constant.UPLOAD_RESOURCE_PATH + Constant.RESOURCE_NAME), "utf8");
             JTextArea jTextArea = new JTextArea(document);
@@ -302,36 +302,99 @@ public class MainFrame extends JFrame {
                     JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
             jTextArea.setEditable(false);
-            jTextArea.setBackground(Color.GREEN);
-            jTextArea.setBounds(5, 5, 780, 760);
-            js.setBounds(5, 5, 780, 760);
+            //jTextArea.setBackground(Color.GREEN);
+            jTextArea.setBounds(2, 2, 789, 766);
+            js.setBounds(2, 2, 789, 766);
             rightPanel.add(js);
         } else if (pathCount == 4 && Menu.VARIABLE_BROAD.getName().equals(e.getPath().getPathComponent(2).toString())) {//变量中文大类VariableBroadType,城市
             JPanel panel = new VariableBroadType(e.getPath()).init();
-            panel.setBackground(Color.GREEN);
-            panel.setBounds(100, 150, 620, 350);
+            //panel.setBackground(Color.GREEN);
+            panel.setBounds(2, 150, 789, 350);
             rightPanel.add(panel);
         } else if (pathCount == 4 && Menu.CONSTANT_BROAD.getName().equals(e.getPath().getPathComponent(2).toString())) {//常量中文ConstBroadChn
             JPanel panel = new ConstBroadChn(e.getPath()).init();
-            panel.setBackground(Color.GREEN);
-            panel.setBounds(10, 150, 700, 400);
+            panel.setBackground(Color.WHITE);
+            panel.setBounds(2, 150, 789, 400);
             rightPanel.add(panel);
         } else if (pathCount == 5 && Menu.VARIABLE_BROAD.getName().equals(e.getPath().getPathComponent(2).toString())) {//变量中文VariableBroadChn
             JPanel panel = new VariableBroadChn(e.getPath()).init();
-            panel.setBackground(Color.GREEN);
-            panel.setBounds(5, 130, 750, 500);
+            //panel.setBackground(Color.GREEN);
+            panel.setBounds(2, 130, 789, 500);
             rightPanel.add(panel);
 
         } else if (pathCount == 5 && Menu.CONSTANT_BROAD.getName().equals(e.getPath().getPathComponent(2).toString())) {//常量非中文ConstBroadNotChn
             JPanel panel = new ConstBroadNotChn(e.getPath()).init();
-            panel.setBackground(Color.GREEN);
-            panel.setBounds(200, 200, 400, 400);
+            panel.setBackground(Color.WHITE);
+            panel.setBounds(2, 200, 789, 400);
             rightPanel.add(panel);
         } else if (pathCount == 6 && Menu.VARIABLE_BROAD.getName().equals(e.getPath().getPathComponent(2).toString())) {//变量非中文VariableBroadNotChn
             JPanel panel = new VariableBroadNotChn(e.getPath()).init();
-            panel.setBackground(Color.GREEN);
-            panel.setBounds(200, 200, 400, 400);
+            panel.setBackground(Color.WHITE);
+            panel.setBounds(2, 200, 789, 400);
             rightPanel.add(panel);
+        } else if (pathCount == 2 && Menu.TEMPLATE_LIST.getName().equals(e.getPath().getLastPathComponent().toString())) {//点击模版列表
+
+            Document documentTemp = DOMUtils.getDocument(Constant.TEMP_PATH + Constant.TEMP_FILE);
+            Node node = documentTemp.selectSingleNode("//resource[1]");
+            if (node == null) {
+                //跳首页
+                JPanel panel = new Index().init();
+                //panel.setBackground(Color.GREEN);
+                panel.setBounds(-90, 2, 900, 766);
+                rightPanel.add(panel);
+                return;
+
+            } else {
+                //没有后缀
+                String engXML = ((Element) node).attributeValue("engXML");
+                //获取模版document
+                StringBuilder templatePath = new StringBuilder(Constant.UPLOAD_BROADCAST_PATH)
+                        .append("\\").append(engXML).append(".xml");
+                Document templateDocument = DOMUtils.getDocumentTemplate(templatePath.toString());
+                String document = DOMUtils.documentToString(templateDocument, "utf8");
+                JTextArea jTextArea = new JTextArea(document);
+
+                JScrollPane js = new JScrollPane(jTextArea);
+
+                //分别设置水平和垂直滚动条自动出现
+                js.setHorizontalScrollBarPolicy(
+                        JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+                js.setVerticalScrollBarPolicy(
+                        JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+                jTextArea.setEditable(false);
+                //jTextArea.setBackground(Color.GREEN);
+                jTextArea.setBounds(2, 2, 789, 766);
+                js.setBounds(2, 2, 789, 766);
+
+                rightPanel.add(js);
+            }
+
+
+        } else if (pathCount == 3 && Menu.TEMPLATE_LIST.getName().equals(e.getPath().getPathComponent(1).toString())) {//点击模版列表中某个模版
+
+            String chnXML = e.getPath().getLastPathComponent().toString();
+            String engXML = DOMUtils.getEngXMLName(chnXML);
+            //获取模版document
+            StringBuilder templatePath = new StringBuilder(Constant.UPLOAD_BROADCAST_PATH)
+                    .append("\\").append(engXML).append(".xml");
+            Document templateDocument = DOMUtils.getDocumentTemplate(templatePath.toString());
+            String document = DOMUtils.documentToString(templateDocument, "utf8");
+            JTextArea jTextArea = new JTextArea(document);
+
+            JScrollPane js = new JScrollPane(jTextArea);
+
+            //分别设置水平和垂直滚动条自动出现
+            js.setHorizontalScrollBarPolicy(
+                    JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            js.setVerticalScrollBarPolicy(
+                    JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+            jTextArea.setEditable(false);
+            //jTextArea.setBackground(Color.GREEN);
+            jTextArea.setBounds(2, 23, 789, 766);
+            js.setBounds(2, 2, 789, 766);
+
+            rightPanel.add(js);
+
         } else if (pathCount == 4 && Menu.PREVIEW_TEMPLATE_XML.getName().equals(e.getPath().getLastPathComponent().toString())) {//点击模版预览
             String chnXML = e.getPath().getPathComponent(2).toString();
             String engXML = DOMUtils.getEngXMLName(chnXML);
@@ -353,16 +416,26 @@ public class MainFrame extends JFrame {
             js.setVerticalScrollBarPolicy(
                     JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
             jTextArea.setEditable(false);
-            jTextArea.setBackground(Color.GREEN);
-            jTextArea.setBounds(2, 3, 787, 758);
-            js.setBounds(2, 3, 787, 758);
+            //jTextArea.setBackground(Color.GREEN);
+            jTextArea.setBounds(2, 2, 789, 766);
+            js.setBounds(2, 2, 789, 766);
 
             rightPanel.add(js);
         } else if (pathCount == 4 && Menu.TEMPLATE_LIST.getName().equals(e.getPath().getPathComponent(1).toString())) {//点击模版列表中的template
             JPanel panel = new AdvertisingWord(e.getPath()).init();
-            panel.setBackground(Color.RED);
-            panel.setBounds(2, 3, 787, 758);
-            rightPanel.add(panel);
+            JScrollPane js = new JScrollPane(panel);
+
+            //分别设置水平和垂直滚动条自动出现
+            js.setHorizontalScrollBarPolicy(
+                    JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            js.setVerticalScrollBarPolicy(
+                    JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+            //panel.setBackground(Color.GREEN);
+            panel.setBounds(2, 2, 789, 766);
+            js.setBounds(2, 2, 789, 766);
+
+            rightPanel.add(js);
         } else if (pathCount == 2 && Menu.EXPORT.getName().equals(e.getPath().getPathComponent(1).toString())) {//点击导出
 
             //列出Windows下所有可用磁盘

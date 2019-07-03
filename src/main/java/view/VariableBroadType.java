@@ -97,12 +97,12 @@ public class VariableBroadType extends JPanel {
         });
 
         audioButton.setFont(new Font("宋体", Font.PLAIN, 12));
-        audioButton.setBackground(new Color(30, 144, 255));
+        audioButton.setBackground(new Color(42, 163, 255));
         audioButton.setBounds(503, 123, 91, 28);
         this.add(audioButton);
 
         JButton delButton = new JButton("删除");
-        delButton.setBackground(new Color(30, 144, 255));
+        delButton.setBackground(new Color(42, 163, 255));
         delButton.setFont(new Font("宋体", Font.PLAIN, 16));
         delButton.setBounds(120, 200, 93, 36);
         this.add(delButton);
@@ -127,7 +127,7 @@ public class VariableBroadType extends JPanel {
         });
 
         JButton submitButton = new JButton("提交");
-        submitButton.setBackground(new Color(30, 144, 255));
+        submitButton.setBackground(new Color(42, 163, 255));
         submitButton.setFont(new Font("宋体", Font.PLAIN, 16));
         submitButton.setBounds(320, 200, 93, 36);
         this.add(submitButton);

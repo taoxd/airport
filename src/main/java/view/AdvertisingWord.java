@@ -94,7 +94,7 @@ public class AdvertisingWord extends JPanel {
 
         //给表格设置行高
 
-        table.setRowHeight(50);
+        table.setRowHeight(100);
     }
 
     public JPanel init() {
@@ -106,18 +106,18 @@ public class AdvertisingWord extends JPanel {
         this.setLayout(null);
         //setContentPane(contentPane);
 
-        JDesktopPane desktopPane = new JDesktopPane();
+/*        JDesktopPane desktopPane = new JDesktopPane();
         desktopPane.setBackground(Color.YELLOW);
-        desktopPane.setBounds(93, 137, 800, 800);
-        scrollPane.setBounds(93, 137, 600, 400);
+        desktopPane.setBounds(93, 137, 800, 800);*/
+        scrollPane.setBounds(30, 30, 720, 650);
         //scrollPane.setLocation(93, 27);
         this.add(scrollPane);
         this.setVisible(true);
 
         JButton delButton = new JButton("删除");
-        delButton.setBackground(new Color(35, 248, 255));
+        delButton.setBackground(new Color(42, 163, 255));
         delButton.setFont(new Font("宋体", Font.PLAIN, 16));
-        delButton.setBounds(340, 570, 93, 44);
+        delButton.setBounds(340, 700, 93, 44);
         this.add(delButton);
 
         delButton.addActionListener(new ActionListener() {
@@ -125,11 +125,11 @@ public class AdvertisingWord extends JPanel {
 
                 int isDelete = JOptionPane.showConfirmDialog(null, "确定要删除吗？", "删除提示", 0);
                 if (isDelete == JOptionPane.YES_OPTION) {
-                    //模版删除template
-                    delTemplate();
                     //删除树节点
                     JFrame jf = (JFrame) (getRootPane().getParent());
                     SwingUtils.delNode(jf);
+                    //模版删除template，必须先删除节点，否则报错
+                    delTemplate();
                 }
 
             }

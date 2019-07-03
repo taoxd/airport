@@ -14,7 +14,7 @@ public enum Menu {
     CONSTANT_BROAD("常量广播词", "100"),
     VARIABLE_BROAD("变量广播词", "300"),
     PREVIEW_RESOURCE_XML("资源XML预览", "700"),
-    PREVIEW_TEMPLATE_XML("预览", "800"),
+    PREVIEW_TEMPLATE_XML("模版XML预览", "800"),
     EXPORT("导出", "800");
 
     private String name;
