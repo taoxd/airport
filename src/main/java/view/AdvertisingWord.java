@@ -115,9 +115,10 @@ public class AdvertisingWord extends JPanel {
         this.setVisible(true);
 
         JButton delButton = new JButton("删除");
-        delButton.setBackground(new Color(42, 163, 255));
+        delButton.setFocusPainted(false);
+        delButton.setBackground(new Color(56, 145, 255));
         delButton.setFont(new Font("宋体", Font.PLAIN, 16));
-        delButton.setBounds(340, 700, 93, 44);
+        delButton.setBounds(340, 700, 93, 31);
         this.add(delButton);
 
         delButton.addActionListener(new ActionListener() {

@@ -1,14 +1,9 @@
 package run;
 
 import config.Constant;
-import org.dom4j.Document;
-import org.dom4j.Element;
-import org.dom4j.Node;
-import util.DOMUtils;
 import view.MainFrame;
 
 import java.io.File;
-import java.io.IOException;
 
 /**
  * @Description: 启动入口

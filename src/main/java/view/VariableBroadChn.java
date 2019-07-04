@@ -51,44 +51,45 @@ public class VariableBroadChn extends JPanel {
 
         JLabel label_2 = new JLabel("所属类别:");
         label_2.setFont(new Font("宋体", Font.PLAIN, 16));
-        label_2.setBounds(141, 58, 91, 28);
+        label_2.setBounds(141, 58, 91, 31);
         this.add(label_2);
 
         JLabel label_3 = new JLabel(treePath.getPathComponent(3).toString());
         label_3.setFont(new Font("宋体", Font.PLAIN, 16));
-        label_3.setBounds(223, 58, 91, 28);
+        label_3.setBounds(223, 58, 91, 31);
         this.add(label_3);
 
 
         JLabel label_4 = new JLabel("变量广告词:");
         label_4.setFont(new Font("宋体", Font.PLAIN, 16));
-        label_4.setBounds(126, 111, 91, 28);
+        label_4.setBounds(126, 111, 91, 31);
         this.add(label_4);
 
         JLabel label_5 = new JLabel(treePath.getLastPathComponent().toString());
         label_5.setFont(new Font("宋体", Font.PLAIN, 16));
-        label_5.setBounds(223, 111, 91, 28);
+        label_5.setBounds(223, 111, 91, 31);
         this.add(label_5);
 
         JLabel label = new JLabel("新增语种:");
         label.setFont(new Font("宋体", Font.PLAIN, 16));
-        label.setBounds(141, 174, 91, 29);
+        label.setBounds(141, 174, 91, 31);
         this.add(label);
 
         languageComboBox = new JComboBox();
-        languageComboBox.setModel(new DefaultComboBoxModel(new String[]{"Eng"}));
-        languageComboBox.setFont(new Font("宋体", Font.PLAIN, 20));
+        languageComboBox.setModel(new DefaultComboBoxModel(new String[]{ "Eng", "Jpn", "Kor", "Fre", "Ger", "Rus"}));
+        languageComboBox.setFont(new Font("宋体", Font.PLAIN, 16));
         languageComboBox.setToolTipText("1");
-        languageComboBox.setBounds(223, 167, 91, 36);
+        languageComboBox.setBounds(223, 174, 91, 31);
+        languageComboBox.setBackground(Color.WHITE);
         this.add(languageComboBox);
 
         JLabel label_1 = new JLabel("新增语种广播词:");
         label_1.setFont(new Font("宋体", Font.PLAIN, 16));
-        label_1.setBounds(93, 238, 120, 36);
+        label_1.setBounds(93, 238, 120, 31);
         this.add(label_1);
 
         textField = new JTextField();
-        textField.setBounds(223, 236, 385, 36);
+        textField.setBounds(223, 238, 385, 31);
         this.add(textField);
         textField.setColumns(10);
 
@@ -106,20 +107,24 @@ public class VariableBroadChn extends JPanel {
                 }
             }
         });
-        audioButton.setFont(new Font("宋体", Font.PLAIN, 12));
-        audioButton.setBackground(new Color(42, 163, 255));
-        audioButton.setBounds(629, 239, 91, 28);
+        audioButton.setFocusPainted(false);
+        audioButton.setFont(new Font("宋体", Font.PLAIN, 16));
+        audioButton.setBackground(new Color(56, 145, 255));
+        audioButton.setBounds(629, 238, 99, 31);
         this.add(audioButton);
 
 
         audioName = new JLabel();
-        audioName.setBounds(223, 283, 299, 15);
+        audioName.setBounds(223, 283, 385, 31);
+        audioName.setOpaque(true);//设置组件JLabel不透明，只有设置为不透明，设置背景色才有效
+        audioName.setBackground(new Color(238, 238, 238));
         this.add(audioName);
 
         JButton delButton = new JButton("删除");
+        delButton.setFocusPainted(false);
         delButton.setFont(new Font("宋体", Font.PLAIN, 16));
-        delButton.setBackground(new Color(42, 163, 255));
-        delButton.setBounds(223, 320, 93, 36);
+        delButton.setBackground(new Color(56, 145, 255));
+        delButton.setBounds(223, 320, 93, 31);
         this.add(delButton);
 
         delButton.addActionListener(new ActionListener() {
@@ -143,9 +148,10 @@ public class VariableBroadChn extends JPanel {
         });
 
         JButton submitButton = new JButton("提交");
-        submitButton.setBackground(new Color(42, 163, 255));
+        submitButton.setFocusPainted(false);
+        submitButton.setBackground(new Color(56, 145, 255));
         submitButton.setFont(new Font("宋体", Font.PLAIN, 16));
-        submitButton.setBounds(400, 320, 93, 36);
+        submitButton.setBounds(400, 320, 93, 31);
         this.add(submitButton);
         submitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {

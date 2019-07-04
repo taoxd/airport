@@ -53,32 +53,35 @@ public class VariableBroadType extends JPanel {
 
         JLabel languageLabel = new JLabel("语种:");
         languageLabel.setFont(new Font("宋体", Font.PLAIN, 16));
-        languageLabel.setBounds(38, 62, 54, 15);
+        languageLabel.setBounds(38, 62, 54, 31);
         this.add(languageLabel);
 
         //语种下拉框
         languageComboBox = new JComboBox();
         languageComboBox.setModel(new DefaultComboBoxModel(new String[]{"Chn"}));
-        languageComboBox.setFont(new Font("宋体", Font.PLAIN, 24));
+        languageComboBox.setFont(new Font("宋体", Font.PLAIN, 16));
         languageComboBox.setToolTipText("1");
-        languageComboBox.setBounds(89, 50, 91, 36);
+        languageComboBox.setBounds(89, 62, 91, 31);
+        languageComboBox.setBackground(Color.WHITE);
         this.add(languageComboBox);
 
         //资源
         JLabel resourceLabel = new JLabel("资源:");
         resourceLabel.setFont(new Font("宋体", Font.PLAIN, 16));
-        resourceLabel.setBounds(38, 130, 54, 15);
+        resourceLabel.setBounds(38, 130, 54, 31);
         this.add(resourceLabel);
 
         //资源名称
         resourceTextField = new JTextField();
-        resourceTextField.setBounds(89, 120, 385, 36);
+        resourceTextField.setBounds(89, 130, 385, 31);
         this.add(resourceTextField);
         resourceTextField.setColumns(10);
 
         //导入音频显示文件名
         audioName = new JLabel();
-        audioName.setBounds(89, 170, 299, 15);
+        audioName.setBounds(89, 170, 385, 31);
+        audioName.setOpaque(true);//设置组件JLabel不透明，只有设置为不透明，设置背景色才有效
+        audioName.setBackground(new Color(238, 238, 238));
         this.add(audioName);
 
         JButton audioButton = new JButton("导入音频");
@@ -91,26 +94,28 @@ public class VariableBroadType extends JPanel {
                     audioName.setText(fc.getSelectedFile().toString());
                 } else {
                     //未正常选择文件，如选择取消按钮
-                    audioName.setText("未选择文件");
+                    audioName.setText("");
                 }
             }
         });
 
-        audioButton.setFont(new Font("宋体", Font.PLAIN, 12));
-        audioButton.setBackground(new Color(42, 163, 255));
-        audioButton.setBounds(503, 123, 91, 28);
+        audioButton.setFont(new Font("宋体", Font.PLAIN, 16));
+        audioButton.setFocusPainted(false);
+        audioButton.setBackground(new Color(56, 145, 255));
+        audioButton.setBounds(503, 130, 99, 31);
         this.add(audioButton);
 
         JButton delButton = new JButton("删除");
-        delButton.setBackground(new Color(42, 163, 255));
+        delButton.setFocusPainted(false);
+        delButton.setBackground(new Color(56, 145, 255));
         delButton.setFont(new Font("宋体", Font.PLAIN, 16));
-        delButton.setBounds(120, 200, 93, 36);
+        delButton.setBounds(89, 220, 93, 31);
         this.add(delButton);
         delButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
                 int i = JOptionPane.showConfirmDialog(null, "确定要删除吗？", "删除提示", 0);
-                if (i==JOptionPane.YES_OPTION){
+                if (i == JOptionPane.YES_OPTION) {
                     //删除树节点
                     JFrame jf = (JFrame) (getRootPane().getParent());
                     SwingUtils.delNode(jf);
@@ -127,9 +132,10 @@ public class VariableBroadType extends JPanel {
         });
 
         JButton submitButton = new JButton("提交");
-        submitButton.setBackground(new Color(42, 163, 255));
+        submitButton.setBackground(new Color(56, 145, 255));
+        submitButton.setFocusPainted(false);
         submitButton.setFont(new Font("宋体", Font.PLAIN, 16));
-        submitButton.setBounds(320, 200, 93, 36);
+        submitButton.setBounds(320, 220, 93, 31);
         this.add(submitButton);
 
         submitButton.addActionListener(new ActionListener() {
@@ -157,8 +163,8 @@ public class VariableBroadType extends JPanel {
         Document document = DOMUtils.getDocument(Constant.UPLOAD_RESOURCE_PATH + Constant.RESOURCE_NAME);
 
         Node node = document.selectSingleNode("//resourceType[@type='" + treePath.getLastPathComponent().toString() + "']/hashValue/resource[@language='" + languageComboBox.getSelectedItem().toString() + "' and @value='" + resourceTextField.getText() + "']");
-        if (node!=null){
-            JOptionPane.showMessageDialog(null,"存在相同资源！","提示",1);
+        if (node != null) {
+            JOptionPane.showMessageDialog(null, "存在相同资源！", "提示", 1);
             return;
         }
         updateXML(document, getNewId());
@@ -202,7 +208,7 @@ public class VariableBroadType extends JPanel {
             id = typeId + 1;
         } else {
             String lastId = ((Element) node).attributeValue("id");
-            id = typeId + String.valueOf(Integer.valueOf(lastId.replace(typeId, "")) + 1);
+            id = typeId + (Integer.valueOf(lastId.replace(typeId, "")) + 1);
         }
         map.put("id", id);
         map.put("hashId", id + 1);

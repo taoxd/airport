@@ -36,6 +36,7 @@ public class BulletBox extends JDialog {
     public JDialog init() {
 
         setName("JDialog");
+        setTitle("新增模版");
         //获取屏幕的宽度高度
         int screenWidth = (int) this.getToolkit().getScreenSize().getWidth();
         int screenHeight = (int) this.getToolkit().getScreenSize().getHeight();
@@ -56,7 +57,7 @@ public class BulletBox extends JDialog {
         this.add(label);
 
         chnField = new JTextField();
-        chnField.setBounds(80, 34, 206, 30);
+        chnField.setBounds(80, 34, 206, 31);
         this.add(chnField);
         chnField.setColumns(10);
 
@@ -66,15 +67,15 @@ public class BulletBox extends JDialog {
         this.add(lblNewLabel);
 
         engField = new JTextField();
-        engField.setBounds(80, 94, 206, 30);
+        engField.setBounds(80, 94, 206, 31);
         this.add(engField);
         engField.setColumns(10);
 
         JButton submitButton = new JButton("提交");
-        submitButton.setBackground(new Color(30, 144, 255));
-        submitButton.setForeground(new Color(255, 255, 255));
+        submitButton.setBackground(new Color(56, 145, 255));
+        submitButton.setFocusPainted(false);
         submitButton.setFont(new Font("宋体", Font.PLAIN, 16));
-        submitButton.setBounds(120, 150, 99, 36);
+        submitButton.setBounds(120, 150, 99, 31);
         this.add(submitButton);
 
         submitButton.addActionListener(new ActionListener() {
@@ -84,8 +85,12 @@ public class BulletBox extends JDialog {
                 String engText = engField.getText();
 
                 //判断不能为空
-                if (StringUtils.isEmpty(chnText) || StringUtils.isEmpty(engText)){
-                    JOptionPane.showMessageDialog(null, "不能为空哦！", "提示", 1);
+                if (StringUtils.isEmpty(chnText)) {
+                    JOptionPane.showMessageDialog(null, "中文不能为空！", "提示", 1);
+                    return;
+                }
+                if (StringUtils.isEmpty(engText)) {
+                    JOptionPane.showMessageDialog(null, "英文不能为空！", "提示", 1);
                     return;
                 }
 
@@ -124,8 +129,8 @@ public class BulletBox extends JDialog {
         rightPanel.removeAll();
         rightPanel.setLayout(null);
         JPanel panel = new Index().init();
-        panel.setBackground(Color.GREEN);
-        panel.setBounds(-90, 0, 900, 760);
+        panel.setBackground(new Color(0, 0, 0, 0));
+        panel.setBounds(-90, 2, 900, 766);
         rightPanel.add(panel);
         rightPanel.repaint();
     }

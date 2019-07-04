@@ -45,32 +45,32 @@ public class VariableBroadAdd extends JPanel {
 
         JLabel label = new JLabel("新增变量类别:");
         label.setFont(new Font("宋体", Font.PLAIN, 16));
-        label.setBounds(47, 72, 111, 43);
+        label.setBounds(47, 72, 111, 31);
         this.add(label);
 
         //变量类别输入框
         variableTypeField = new JTextField();
-        variableTypeField.setBounds(159, 72, 206, 43);
+        variableTypeField.setBounds(159, 72, 206, 31);
         this.add(variableTypeField);
         variableTypeField.setColumns(10);
 
         JLabel showTypeLabel = new JLabel("展示类型:");
         showTypeLabel.setFont(new Font("宋体", Font.PLAIN, 16));
-        showTypeLabel.setBounds(79, 136, 79, 43);
+        showTypeLabel.setBounds(79, 136, 79, 31);
         this.add(showTypeLabel);
 
         comboBox = new JComboBox();
         comboBox.setBackground(new Color(255, 255, 255));
         comboBox.setFont(new Font("宋体", Font.PLAIN, 16));
         comboBox.setModel(new DefaultComboBoxModel(new String[]{Constant.SELECTION, Constant.EDITBOX}));
-        comboBox.setBounds(159, 141, 206, 38);
+        comboBox.setBounds(159, 136, 206, 31);
         this.add(comboBox);
 
         JButton submitButton = new JButton("提交");
-        submitButton.setBackground(new Color(30, 144, 255));
-        submitButton.setForeground(new Color(255, 255, 255));
+        submitButton.setFocusPainted(false);
+        submitButton.setBackground(new Color(56, 145, 255));
         submitButton.setFont(new Font("宋体", Font.PLAIN, 16));
-        submitButton.setBounds(202, 246, 99, 36);
+        submitButton.setBounds(159, 210, 99, 31);
         this.add(submitButton);
 
         //提交按钮
@@ -78,7 +78,7 @@ public class VariableBroadAdd extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 //变量类型不能为空
                 if (StringUtils.isEmpty(variableTypeField.getText())) {
-                    JOptionPane.showMessageDialog(null, "请输入变量类别...", "提示", 1);
+                    JOptionPane.showMessageDialog(null, "请输入变量类别!", "提示", 1);
                 } else {
                     writeToXML();
                     //提交完清空变量类型

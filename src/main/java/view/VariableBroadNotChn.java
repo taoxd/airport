@@ -43,33 +43,34 @@ public class VariableBroadNotChn extends JPanel {
 
         JLabel label_2 = new JLabel("变量广播词:");
         label_2.setFont(new Font("宋体", Font.PLAIN, 16));
-        label_2.setBounds(56, 70, 91, 36);
+        label_2.setBounds(56, 70, 91, 31);
         this.add(label_2);
 
         JLabel constLabel = new JLabel();
         constLabel.setFont(new Font("宋体", Font.PLAIN, 16));
-        constLabel.setBounds(161, 70, 500, 36);
+        constLabel.setBounds(161, 70, 500, 31);
         constLabel.setText(treePath.getLastPathComponent().toString());
         this.add(constLabel);
 
 
         JLabel label = new JLabel("语种:");
         label.setFont(new Font("宋体", Font.PLAIN, 16));
-        label.setBounds(106, 120, 54, 22);
+        label.setBounds(106, 120, 54, 31);
         this.add(label);
 
 
         JLabel languageLabel = new JLabel();
         languageLabel.setFont(new Font("宋体", Font.PLAIN, 16));
-        languageLabel.setBounds(161, 120, 91, 22);
+        languageLabel.setBounds(161, 120, 91, 31);
         languageLabel.setText(element.attributeValue("language"));
         this.add(languageLabel);
 
 
         JButton delButton = new JButton("删除");
+        delButton.setFocusPainted(false);
         delButton.setFont(new Font("宋体", Font.PLAIN, 16));
-        delButton.setBackground(new Color(42, 163, 255));
-        delButton.setBounds(161, 170, 93, 36);
+        delButton.setBackground(new Color(56, 145, 255));
+        delButton.setBounds(161, 170, 93, 31);
         this.add(delButton);
 
         delButton.addActionListener(new ActionListener() {

@@ -53,50 +53,45 @@ public class ConstBroadChn extends JPanel {
 
         JLabel label_2 = new JLabel("常量广播词:");
         label_2.setFont(new Font("宋体", Font.PLAIN, 16));
-        label_2.setBounds(56, 70, 91, 36);
+        label_2.setBounds(56, 70, 91, 31);
         this.add(label_2);
 
         JLabel constLabel = new JLabel();
         constLabel.setFont(new Font("宋体", Font.PLAIN, 16));
-        constLabel.setBounds(161, 70, 600, 36);
+        constLabel.setBounds(161, 70, 600, 31);
         constLabel.setText(treePath.getLastPathComponent().toString());
         this.add(constLabel);
 
         JLabel label = new JLabel("语种:");
         label.setFont(new Font("宋体", Font.PLAIN, 16));
-        label.setBounds(106, 132, 54, 22);
+        label.setBounds(106, 132, 54, 31);
         this.add(label);
 
         languageComboBox = new JComboBox();
-        languageComboBox.setModel(new DefaultComboBoxModel(new String[]{"Eng"}));
-        languageComboBox.setFont(new Font("宋体", Font.PLAIN, 20));
+        languageComboBox.setModel(new DefaultComboBoxModel(new String[]{"Eng", "Jpn", "Kor", "Fre", "Ger", "Rus"}));
+        languageComboBox.setFont(new Font("宋体", Font.PLAIN, 16));
         languageComboBox.setToolTipText("1");
-        languageComboBox.setBounds(161, 125, 91, 36);
+        languageComboBox.setBounds(161, 129, 91, 31);
         languageComboBox.setBackground(Color.WHITE);
         this.add(languageComboBox);
 
 
         JLabel label_1 = new JLabel("新增语种广播词:");
         label_1.setFont(new Font("宋体", Font.PLAIN, 16));
-        label_1.setBounds(31, 194, 129, 24);
+        label_1.setBounds(31, 194, 129, 31);
         this.add(label_1);
 
 
         resourceTextField = new JTextField();
-        resourceTextField.setBounds(161, 190, 500, 36);
+        resourceTextField.setBounds(161, 192, 500, 31);
         this.add(resourceTextField);
         resourceTextField.setColumns(10);
 
-        //音频路径
-        audioName = new JLabel();
-        audioName.setBounds(290, 260, 299, 15);
-        this.add(audioName);
-
-
         JButton changeLineButton = new JButton("换行");
-        changeLineButton.setFont(new Font("宋体", Font.PLAIN, 12));
-        changeLineButton.setBackground(new Color(42, 163, 255));
-        changeLineButton.setBounds(680, 193, 91, 28);
+        changeLineButton.setFont(new Font("宋体", Font.PLAIN, 16));
+        changeLineButton.setFocusPainted(false);
+        changeLineButton.setBackground(new Color(56, 145, 255));
+        changeLineButton.setBounds(680, 192, 91, 31);
         changeLineButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String resourceName = resourceTextField.getText();
@@ -108,10 +103,20 @@ public class ConstBroadChn extends JPanel {
         });
         this.add(changeLineButton);
 
+
+        //音频路径
+        audioName = new JLabel();
+        audioName.setBounds(290, 255, 370, 31);
+        audioName.setOpaque(true);//设置组件JLabel不透明，只有设置为不透明，设置背景色才有效
+        audioName.setBackground(new Color(238, 238, 238));
+        this.add(audioName);
+
+
         JButton audioButton = new JButton("导入音频");
-        audioButton.setFont(new Font("宋体", Font.PLAIN, 12));
-        audioButton.setBackground(new Color(42, 163, 255));
-        audioButton.setBounds(161, 255, 91, 28);
+        audioButton.setFont(new Font("宋体", Font.PLAIN, 16));
+        audioButton.setBackground(new Color(56, 145, 255));
+        audioButton.setBounds(161, 255, 99, 31);
+        audioButton.setFocusPainted(false);
         audioButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JFileChooser fc = new JFileChooser(Constant.IMPORT_VOICE_OPEN_URL);
@@ -127,12 +132,11 @@ public class ConstBroadChn extends JPanel {
         });
         this.add(audioButton);
 
-
         JButton delButton = new JButton("删除");
-        //delButton.setForeground(Color.WHITE);
+        delButton.setFocusPainted(false);
         delButton.setFont(new Font("宋体", Font.PLAIN, 16));
-        delButton.setBackground(new Color(42, 163, 255));
-        delButton.setBounds(161, 310, 93, 36);
+        delButton.setBackground(new Color(56, 145, 255));
+        delButton.setBounds(161, 310, 99, 31);
         this.add(delButton);
         delButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -156,9 +160,10 @@ public class ConstBroadChn extends JPanel {
         });
 
         JButton submitButton = new JButton("提交");
-        submitButton.setBackground(new Color(42, 163, 255));
+        submitButton.setBackground(new Color(56, 145, 255));
         submitButton.setFont(new Font("宋体", Font.PLAIN, 16));
-        submitButton.setBounds(390, 310, 93, 36);
+        submitButton.setBounds(390, 310, 93, 31);
+        submitButton.setFocusPainted(false);
         this.add(submitButton);
         submitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -166,15 +171,19 @@ public class ConstBroadChn extends JPanel {
                 String audioNameText = audioName.getText();
 
                 //判断空
-                if (StringUtils.isEmpty(resourceName) || StringUtils.isEmpty(audioNameText)) {
-                    JOptionPane.showMessageDialog(null, "输入不能为空哦！", "提示", 1);
+                if (StringUtils.isEmpty(resourceName)) {
+                    JOptionPane.showMessageDialog(null, "请输入广播词!", "提示", 1);
                     return;
-                } else {
-                    submitData(getNewId());
-                    //提交完之后，清空
-                    resourceTextField.setText("");
-                    audioName.setText("");
                 }
+                if (StringUtils.isEmpty(audioNameText)) {
+                    JOptionPane.showMessageDialog(null, "请导入资源", "提示", 1);
+                    return;
+                }
+
+                submitData(getNewId());
+                //提交完之后，清空
+                resourceTextField.setText("");
+                audioName.setText("");
             }
         });
         return this;
@@ -187,7 +196,7 @@ public class ConstBroadChn extends JPanel {
         String hashValueId = hashValueElement.attributeValue("id");
 
 
-        Node node = document.selectSingleNode("//resourceType[@typeId='" + Menu.CONSTANT_BROAD.getCode() + "']/hashValue[@id='"+hashValueId+"']/resource[@language='" + languageComboBox.getSelectedItem().toString() + "']");
+        Node node = document.selectSingleNode("//resourceType[@typeId='" + Menu.CONSTANT_BROAD.getCode() + "']/hashValue[@id='" + hashValueId + "']/resource[@language='" + languageComboBox.getSelectedItem().toString() + "']");
 
         if (node != null) {
             JOptionPane.showMessageDialog(null, "存在相同资源！", "提示", 1);

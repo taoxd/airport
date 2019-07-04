@@ -149,11 +149,11 @@ public class Index extends JPanel {
 
         JButton addTypeButton = new JButton("新增模版类别");
         addTypeButton.setFont(new Font("宋体", Font.PLAIN, 16));
-        //addTypeButton.setForeground(new Color(255, 255, 255));
-        addTypeButton.setBackground(new Color(30, 144, 255));
+        addTypeButton.setBackground(new Color(56, 145, 255, 195));
+        //设置不绘制焦点,否则字体周围有虚线框
+        addTypeButton.setFocusPainted(false);
         addTypeButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
                 //将RightPanel传到弹框
                 JFrame jf = (JFrame) (getRootPane().getParent());
                 JDialog init = new BulletBox(SwingUtils.getRightPanel(jf)).init();
@@ -192,7 +192,7 @@ public class Index extends JPanel {
         JComboBox languageCcomboBox = new JComboBox();
         languageCcomboBox.setFont(new Font("宋体", Font.PLAIN, 16));
         languageCcomboBox.setBackground(Color.WHITE);
-        languageCcomboBox.setModel(new DefaultComboBoxModel(new String[]{"Chn", "Eng"}));
+        languageCcomboBox.setModel(new DefaultComboBoxModel(new String[]{"Chn", "Eng", "Jpn", "Kor", "Fre", "Ger", "Rus"}));
         languageCcomboBox.setBounds(318, 156, 225, 31);
         this.add(languageCcomboBox);
 
@@ -233,9 +233,6 @@ public class Index extends JPanel {
         jsp.setVerticalScrollBarPolicy(
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
-
-        constBroadList.setBackground(SystemColor.control);
-        constBroadList.setForeground(new Color(0, 0, 0));
         constBroadList.setBackground(Color.WHITE);
         constBroadList.setFont(new Font("宋体", Font.PLAIN, 16));
         //constBroadList.setLineWrap(true);
@@ -251,12 +248,12 @@ public class Index extends JPanel {
 
         }
 
-
         constBroadList.addMouseListener(new MouseListener() {
             //鼠标单击事件
             @Override
             public void mouseClicked(MouseEvent e) {
-                String constBroad = constBroadList.getSelectedValue().toString();
+                String constBroad = constBroadList.getSelectedValue();
+                if (constBroad == null) return;
                 Element resourceElement = (Element) document.selectSingleNode("//resourceType[@flag='" + Constant.CONST + "']/hashValue/resource[@value='" + constBroad + "' and @language='" + languageTemp + "']");
                 String hashId = resourceElement.attributeValue("hashId");
                 Element constElement = DocumentHelper.createElement("const");
@@ -341,9 +338,9 @@ public class Index extends JPanel {
         label_3.setBounds(232, 515, 72, 25);
         this.add(label_3);
 
-        /**
-         * jTextArea.append("输入内容"+"\r\n");
-         * 这样，每次输入的话，都是另起一行的。
+        /*
+          jTextArea.append("输入内容"+"\r\n");
+          这样，每次输入的话，都是另起一行的。
          */
         templateContent = new JTextArea();
 
@@ -366,8 +363,9 @@ public class Index extends JPanel {
         this.add(js);
 
         JButton resetButton = new JButton("重置");
-        resetButton.setBackground(new Color(30, 144, 255));
         resetButton.setFont(new Font("宋体", Font.PLAIN, 16));
+        resetButton.setBackground(new Color(56, 145, 255));
+        resetButton.setFocusPainted(false);
         resetButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 //清空模版内容
@@ -380,7 +378,10 @@ public class Index extends JPanel {
         this.add(resetButton);
 
         JButton submitButton = new JButton("提交");
-        submitButton.setBackground(new Color(30, 144, 255));
+        submitButton.setFont(new Font("宋体", Font.PLAIN, 16));
+        submitButton.setBackground(new Color(56, 145, 255));
+        submitButton.setFocusPainted(false);
+        submitButton.setBounds(564, 680, 93, 31);
         submitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
@@ -392,7 +393,7 @@ public class Index extends JPanel {
                 String text = templateContent.getText();
 
                 if (xmlComboBox.getSelectedItem() == null) {
-                    JOptionPane.showMessageDialog(null, "XML命名不能为空！请新增类别...", "提示", 1);
+                    JOptionPane.showMessageDialog(null, "模版类别不能为空！请新增模版类别...", "提示", 1);
                     return;
                 }
                 if (StringUtils.isEmpty(chnFieldText)) {
@@ -412,8 +413,7 @@ public class Index extends JPanel {
                 submitData();
             }
         });
-        submitButton.setFont(new Font("宋体", Font.PLAIN, 16));
-        submitButton.setBounds(564, 680, 93, 31);
+
         this.add(submitButton);
 
         this.setVisible(true);

@@ -61,45 +61,48 @@ public class ConstBroadAdd extends JPanel {
 
         JLabel languageLabel = new JLabel("语种:");
         languageLabel.setFont(new Font("宋体", Font.PLAIN, 16));
-        languageLabel.setBounds(38, 49, 54, 15);
+        languageLabel.setBounds(38, 49, 54, 31);
         this.add(languageLabel);
 
         //语种下拉框
         languageComboBox = new JComboBox();
         languageComboBox.setModel(new DefaultComboBoxModel(new String[]{"Chn"}));
         languageComboBox.setBackground(Color.WHITE);
-        languageComboBox.setFont(new Font("宋体", Font.PLAIN, 20));
+        languageComboBox.setFont(new Font("宋体", Font.PLAIN, 16));
         languageComboBox.setToolTipText("1");
-        languageComboBox.setBounds(89, 36, 91, 36);
+        languageComboBox.setBounds(89, 49, 91, 31);
         this.add(languageComboBox);
 
         //资源
         JLabel resourceLabel = new JLabel("资源:");
         resourceLabel.setFont(new Font("宋体", Font.PLAIN, 16));
-        resourceLabel.setBounds(38, 109, 54, 15);
+        resourceLabel.setBounds(38, 109, 54, 31);
         this.add(resourceLabel);
 
         //资源名称
         resourceTextField = new JTextField();
-        resourceTextField.setBounds(89, 101, 500, 36);
+        resourceTextField.setBounds(89, 109, 500, 31);
         this.add(resourceTextField);
         resourceTextField.setColumns(10);
 
         //导入音频显示文件名
         audioName = new JLabel();
-        audioName.setBounds(210, 173, 299, 15);
+        audioName.setBounds(210, 166, 370, 31);
+        audioName.setOpaque(true);//设置组件JLabel不透明，只有设置为不透明，设置背景色才有效
+        audioName.setBackground(new Color(238, 238, 238));
         this.add(audioName);
 
 
         JButton changeLineButton = new JButton("换行");
-        changeLineButton.setFont(new Font("宋体", Font.PLAIN, 12));
-        changeLineButton.setBackground(new Color(42, 163, 255));
-        changeLineButton.setBounds(620, 104, 91, 28);
-        changeLineButton.addActionListener(new ActionListener(){
+        changeLineButton.setFont(new Font("宋体", Font.PLAIN, 16));
+        changeLineButton.setBackground(new Color(56, 145, 255));
+        changeLineButton.setFocusPainted(false);
+        changeLineButton.setBounds(620, 109, 91, 31);
+        changeLineButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String resourceName = resourceTextField.getText();
-                if (!StringUtils.isEmpty(resourceName)){
+                if (!StringUtils.isEmpty(resourceName)) {
                     StringBuilder append = new StringBuilder(resourceName).append("\\n      ");
                     resourceTextField.setText(append.toString());
                 }
@@ -117,6 +120,7 @@ public class ConstBroadAdd extends JPanel {
                 if (val == fc.APPROVE_OPTION) {
                     //正常选择文件
                     audioName.setText(fc.getSelectedFile().toString());
+                    audioName.updateUI();
                 } else {
                     //未正常选择文件，如选择取消按钮
                     audioName.setText("");
@@ -124,15 +128,17 @@ public class ConstBroadAdd extends JPanel {
             }
         });
 
-        audioButton.setFont(new Font("宋体", Font.PLAIN, 12));
-        audioButton.setBackground(new Color(42, 163, 255));
-        audioButton.setBounds(89, 165, 91, 28);
+        audioButton.setFont(new Font("宋体", Font.PLAIN, 16));
+        audioButton.setBackground(new Color(56, 145, 255));
+        audioButton.setFocusPainted(false);
+        audioButton.setBounds(89, 165, 99, 31);
         this.add(audioButton);
 
         JButton submitButton = new JButton("提交");
-        submitButton.setBackground(new Color(42, 163, 255));
-        submitButton.setFont(new Font("宋体", Font.PLAIN, 12));
-        submitButton.setBounds(89, 220, 91, 30);
+        submitButton.setBackground(new Color(56, 145, 255));
+        submitButton.setFont(new Font("宋体", Font.PLAIN, 16));
+        submitButton.setFocusPainted(false);
+        submitButton.setBounds(89, 220, 99, 31);
         this.add(submitButton);
 
         submitButton.addActionListener(new ActionListener() {
@@ -140,8 +146,12 @@ public class ConstBroadAdd extends JPanel {
                 String resourceName = resourceTextField.getText();
                 String audioNameText = audioName.getText();
                 //判断空
-                if (StringUtils.isEmpty(resourceName) || StringUtils.isEmpty(audioNameText)) {
-                    JOptionPane.showMessageDialog(null, "输入不能为空哦...", "提示", 1);
+                if (StringUtils.isEmpty(resourceName)) {
+                    JOptionPane.showMessageDialog(null, "资源不能为空!", "提示", 1);
+                    return;
+                }
+                if (StringUtils.isEmpty(audioNameText)) {
+                    JOptionPane.showMessageDialog(null, "音频不能为空!", "提示", 1);
                     return;
                 }
                 submitData();

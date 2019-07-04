@@ -100,7 +100,9 @@ public class SwingUtils {
 
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
         if (!node.isRoot()) {
-            DefaultMutableTreeNode nodeNext = node.getNextSibling();
+            //DefaultMutableTreeNode nodeNext = node.getNextSibling();
+            //设置删除后跳到父节点
+            DefaultMutableTreeNode nodeNext = (DefaultMutableTreeNode)node.getParent();
             if (nodeNext == null) {
                 nodeNext = (DefaultMutableTreeNode) node.getParent();
             }

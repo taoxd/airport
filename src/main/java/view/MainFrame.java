@@ -44,22 +44,28 @@ public class MainFrame extends JFrame {
 
         DefaultMutableTreeNode child2 = new DefaultMutableTreeNode(Menu.TEMPLATE_LIST.getName());//模版列表
         List<DefaultMutableTreeNode> chnXMLList = getTemplateXMLList();
-        for (DefaultMutableTreeNode chnXML : chnXMLList) {
-            child2.add(chnXML);
+        if (CollectionUtils.isNotEmpty(chnXMLList)) {
+            for (DefaultMutableTreeNode chnXML : chnXMLList) {
+                child2.add(chnXML);
+            }
         }
 
         DefaultMutableTreeNode child3 = new DefaultMutableTreeNode(Menu.RESOURCE_ADD.getName());//资源添加
 
         DefaultMutableTreeNode child31 = new DefaultMutableTreeNode(Menu.CONSTANT_BROAD.getName());//常量广播词
         List<DefaultMutableTreeNode> constTreeNodes = constTree(document);
-        for (DefaultMutableTreeNode node : constTreeNodes) {
-            child31.add(node);
+        if (CollectionUtils.isNotEmpty(constTreeNodes)) {
+            for (DefaultMutableTreeNode node : constTreeNodes) {
+                child31.add(node);
+            }
         }
 
         DefaultMutableTreeNode child32 = new DefaultMutableTreeNode(Menu.VARIABLE_BROAD.getName());//变量广播词
         List<DefaultMutableTreeNode> variableTreeNodes = variableTree(document);
-        for (DefaultMutableTreeNode node : variableTreeNodes) {
-            child32.add(node);
+        if (CollectionUtils.isNotEmpty(variableTreeNodes)) {
+            for (DefaultMutableTreeNode node : variableTreeNodes) {
+                child32.add(node);
+            }
         }
 
         DefaultMutableTreeNode child30 = new DefaultMutableTreeNode(Menu.PREVIEW_RESOURCE_XML.getName());//资源XML预览
@@ -113,6 +119,7 @@ public class MainFrame extends JFrame {
 
                     StringBuilder append = new StringBuilder(Constant.UPLOAD_BROADCAST_PATH).append("\\").append(engXMLName);
                     Document documentTemplate = DOMUtils.getDocumentTemplate(append.toString());
+                    if (documentTemplate == null) continue;
                     List<Element> templateList = documentTemplate.selectNodes("//template");
                     for (Element template : templateList) {
                         String caption = template.attributeValue("caption");
@@ -231,11 +238,13 @@ public class MainFrame extends JFrame {
 
         leftPanel.setName("leftPanel");
         leftPanel.setLayout(null);
-        leftPanel.setBackground(Color.LIGHT_GRAY);
+        leftPanel.setBackground(new Color(238, 238, 238));
         leftPanel.setPreferredSize(new Dimension(200, 400));
 
 
         js.setBounds(2, 2, 195, 766);
+        //取消导航滚动条边框
+        js.setBorder(null);
         leftPanel.add(js);
 
         container.add(BorderLayout.WEST, leftPanel);
@@ -336,22 +345,24 @@ public class MainFrame extends JFrame {
         } else if (pathCount == 2 && Menu.TEMPLATE_LIST.getName().equals(e.getPath().getLastPathComponent().toString())) {//点击模版列表
 
             Document documentTemp = DOMUtils.getDocument(Constant.TEMP_PATH + Constant.TEMP_FILE);
-            Node node = documentTemp.selectSingleNode("//resource[1]");
+            Node node = documentTemp.selectSingleNode("//resource[1]/content");
             if (node == null) {
                 //跳首页
                 JPanel panel = new Index().init();
                 panel.setBackground(new Color(0, 0, 0, 0));
                 panel.setBounds(-90, 2, 900, 766);
                 rightPanel.add(panel);
+                rightPanel.repaint();
                 return;
 
             } else {
                 //没有后缀
-                String engXML = ((Element) node).attributeValue("engXML");
+                String engXML = node.getParent().attributeValue("engXML");
                 //获取模版document
                 StringBuilder templatePath = new StringBuilder(Constant.UPLOAD_BROADCAST_PATH)
                         .append("\\").append(engXML).append(".xml");
                 Document templateDocument = DOMUtils.getDocumentTemplate(templatePath.toString());
+
                 String document = DOMUtils.documentToString(templateDocument, "utf8");
                 JTextArea jTextArea = new JTextArea(document);
 
@@ -369,8 +380,6 @@ public class MainFrame extends JFrame {
                 js.setBorder(null);
                 rightPanel.add(js);
             }
-
-
         } else if (pathCount == 3 && Menu.TEMPLATE_LIST.getName().equals(e.getPath().getPathComponent(1).toString())) {//点击模版列表中某个模版
 
             String chnXML = e.getPath().getLastPathComponent().toString();
@@ -390,13 +399,13 @@ public class MainFrame extends JFrame {
             js.setVerticalScrollBarPolicy(
                     JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
             jTextArea.setEditable(false);
-            //jTextArea.setBackground(Color.GREEN);
+            jTextArea.setBackground(new Color(238, 238, 238));
             jTextArea.setBounds(2, 23, 789, 766);
             js.setBounds(2, 2, 789, 766);
             js.setBorder(null);
             rightPanel.add(js);
 
-        } else if (pathCount == 4 && Menu.PREVIEW_TEMPLATE_XML.getName().equals(e.getPath().getLastPathComponent().toString())) {//点击模版预览
+        } else if (pathCount == 4 && Menu.PREVIEW_TEMPLATE_XML.getName().equals(e.getPath().getLastPathComponent().toString())) {//点击模版XML预览
             String chnXML = e.getPath().getPathComponent(2).toString();
             String engXML = DOMUtils.getEngXMLName(chnXML);
 
@@ -417,7 +426,7 @@ public class MainFrame extends JFrame {
             js.setVerticalScrollBarPolicy(
                     JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
             jTextArea.setEditable(false);
-            jTextArea.setBackground(new Color(0, 0, 0, 0));
+            jTextArea.setBackground(new Color(238, 238, 238));
             jTextArea.setBounds(2, 2, 789, 766);
             js.setBounds(2, 2, 789, 766);
             js.setBorder(null);
@@ -435,22 +444,27 @@ public class MainFrame extends JFrame {
             panel.setBackground(new Color(0, 0, 0, 0));
             panel.setBounds(2, 2, 789, 766);
             js.setBounds(2, 2, 789, 766);
-
+            js.setBorder(null);
             rightPanel.add(js);
         } else if (pathCount == 2 && Menu.EXPORT.getName().equals(e.getPath().getPathComponent(1).toString())) {//点击导出
 
-            //列出Windows下所有可用磁盘
-            File[] parts = File.listRoots();
-            for (File part : parts) {
-                System.out.println(part.getAbsolutePath());
+            int i = JOptionPane.showConfirmDialog(null, "确定导出吗？", "提示", 0);
+            //确认删除
+            if (i == JOptionPane.YES_OPTION) {
+                //列出Windows下所有可用磁盘
+                File[] parts = File.listRoots();
+                for (File part : parts) {
+                    System.out.println(part.getAbsolutePath());
+                }
+
+                FileSystemView fsv = FileSystemView.getFileSystemView();
+                File com = fsv.getHomeDirectory();    //这便是读取桌面路径的方法了
+                ZipCompressor zc = new ZipCompressor(com.getPath() + Constant.EXPORT_DEST_DIR);// 压缩后的目标文件
+                zc.compress(Constant.EXPORT_SRC_DIR);// 需要压缩的文件
+
+                JOptionPane.showMessageDialog(null, "导出成功！", "提示", JOptionPane.PLAIN_MESSAGE);
+
             }
-
-            FileSystemView fsv = FileSystemView.getFileSystemView();
-            File com = fsv.getHomeDirectory();    //这便是读取桌面路径的方法了
-            ZipCompressor zc = new ZipCompressor(com.getPath() + Constant.EXPORT_DEST_DIR);// 压缩后的目标文件
-            zc.compress(Constant.EXPORT_SRC_DIR);// 需要压缩的文件
-
-            JOptionPane.showMessageDialog(null, "导出成功！", "提示", JOptionPane.PLAIN_MESSAGE);
         } else {
             JLabel l = new JLabel(e.getPath().toString());
             l.setBounds(5, 190, 250, 20);

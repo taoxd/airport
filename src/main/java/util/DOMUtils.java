@@ -8,6 +8,7 @@ import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
@@ -652,7 +653,7 @@ public class DOMUtils {
         //OutputFormat format=OutputFormat.createCompactFormat();  //紧凑格式:去除空格换行
         OutputFormat format = OutputFormat.createPrettyPrint();   //漂亮格式：有空格换行
         format.setEncoding("UTF-8");
-        XMLWriter writer = new XMLWriter(new OutputStreamWriter(new FileOutputStream(path), "UTF-8"), format);
+        XMLWriter writer = new XMLWriter(new OutputStreamWriter(new FileOutputStream(path), StandardCharsets.UTF_8), format);
         writer.write(document);
         writer.close();
     }
