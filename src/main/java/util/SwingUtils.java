@@ -3,7 +3,11 @@ package util;
 import javax.swing.*;
 import javax.swing.tree.*;
 import java.awt.*;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.util.Enumeration;
 
 /**
@@ -102,7 +106,7 @@ public class SwingUtils {
         if (!node.isRoot()) {
             //DefaultMutableTreeNode nodeNext = node.getNextSibling();
             //设置删除后跳到父节点
-            DefaultMutableTreeNode nodeNext = (DefaultMutableTreeNode)node.getParent();
+            DefaultMutableTreeNode nodeNext = (DefaultMutableTreeNode) node.getParent();
             if (nodeNext == null) {
                 nodeNext = (DefaultMutableTreeNode) node.getParent();
             }
@@ -114,6 +118,7 @@ public class SwingUtils {
 
     /**
      * 根据模版中文名查询treePath
+     *
      * @param jf
      * @param chnXML
      * @return
@@ -151,16 +156,22 @@ public class SwingUtils {
         if (!srcFile.isFile()) {
             throw new IllegalArgumentException(srcFile + "不是文件");
         }
-        BufferedInputStream bis = new BufferedInputStream(
-                new FileInputStream(srcFile));
-        BufferedOutputStream bos = new BufferedOutputStream(
-                new FileOutputStream(destFile));
-        int c;
-        while ((c = bis.read()) != -1) {
-            bos.write(c);
-            bos.flush();//带缓冲必须刷新缓冲区
+
+        System.out.println("文件" + srcFile.getName() + "的大小是：" + srcFile.length());
+        long begin = System.currentTimeMillis();
+
+        FileChannel inputChannel = null;
+        FileChannel outputChannel = null;
+        try {
+            inputChannel = new FileInputStream(srcFile).getChannel();
+            outputChannel = new FileOutputStream(destFile).getChannel();
+            outputChannel.transferFrom(inputChannel, 0, inputChannel.size());
+        } finally {
+            inputChannel.close();
+            outputChannel.close();
         }
-        bis.close();
-        bos.close();
+
+        long end = System.currentTimeMillis();
+        System.out.println("时间差: " + (end - begin) + "毫秒");
     }
 }
