@@ -8,46 +8,8 @@
   <component name="ChangeListManager">
     <list default="true" id="282ea613-4339-47a1-859e-2bf87d5c1d87" name="Default Changelist" comment="导入音频优化">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/config/Constant.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/config/Constant.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/run/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/run/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/view/AdvertisingWord.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/view/AdvertisingWord.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/view/ConstBroadAdd.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/view/ConstBroadAdd.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/view/ConstBroadChn.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/view/ConstBroadChn.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/view/Index.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/view/Index.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/view/MainFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/view/MainFrame.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/view/VariableBroadChn.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/view/VariableBroadChn.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/view/VariableBroadType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/view/VariableBroadType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/config/Constant.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/config/Constant.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/run/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/run/Main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/view/AdvertisingWord$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/view/AdvertisingWord$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/view/AdvertisingWord.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/view/AdvertisingWord.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/view/ConstBroadAdd$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/view/ConstBroadAdd$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/view/ConstBroadAdd$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/view/ConstBroadAdd$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/view/ConstBroadAdd$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/view/ConstBroadAdd$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/view/ConstBroadAdd.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/view/ConstBroadAdd.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/view/ConstBroadChn$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/view/ConstBroadChn$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/view/ConstBroadChn$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/view/ConstBroadChn$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/view/ConstBroadChn$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/view/ConstBroadChn$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/view/ConstBroadChn$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/view/ConstBroadChn$4.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/view/ConstBroadChn.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/view/ConstBroadChn.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/view/ConstBroadNotChn$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/view/ConstBroadNotChn$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/view/ConstBroadNotChn.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/view/ConstBroadNotChn.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/view/Index$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/view/Index$4.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/view/Index$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/view/Index$5.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/view/Index$6.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/view/Index$6.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/view/Index.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/view/Index.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/view/MainFrame.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/view/MainFrame.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/view/VariableBroadAdd.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/view/VariableBroadAdd.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/view/VariableBroadChn$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/view/VariableBroadChn$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/view/VariableBroadChn$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/view/VariableBroadChn$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/view/VariableBroadChn$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/view/VariableBroadChn$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/view/VariableBroadChn.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/view/VariableBroadChn.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/view/VariableBroadNotChn$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/view/VariableBroadNotChn$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/view/VariableBroadNotChn.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/view/VariableBroadNotChn.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/view/VariableBroadType$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/view/VariableBroadType$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/view/VariableBroadType$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/view/VariableBroadType$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/view/VariableBroadType$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/view/VariableBroadType$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/view/VariableBroadType.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/view/VariableBroadType.class" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -75,24 +37,21 @@
     <favorites_list name="airport" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/view/ConstBroadAdd.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/view/ConstBroadChn.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="252">
-              <caret line="175" column="16" lean-forward="true" selection-start-line="175" selection-start-column="16" selection-end-line="175" selection-end-column="26" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state relative-caret-position="357">
+              <caret line="255" column="12" selection-start-line="255" selection-start-column="12" selection-end-line="255" selection-end-column="48" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/view/ConstBroadChn.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/view/VariableBroadChn.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="336">
-              <caret line="210" column="21" selection-start-line="210" selection-start-column="21" selection-end-line="210" selection-end-column="21" />
+            <state relative-caret-position="413">
+              <caret line="244" selection-start-line="244" selection-end-line="244" />
             </state>
           </provider>
         </entry>
@@ -167,8 +126,6 @@
         <option value="$PROJECT_DIR$/src/main/java/view/VariableBroadAdd.java" />
         <option value="$PROJECT_DIR$/src/main/java/view/VariableBroadNotChn.java" />
         <option value="$PROJECT_DIR$/src/main/java/util/SwingUtils.java" />
-        <option value="$PROJECT_DIR$/src/main/java/view/VariableBroadType.java" />
-        <option value="$PROJECT_DIR$/src/main/java/view/VariableBroadChn.java" />
         <option value="$PROJECT_DIR$/src/main/java/run/Main.java" />
         <option value="$PROJECT_DIR$/src/main/java/config/Constant.java" />
         <option value="$PROJECT_DIR$/src/main/java/view/MainFrame.java" />
@@ -176,6 +133,8 @@
         <option value="$PROJECT_DIR$/src/main/java/view/ConstBroadAdd.java" />
         <option value="$PROJECT_DIR$/src/main/java/view/Index.java" />
         <option value="$PROJECT_DIR$/src/main/java/view/ConstBroadChn.java" />
+        <option value="$PROJECT_DIR$/src/main/java/view/VariableBroadType.java" />
+        <option value="$PROJECT_DIR$/src/main/java/view/VariableBroadChn.java" />
       </list>
     </option>
   </component>
@@ -215,8 +174,8 @@
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="265" />
-    <option name="y" value="276" />
-    <option name="width" value="1602" />
+    <option name="y" value="275" />
+    <option name="width" value="1603" />
     <option name="height" value="625" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -225,8 +184,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -234,43 +191,19 @@
               <item name="airport" type="b2602c69:ProjectViewProjectNode" />
               <item name="airport" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="airport" type="b2602c69:ProjectViewProjectNode" />
-              <item name="airport" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="airport" type="b2602c69:ProjectViewProjectNode" />
-              <item name="airport" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="airport" type="b2602c69:ProjectViewProjectNode" />
-              <item name="airport" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="airport" type="b2602c69:ProjectViewProjectNode" />
-              <item name="airport" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="view" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="DatabaseDriversLRU" value="mysql" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1562839826766" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1562860600411" />
     <property name="extract.method.default.visibility" value="private" />
     <property name="last_opened_file_path" value="E:/airport" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
@@ -403,6 +336,7 @@
       <workItem from="1562547096120" duration="1037000" />
       <workItem from="1562658119655" duration="534000" />
       <workItem from="1562815182055" duration="21655000" />
+      <workItem from="1562858173064" duration="2429000" />
     </task>
     <task id="LOCAL-00001" summary="first">
       <created>1561447676535</created>
@@ -488,17 +422,24 @@
       <option name="project" value="LOCAL" />
       <updated>1562296068354</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="删除">
+      <created>1562858798975</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1562858798975</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="275960000" />
+    <option name="totallyTimeSpent" value="278389000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4978308" visible="true" weight="0.195629" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4978308" visible="true" weight="0.19504021" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -507,19 +448,20 @@
       <window_info id="Favorites" order="6" sideWeight="0.5021692" side_tool="true" weight="0.18923241" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.69739693" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49946696" visible="true" weight="0.164859" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49946696" weight="0.26912183" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.5835141" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="8" weight="0.6496746" />
+      <window_info anchor="bottom" id="Version Control" order="8" weight="0.6487252" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Terminal" order="10" />
+      <window_info anchor="bottom" id="Terminal" order="10" weight="0.3286119" />
       <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.50053304" side_tool="true" weight="0.19088937" />
-      <window_info anchor="bottom" id="Messages" order="12" weight="0.329718" />
+      <window_info anchor="bottom" id="Messages" order="12" weight="0.3286119" />
       <window_info anchor="bottom" id="Duplicate detector" order="13" weight="0.43167028" />
       <window_info anchor="bottom" id="Inspection Results" order="14" weight="0.329718" />
+      <window_info anchor="right" id="Jms Messenger" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -556,7 +498,8 @@
     <MESSAGE value="优化页面" />
     <MESSAGE value="页面调整" />
     <MESSAGE value="导入音频优化" />
-    <option name="LAST_COMMIT_MESSAGE" value="导入音频优化" />
+    <MESSAGE value="删除" />
+    <option name="LAST_COMMIT_MESSAGE" value="删除" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -574,27 +517,9 @@
     <entry file="file://$PROJECT_DIR$/airport.iml">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_101/src.zip!/javax/swing/event/TreeSelectionListener.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="42" column="17" selection-start-line="42" selection-start-column="17" selection-end-line="42" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_101/src.zip!/javax/swing/JPanel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2744">
-          <caret line="64" column="13" selection-start-line="64" selection-start-column="13" selection-end-line="64" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_101/src.zip!/java/io/FileWriter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="297">
-          <caret line="88" column="11" selection-start-line="88" selection-start-column="11" selection-end-line="88" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_101/src.zip!/javax/swing/event/TreeSelectionListener.java" />
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_101/src.zip!/javax/swing/JPanel.java" />
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_101/src.zip!/java/io/FileWriter.java" />
     <entry file="jar://$MAVEN_REPOSITORY$/dom4j/dom4j/1.6.1/dom4j-1.6.1.jar!/org/dom4j/DocumentHelper.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="409">
@@ -623,13 +548,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_101/src.zip!/java/util/Collections.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="206">
-          <caret line="4396" column="29" selection-start-line="4396" selection-start-column="29" selection-end-line="4396" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_101/src.zip!/java/util/Collections.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/view/Tree.java" />
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
@@ -638,13 +557,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_101/src.zip!/java/util/Collection.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="230">
-          <caret line="160" column="12" selection-start-line="160" selection-start-column="12" selection-end-line="160" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_101/src.zip!/java/util/Collection.java" />
     <entry file="jar://$MAVEN_REPOSITORY$/org/apache/commons/commons-collections4/4.2/commons-collections4-4.2.jar!/org/apache/commons/collections4/CollectionUtils.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="241">
@@ -658,17 +571,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_101/src.zip!/javax/swing/JFrame.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="226">
-          <caret line="670" column="21" selection-start-line="670" selection-start-column="21" selection-end-line="670" selection-end-column="21" />
-          <folding>
-            <element signature="e#23469#23470#0" expanded="true" />
-            <element signature="e#23522#23523#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_101/src.zip!/javax/swing/JFrame.java" />
     <entry file="jar://$MAVEN_REPOSITORY$/dom4j/dom4j/1.6.1/dom4j-1.6.1.jar!/org/dom4j/Branch.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="381">
@@ -677,31 +580,9 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/util/ToZIPUtil.java" />
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_101/src.zip!/javax/swing/table/DefaultTableModel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="279">
-          <caret line="84" column="11" selection-start-line="84" selection-start-column="11" selection-end-line="84" selection-end-column="11" />
-          <folding>
-            <element signature="e#2103#2104#0" expanded="true" />
-            <element signature="e#2129#2130#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_101/src.zip!/javax/swing/table/DefaultTableModel.java" />
     <entry file="file://C:/DHKC/templateXML/dengji.xml" />
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_101/src.zip!/java/awt/Dimension.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2228">
-          <caret line="97" column="11" selection-start-line="97" selection-start-column="11" selection-end-line="97" selection-end-column="11" />
-          <folding>
-            <element signature="e#2206#2207#0" expanded="true" />
-            <element signature="e#2232#2233#0" expanded="true" />
-            <element signature="e#2565#2566#0" expanded="true" />
-            <element signature="e#2604#2605#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_101/src.zip!/java/awt/Dimension.java" />
     <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-core/5.1.6.RELEASE/spring-core-5.1.6.RELEASE.jar!/org/springframework/util/StringUtils.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="297">
@@ -720,13 +601,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_101/src.zip!/java/time/format/DateTimeFormatter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="231">
-          <caret line="482" column="19" selection-start-line="482" selection-start-column="19" selection-end-line="482" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_101/src.zip!/java/time/format/DateTimeFormatter.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/view/BulletBox.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1091">
@@ -748,13 +623,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_101/src.zip!/java/awt/Color.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="539">
-          <caret line="288" column="24" selection-start-line="288" selection-start-column="24" selection-end-line="288" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_101/src.zip!/java/awt/Color.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/util/ZipCompressor.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2044">
@@ -779,13 +648,6 @@
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/view/VariableBroadType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="381">
-          <caret line="181" selection-start-line="181" selection-end-line="181" />
         </state>
       </provider>
     </entry>
@@ -816,34 +678,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_101/jre/lib/rt.jar!/sun/swing/FilePane.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1843">
-          <caret line="1322" column="10" selection-start-line="1322" selection-start-column="10" selection-end-line="1322" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_101/src.zip!/javax/swing/table/TableCellRenderer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="364">
-          <caret line="37" column="34" selection-start-line="37" selection-start-column="17" selection-end-line="37" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_101/jre/lib/rt.jar!/sun/swing/table/DefaultTableCellHeaderRenderer.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="27" column="61" lean-forward="true" selection-start-line="27" selection-start-column="61" selection-end-line="27" selection-end-column="61" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_101/src.zip!/javax/swing/table/DefaultTableCellRenderer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1517">
-          <caret line="84" column="13" selection-start-line="84" selection-start-column="13" selection-end-line="84" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_101/jre/lib/rt.jar!/sun/swing/FilePane.class" />
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_101/src.zip!/javax/swing/table/TableCellRenderer.java" />
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_101/jre/lib/rt.jar!/sun/swing/table/DefaultTableCellHeaderRenderer.class" />
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_101/src.zip!/javax/swing/table/DefaultTableCellRenderer.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/view/AdvertisingWord.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="784">
@@ -863,13 +701,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/view/VariableBroadChn.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="353">
-          <caret line="115" column="31" selection-start-line="115" selection-start-column="29" selection-end-line="115" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/view/Index.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="214">
@@ -882,18 +713,52 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/view/ConstBroadAdd.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="175" column="16" lean-forward="true" selection-start-line="175" selection-start-column="16" selection-end-line="175" selection-end-column="26" />
+        <state relative-caret-position="4900">
+          <caret line="175" column="16" selection-start-line="175" selection-start-column="16" selection-end-line="175" selection-end-column="26" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/.idea/artifacts/airport_jar.xml">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/view/VariableBroadType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-266">
+          <caret line="154" column="28" selection-start-line="154" selection-start-column="16" selection-end-line="154" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/view/ConstBroadChn.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="336">
-          <caret line="210" column="21" selection-start-line="210" selection-start-column="21" selection-end-line="210" selection-end-column="21" />
+        <state relative-caret-position="357">
+          <caret line="255" column="12" selection-start-line="255" selection-start-column="12" selection-end-line="255" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DHKC/resourceXML/resource.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="112">
+          <caret line="4" column="12" lean-forward="true" selection-start-line="4" selection-start-column="12" selection-end-line="4" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DHKC/temp/temp.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="168">
+          <caret line="6" lean-forward="true" selection-start-line="6" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/view/VariableBroadChn.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="413">
+          <caret line="244" selection-start-line="244" selection-end-line="244" />
         </state>
       </provider>
     </entry>
@@ -908,7 +773,6 @@
             <option name="proportions">
               <list>
                 <option value="0.2" />
-                <option value="0.5" />
               </list>
             </option>
           </splitter-proportions>

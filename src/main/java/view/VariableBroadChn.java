@@ -117,6 +117,11 @@ public class VariableBroadChn extends JPanel {
                 int val = fc.showOpenDialog(null);    //文件打开对话框
                 if (val == fc.APPROVE_OPTION) {
                     //正常选择文件
+                    String name = fc.getSelectedFile().getName();
+                    if (!name.substring(0, name.lastIndexOf(".")).matches(Constant.regexZ)) {
+                        JOptionPane.showMessageDialog(null, "音频名称不能为中文!", "提示", 1);
+                        return;
+                    }
                     audioName.setText(fc.getSelectedFile().toString());
                 } else {
                     //未正常选择文件，如选择取消按钮
@@ -179,20 +184,18 @@ public class VariableBroadChn extends JPanel {
                     JOptionPane.showMessageDialog(null, "请输入广播词!", "提示", 1);
                     return;
                 }
-                if (StringUtils.isEmpty(audioNameText)) {
-                    JOptionPane.showMessageDialog(null, "请导入音频！", "提示", 1);
-                    return;
-                }
-                File audioFile = new File(audioNameText);
-                String parentPath = audioFile.getParent();
-
-                Element pathElement = (Element) tempDocument.selectSingleNode("//path");
-                pathElement.addAttribute("importRadio", parentPath);
-                try {
-                    //写xml文件
-                    DOMUtils.writeXMLToFile(tempDocument, Constant.TEMP_PATH + Constant.TEMP_FILE);
-                } catch (IOException e1) {
-                    e1.printStackTrace();
+                //更新导入音频路径
+                if (!StringUtils.isEmpty(audioNameText)) {
+                    File audioFile = new File(audioNameText);
+                    String parentPath = audioFile.getParent();
+                    Element pathElement = (Element) tempDocument.selectSingleNode("//path");
+                    pathElement.addAttribute("importRadio", parentPath);
+                    try {
+                        //写xml文件
+                        DOMUtils.writeXMLToFile(tempDocument, Constant.TEMP_PATH + Constant.TEMP_FILE);
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
                 }
                 writeToXML();
             }
@@ -218,16 +221,28 @@ public class VariableBroadChn extends JPanel {
     }
 
     public void addXML(Map<String, String> map) {
+        //音频路径
+        String audioPath = audioName.getText();
+
         Element hashValueElement = document.selectSingleNode("//resourceType[@type='" + treePath.getPathComponent(3).toString() + "']/hashValue/resource[@value='" + treePath.getLastPathComponent().toString() + "']").getParent();
         Element resourceElement = hashValueElement.addElement("resource");
         resourceElement.addAttribute("language", languageComboBox.getSelectedItem().toString());
         resourceElement.addAttribute("value", resourceTextArea.getText());
-        resourceElement.addAttribute("url", new File(audioName.getText()).getName());
+
+        //获取路径中的文件名
+        if (StringUtils.isEmpty(audioPath)) {
+            resourceElement.addAttribute("url", "");
+        } else {
+            resourceElement.addAttribute("url", new File(audioPath).getName());
+        }
+
         resourceElement.addAttribute("hashId", map.get("hashId"));
         try {
-            //长传音频文件(放在第一位置，如果文件不存在，直接报错)
-            File srcFile = new File(audioName.getText());
-            SwingUtils.copyFileByBuffer(srcFile, new File(Constant.UPLOAD_VOICE_PATH + "\\" + srcFile.getName()));
+            if (!StringUtils.isEmpty(audioPath)) {
+                //长传音频文件(放在第一位置，如果文件不存在，直接报错)
+                File srcFile = new File(audioName.getText());
+                SwingUtils.copyFileByBuffer(srcFile, new File(Constant.UPLOAD_VOICE_PATH + "\\" + srcFile.getName()));
+            }
             //写xml文件
             DOMUtils.writeXMLToFile(document, Constant.UPLOAD_RESOURCE_PATH + Constant.RESOURCE_NAME);
             //动态添加节点
