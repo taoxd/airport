@@ -11,23 +11,31 @@ import java.time.format.DateTimeFormatter;
  */
 public class Constant {
 
-    private static final String format = LocalDateTime.now().format(DateTimeFormatter.BASIC_ISO_DATE);
+    //校验不能输入中文
+    public static final String regexZ = "^\\w+$";
 
-    //导出读取源文件
-    public static final String EXPORT_SRC_DIR = "C:\\DHKC";
-    //导出文件类型
-    public static final String EXPORT_DEST_DIR = new StringBuilder("\\DHKC_").append(format).append(".zip").toString();
-    //导入音频默认打开文件目录
-    public static final String IMPORT_VOICE_OPEN_URL = "F:\\";
+    private static final String format = LocalDateTime.now().format(DateTimeFormatter.BASIC_ISO_DATE);
+    //项目当前路径
+    private static final String CURRENT_PATH = System.getProperty("user.dir");
+
+    //资源文件夹
+    public static final String DHKC_DIR = new StringBuilder(CURRENT_PATH).append("\\DHKC").toString();
+    public static final String ZIP_DIR = new StringBuilder(CURRENT_PATH).append("\\ZIP").toString();
+
+    //导出压缩文件
+    public static final String EXPORT_DEST_DIR = new StringBuilder(ZIP_DIR).append("\\DHKC_").append(format).append(".zip").toString();
     //音频上传路径
-    public static final String UPLOAD_VOICE_PATH = "C:\\DHKC\\voice";
+    public static final String UPLOAD_VOICE_PATH = new StringBuilder(DHKC_DIR).append("\\voice").toString();
     //资源文件路径
-    public static final String UPLOAD_RESOURCE_PATH = "C:\\DHKC\\resourceXML";
+    public static final String UPLOAD_RESOURCE_PATH = new StringBuilder(DHKC_DIR).append("\\resourceXML").toString();
     //广播模版路径
-    public static final String UPLOAD_BROADCAST_PATH = "C:\\DHKC\\templateXML";
+    public static final String UPLOAD_BROADCAST_PATH = new StringBuilder(DHKC_DIR).append("\\templateXML").toString();
     //资源文件名
     public static final String RESOURCE_NAME = "\\resource.xml";
-
+    //新增类别的文件路径   xml命名  中英文
+    public static final String TEMP_PATH = new StringBuilder(DHKC_DIR).append("\\temp").toString();
+    //新增类别的文件名
+    public static final String TEMP_FILE = "\\temp.xml";
 
     //常量标识
     public static final String CONST = "const";
@@ -40,10 +48,4 @@ public class Constant {
 
     public static final String EDITBOX = "输入框";
     public static final String EDITBOX_VALUE = "editBox";
-
-    //新增类别的文件路径   xml命名  中英文
-    public static final String TEMP_PATH = "C:\\DHKC\\temp";
-    //新增类别的文件名
-    public static final String TEMP_FILE = "\\temp.xml";
-
 }

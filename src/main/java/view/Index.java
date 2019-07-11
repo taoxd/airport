@@ -328,7 +328,10 @@ public class Index extends JPanel {
                     variableElement.addAttribute("hashId", hashId);
                     templateElementList.add(variableElement);
 
-                    templateContent.append(value);
+                    //变量名前后加括号
+                    StringBuilder append = new StringBuilder("（").append(value).append("）");
+
+                    templateContent.append(append.toString());
                 }
             }
         });

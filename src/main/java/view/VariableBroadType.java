@@ -29,11 +29,12 @@ public class VariableBroadType extends JPanel {
     private static final long serialVersionUID = 1L;
 
     private JComboBox languageComboBox;
-    private JTextField resourceTextField;
+    private JTextArea resourceTextArea;
     private JLabel audioName;
     private Element element;
     private Document document;
     private TreePath treePath;
+    private Document tempDocument = DOMUtils.getDocument(Constant.TEMP_PATH + Constant.TEMP_FILE);
 
 
     public VariableBroadType(TreePath treePath) {
@@ -72,14 +73,27 @@ public class VariableBroadType extends JPanel {
         this.add(resourceLabel);
 
         //资源名称
-        resourceTextField = new JTextField();
-        resourceTextField.setBounds(89, 130, 385, 31);
-        this.add(resourceTextField);
-        resourceTextField.setColumns(10);
+        resourceTextArea = new JTextArea();
+
+        JScrollPane js = new JScrollPane(resourceTextArea);
+        //分别设置水平和垂直滚动条自动出现
+        js.setHorizontalScrollBarPolicy(
+                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        js.setVerticalScrollBarPolicy(
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+        //自动换行
+        resourceTextArea.setLineWrap(true);
+        //设置5行
+        resourceTextArea.setColumns(5);
+        resourceTextArea.setFont(new Font("宋体", Font.PLAIN, 16));
+        resourceTextArea.setBounds(89, 130, 385, 130);
+        js.setBounds(89, 130, 385, 130);
+        this.add(js);
 
         //导入音频显示文件名
         audioName = new JLabel();
-        audioName.setBounds(89, 170, 385, 31);
+        audioName.setBounds(89, 290, 385, 31);
         audioName.setOpaque(true);//设置组件JLabel不透明，只有设置为不透明，设置背景色才有效
         audioName.setBackground(new Color(238, 238, 238));
         this.add(audioName);
@@ -87,7 +101,9 @@ public class VariableBroadType extends JPanel {
         JButton audioButton = new JButton("导入音频");
         audioButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JFileChooser fc = new JFileChooser(Constant.IMPORT_VOICE_OPEN_URL);
+                Element pathElement = (Element) tempDocument.selectSingleNode("//path");
+                String importRadio = pathElement.attributeValue("importRadio");
+                JFileChooser fc = new JFileChooser(importRadio);
                 int val = fc.showOpenDialog(null);    //文件打开对话框
                 if (val == fc.APPROVE_OPTION) {
                     //正常选择文件
@@ -109,7 +125,7 @@ public class VariableBroadType extends JPanel {
         delButton.setFocusPainted(false);
         delButton.setBackground(new Color(56, 145, 255));
         delButton.setFont(new Font("宋体", Font.PLAIN, 16));
-        delButton.setBounds(89, 220, 93, 31);
+        delButton.setBounds(89, 350, 93, 31);
         this.add(delButton);
         delButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -135,12 +151,12 @@ public class VariableBroadType extends JPanel {
         submitButton.setBackground(new Color(56, 145, 255));
         submitButton.setFocusPainted(false);
         submitButton.setFont(new Font("宋体", Font.PLAIN, 16));
-        submitButton.setBounds(320, 220, 93, 31);
+        submitButton.setBounds(320, 350, 93, 31);
         this.add(submitButton);
 
         submitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String resourceName = resourceTextField.getText();
+                String resourceName = resourceTextArea.getText();
                 String audioNameText = audioName.getText();
 
                 if (StringUtils.isEmpty(resourceName)) {
@@ -151,6 +167,18 @@ public class VariableBroadType extends JPanel {
                     JOptionPane.showMessageDialog(null, "请导入音频！", "提示", 1);
                     return;
                 }
+                File audioFile = new File(audioNameText);
+                String parentPath = audioFile.getParent();
+
+                Element pathElement = (Element) tempDocument.selectSingleNode("//path");
+                pathElement.addAttribute("importRadio", parentPath);
+                try {
+                    //写xml文件
+                    DOMUtils.writeXMLToFile(tempDocument, Constant.TEMP_PATH + Constant.TEMP_FILE);
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+
                 writeToXML();
             }
         });
@@ -162,14 +190,14 @@ public class VariableBroadType extends JPanel {
     public void writeToXML() {
         Document document = DOMUtils.getDocument(Constant.UPLOAD_RESOURCE_PATH + Constant.RESOURCE_NAME);
 
-        Node node = document.selectSingleNode("//resourceType[@type='" + treePath.getLastPathComponent().toString() + "']/hashValue/resource[@language='" + languageComboBox.getSelectedItem().toString() + "' and @value='" + resourceTextField.getText() + "']");
+        Node node = document.selectSingleNode("//resourceType[@type='" + treePath.getLastPathComponent().toString() + "']/hashValue/resource[@language='" + languageComboBox.getSelectedItem().toString() + "' and @value='" + resourceTextArea.getText() + "']");
         if (node != null) {
             JOptionPane.showMessageDialog(null, "存在相同资源！", "提示", 1);
             return;
         }
         updateXML(document, getNewId());
         //提交完之后，清空
-        resourceTextField.setText("");
+        resourceTextArea.setText("");
         audioName.setText("");
     }
 
@@ -180,7 +208,7 @@ public class VariableBroadType extends JPanel {
         hashValueElement.addAttribute("id", map.get("id"));
         Element resource = hashValueElement.addElement("resource");
         resource.addAttribute("language", languageComboBox.getSelectedItem().toString());
-        resource.addAttribute("value", resourceTextField.getText());
+        resource.addAttribute("value", resourceTextArea.getText());
         resource.addAttribute("url", new File(audioName.getText()).getName());
         resource.addAttribute("hashId", map.get("hashId"));
         try {
@@ -191,7 +219,7 @@ public class VariableBroadType extends JPanel {
             DOMUtils.writeXMLToFile(document, Constant.UPLOAD_RESOURCE_PATH + Constant.RESOURCE_NAME);
             //动态添加节点
             JFrame jf = (JFrame) (getRootPane().getParent());
-            SwingUtils.addNode(jf, resourceTextField.getText(), treePath);
+            SwingUtils.addNode(jf, resourceTextArea.getText(), treePath);
         } catch (IOException e) {
             e.printStackTrace();
         }

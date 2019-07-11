@@ -1,9 +1,14 @@
 package run;
 
 import config.Constant;
+import org.dom4j.Document;
+import org.dom4j.Element;
+import util.DOMUtils;
 import view.MainFrame;
 
+import javax.swing.filechooser.FileSystemView;
 import java.io.File;
+import java.io.IOException;
 
 /**
  * @Description: 启动入口
@@ -13,6 +18,10 @@ import java.io.File;
  */
 public class Main {
     public static void main(String[] args) {
+
+        String property = System.getProperty("java.class.path");
+        String property1 = System.getProperty("user.dir");
+
         //启动时创建resource文件
         File file = new File(Constant.UPLOAD_RESOURCE_PATH);
         if (!file.exists()) {
@@ -52,8 +61,24 @@ public class Main {
         File file3 = new File(Constant.TEMP_PATH);
         if (!file3.exists()) {
             file3.mkdirs();
-        }
 
+            //初始化时默认导入音频路径为桌面
+            FileSystemView fsv = FileSystemView.getFileSystemView();
+            Document tempDocument = DOMUtils.getDocument(Constant.TEMP_PATH + Constant.TEMP_FILE);
+            Element pathElement = tempDocument.getRootElement().addElement("path");
+            pathElement.addAttribute("importRadio", fsv.getHomeDirectory().getPath());
+            try {
+                //写xml文件
+                DOMUtils.writeXMLToFile(tempDocument, Constant.TEMP_PATH + Constant.TEMP_FILE);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
+        //压缩包文件夹
+        File file4 = new File(Constant.ZIP_DIR);
+        if (!file4.exists()) {
+            file4.mkdirs();
+        }
         new MainFrame().init();
     }
 }

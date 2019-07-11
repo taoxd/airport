@@ -9,6 +9,7 @@ import util.SwingUtils;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.TreePath;
 import java.awt.*;
@@ -70,6 +71,7 @@ public class AdvertisingWord extends JPanel {
 
         //初始化表格
         table = new JTable(model);
+        table.setEnabled(false);
 
         //初始化面板
         scrollPane = new JScrollPane(table);
@@ -79,9 +81,7 @@ public class AdvertisingWord extends JPanel {
         DefaultTableCellRenderer render = new DefaultTableCellRenderer();
 
         render.setHorizontalAlignment(SwingConstants.CENTER);
-
         table.getColumn("内容").setCellRenderer(render);
-
         //设置表格宽度情况
 
 /*        DefaultTableColumnModel dcm = (DefaultTableColumnModel) table.getColumnModel();
@@ -94,7 +94,7 @@ public class AdvertisingWord extends JPanel {
 
         //给表格设置行高
 
-        table.setRowHeight(100);
+        table.setRowHeight(80);
     }
 
     public JPanel init() {

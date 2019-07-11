@@ -319,17 +319,17 @@ public class MainFrame extends JFrame {
         } else if (pathCount == 4 && Menu.VARIABLE_BROAD.getName().equals(e.getPath().getPathComponent(2).toString())) {//变量中文大类VariableBroadType,城市
             JPanel panel = new VariableBroadType(e.getPath()).init();
             panel.setBackground(new Color(0, 0, 0, 0));
-            panel.setBounds(2, 150, 789, 350);
+            panel.setBounds(2, 120, 789, 500);
             rightPanel.add(panel);
         } else if (pathCount == 4 && Menu.CONSTANT_BROAD.getName().equals(e.getPath().getPathComponent(2).toString())) {//常量中文ConstBroadChn
             JPanel panel = new ConstBroadChn(e.getPath()).init();
             panel.setBackground(new Color(0, 0, 0, 0));
-            panel.setBounds(2, 150, 789, 400);
+            panel.setBounds(2, 80, 789, 600);
             rightPanel.add(panel);
         } else if (pathCount == 5 && Menu.VARIABLE_BROAD.getName().equals(e.getPath().getPathComponent(2).toString())) {//变量中文VariableBroadChn
             JPanel panel = new VariableBroadChn(e.getPath()).init();
             panel.setBackground(new Color(0, 0, 0, 0));
-            panel.setBounds(2, 130, 789, 500);
+            panel.setBounds(2, 100, 789, 600);
             rightPanel.add(panel);
 
         } else if (pathCount == 5 && Menu.CONSTANT_BROAD.getName().equals(e.getPath().getPathComponent(2).toString())) {//常量非中文ConstBroadNotChn
@@ -459,8 +459,8 @@ public class MainFrame extends JFrame {
 
                 FileSystemView fsv = FileSystemView.getFileSystemView();
                 File com = fsv.getHomeDirectory();    //这便是读取桌面路径的方法了
-                ZipCompressor zc = new ZipCompressor(com.getPath() + Constant.EXPORT_DEST_DIR);// 压缩后的目标文件
-                zc.compress(Constant.EXPORT_SRC_DIR);// 需要压缩的文件
+                ZipCompressor zc = new ZipCompressor(Constant.EXPORT_DEST_DIR);// 压缩后的目标文件
+                zc.compress(Constant.DHKC_DIR);// 需要压缩的文件
 
                 JOptionPane.showMessageDialog(null, "导出成功！", "提示", JOptionPane.PLAIN_MESSAGE);
 

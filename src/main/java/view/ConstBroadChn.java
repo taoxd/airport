@@ -29,12 +29,13 @@ import java.util.Map;
 public class ConstBroadChn extends JPanel {
 
     private static final long serialVersionUID = 1L;
-    private JTextField resourceTextField;
+    private JTextArea resourceTextArea;
     private TreePath treePath;
     private JComboBox languageComboBox;
     private JLabel audioName;
     private Element element;
     private Document document;
+    private Document tempDocument = DOMUtils.getDocument(Constant.TEMP_PATH + Constant.TEMP_FILE);
 
 
     public ConstBroadChn(TreePath treePath) {
@@ -81,11 +82,23 @@ public class ConstBroadChn extends JPanel {
         label_1.setBounds(31, 194, 129, 31);
         this.add(label_1);
 
+        //资源名称
+        resourceTextArea = new JTextArea();
 
-        resourceTextField = new JTextField();
-        resourceTextField.setBounds(161, 192, 500, 31);
-        this.add(resourceTextField);
-        resourceTextField.setColumns(10);
+        JScrollPane js = new JScrollPane(resourceTextArea);
+        //分别设置水平和垂直滚动条自动出现
+        js.setHorizontalScrollBarPolicy(
+                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        js.setVerticalScrollBarPolicy(
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+        //自动换行
+        resourceTextArea.setLineWrap(true);
+        resourceTextArea.setColumns(5);
+        resourceTextArea.setFont(new Font("宋体", Font.PLAIN, 16));
+        resourceTextArea.setBounds(161, 192, 500, 130);
+        js.setBounds(161, 192, 500, 130);
+        this.add(js);
 
         JButton changeLineButton = new JButton("换行");
         changeLineButton.setFont(new Font("宋体", Font.PLAIN, 16));
@@ -94,10 +107,10 @@ public class ConstBroadChn extends JPanel {
         changeLineButton.setBounds(680, 192, 91, 31);
         changeLineButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String resourceName = resourceTextField.getText();
+                String resourceName = resourceTextArea.getText();
                 if (!StringUtils.isEmpty(resourceName)) {
                     StringBuilder append = new StringBuilder(resourceName).append("\\n      ");
-                    resourceTextField.setText(append.toString());
+                    resourceTextArea.setText(append.toString());
                 }
             }
         });
@@ -106,7 +119,7 @@ public class ConstBroadChn extends JPanel {
 
         //音频路径
         audioName = new JLabel();
-        audioName.setBounds(290, 255, 370, 31);
+        audioName.setBounds(290, 350, 370, 31);
         audioName.setOpaque(true);//设置组件JLabel不透明，只有设置为不透明，设置背景色才有效
         audioName.setBackground(new Color(238, 238, 238));
         this.add(audioName);
@@ -115,14 +128,23 @@ public class ConstBroadChn extends JPanel {
         JButton audioButton = new JButton("导入音频");
         audioButton.setFont(new Font("宋体", Font.PLAIN, 16));
         audioButton.setBackground(new Color(56, 145, 255));
-        audioButton.setBounds(161, 255, 99, 31);
+        audioButton.setBounds(161, 350, 99, 31);
         audioButton.setFocusPainted(false);
         audioButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JFileChooser fc = new JFileChooser(Constant.IMPORT_VOICE_OPEN_URL);
+
+                Element pathElement = (Element) tempDocument.selectSingleNode("//path");
+                String importRadio = pathElement.attributeValue("importRadio");
+
+                JFileChooser fc = new JFileChooser(importRadio);
                 int val = fc.showOpenDialog(null);    //文件打开对话框
                 if (val == fc.APPROVE_OPTION) {
                     //正常选择文件
+                    String name = fc.getSelectedFile().getName();
+                    if (!name.substring(0, name.lastIndexOf(".")).matches(Constant.regexZ)) {
+                        JOptionPane.showMessageDialog(null, "音频名称不能为中文!", "提示", 1);
+                        return;
+                    }
                     audioName.setText(fc.getSelectedFile().toString());
                 } else {
                     //未正常选择文件，如选择取消按钮
@@ -136,7 +158,7 @@ public class ConstBroadChn extends JPanel {
         delButton.setFocusPainted(false);
         delButton.setFont(new Font("宋体", Font.PLAIN, 16));
         delButton.setBackground(new Color(56, 145, 255));
-        delButton.setBounds(161, 310, 99, 31);
+        delButton.setBounds(161, 410, 99, 31);
         this.add(delButton);
         delButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -162,12 +184,12 @@ public class ConstBroadChn extends JPanel {
         JButton submitButton = new JButton("提交");
         submitButton.setBackground(new Color(56, 145, 255));
         submitButton.setFont(new Font("宋体", Font.PLAIN, 16));
-        submitButton.setBounds(390, 310, 93, 31);
+        submitButton.setBounds(390, 410, 93, 31);
         submitButton.setFocusPainted(false);
         this.add(submitButton);
         submitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String resourceName = resourceTextField.getText();
+                String resourceName = resourceTextArea.getText();
                 String audioNameText = audioName.getText();
 
                 //判断空
@@ -175,14 +197,23 @@ public class ConstBroadChn extends JPanel {
                     JOptionPane.showMessageDialog(null, "请输入广播词!", "提示", 1);
                     return;
                 }
-                if (StringUtils.isEmpty(audioNameText)) {
-                    JOptionPane.showMessageDialog(null, "请导入资源", "提示", 1);
-                    return;
+                //更新导入音频路径
+                if (!StringUtils.isEmpty(audioNameText)) {
+                    File audioFile = new File(audioNameText);
+                    String parentPath = audioFile.getParent();
+                    Element pathElement = (Element) tempDocument.selectSingleNode("//path");
+                    pathElement.addAttribute("importRadio", parentPath);
+                    try {
+                        //写xml文件
+                        DOMUtils.writeXMLToFile(tempDocument, Constant.TEMP_PATH + Constant.TEMP_FILE);
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
                 }
 
                 submitData(getNewId());
                 //提交完之后，清空
-                resourceTextField.setText("");
+                resourceTextArea.setText("");
                 audioName.setText("");
             }
         });
@@ -195,7 +226,6 @@ public class ConstBroadChn extends JPanel {
         Element hashValueElement = document.selectSingleNode("//resourceType[@typeId='" + Menu.CONSTANT_BROAD.getCode() + "']/hashValue/resource[@value='" + treePath.getLastPathComponent().toString() + "']").getParent();
         String hashValueId = hashValueElement.attributeValue("id");
 
-
         Node node = document.selectSingleNode("//resourceType[@typeId='" + Menu.CONSTANT_BROAD.getCode() + "']/hashValue[@id='" + hashValueId + "']/resource[@language='" + languageComboBox.getSelectedItem().toString() + "']");
 
         if (node != null) {
@@ -207,23 +237,32 @@ public class ConstBroadChn extends JPanel {
     }
 
     public void addXML(Map<String, String> map) {
+        //音频路径
+        String audioPath = audioName.getText();
+
         Element hashValueElement = (Element) document.selectSingleNode("//hashValue[@id='" + map.get("id") + "']");
 
         Element resourceElement = hashValueElement.addElement("resource");
         resourceElement.addAttribute("language", languageComboBox.getSelectedItem().toString());
-        resourceElement.addAttribute("value", resourceTextField.getText());
+        resourceElement.addAttribute("value", resourceTextArea.getText());
         //获取路径中的文件名
-        resourceElement.addAttribute("url", new File(audioName.getText()).getName());
+        if (StringUtils.isEmpty(audioPath)) {
+            resourceElement.addAttribute("url", "");
+        } else {
+            resourceElement.addAttribute("url", new File(audioPath).getName());
+        }
         resourceElement.addAttribute("hashId", map.get("hashId"));
         try {
-            //长传音频文件(放在第一位置，如果文件不存在，直接报错)
-            File srcFile = new File(audioName.getText());
-            SwingUtils.copyFileByBuffer(srcFile, new File(Constant.UPLOAD_VOICE_PATH + "\\" + srcFile.getName()));
+            if (!StringUtils.isEmpty(audioPath)) {
+                //长传音频文件(放在第一位置，如果文件不存在，直接报错)
+                File srcFile = new File(audioName.getText());
+                SwingUtils.copyFileByBuffer(srcFile, new File(Constant.UPLOAD_VOICE_PATH + "\\" + srcFile.getName()));
+            }
             //写xml文件
             DOMUtils.writeXMLToFile(document, Constant.UPLOAD_RESOURCE_PATH + Constant.RESOURCE_NAME);
             //动态添加节点
             JFrame jf = (JFrame) (getRootPane().getParent());
-            SwingUtils.addNode(jf, resourceTextField.getText(), treePath);
+            SwingUtils.addNode(jf, resourceTextArea.getText(), treePath);
         } catch (IOException e) {
             e.printStackTrace();
         }
